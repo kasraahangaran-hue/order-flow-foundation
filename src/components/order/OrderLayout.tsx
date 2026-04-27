@@ -5,7 +5,7 @@ import { haptics } from "@/lib/haptics";
 
 interface OrderLayoutProps {
   title: string;
-  step?: 1 | 2 | 3;
+  step?: 1 | 2 | 3 | 4;
   totalSteps?: number;
   onBack?: () => void;
   footerSlot?: ReactNode;
