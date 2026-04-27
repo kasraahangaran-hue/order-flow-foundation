@@ -58,7 +58,7 @@ export function ServiceCard({
 
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <p className="truncate text-base font-semibold text-washmen-secondary-900">
+          <p className="truncate text-base font-semibold leading-tight text-washmen-secondary-900">
             {title}
           </p>
           {badge && (
@@ -80,7 +80,7 @@ export function ServiceCard({
               haptics.light();
               pricingLink.onPress();
             }}
-            className="press-effect mt-1 inline-flex text-sm font-medium text-washmen-primary underline decoration-2 underline-offset-2"
+            className="press-effect mt-0.5 inline-flex text-sm font-medium leading-tight text-washmen-primary underline decoration-2 underline-offset-2"
           >
             {pricingLink.label}
           </button>
