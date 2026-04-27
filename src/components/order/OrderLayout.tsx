@@ -29,7 +29,7 @@ export function OrderLayout({
       {/* Header */}
       <header className="sticky top-0 z-10 bg-subtle-bg px-4 pt-6 pb-0">
         <div className="flex items-start justify-between gap-3">
-          <h1 className="text-[24px] font-bold leading-[1.2] tracking-tight text-washmen-secondary-900">
+          <h1 className="text-lg font-bold text-washmen-primary">
             {title}
           </h1>
           {supportSlot ? <div className="shrink-0">{supportSlot}</div> : null}
