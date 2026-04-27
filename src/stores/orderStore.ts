@@ -1,12 +1,15 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
-export type PressingPrefs = Record<string, unknown>;
+export interface PressingPrefs {
+  items: string[];
+  pricePerItem: number;
+}
 
 export interface ServicesState {
   washAndFold: boolean;
   addPressing: boolean;
-  pressingPrefs: PressingPrefs;
+  pressingPrefs: PressingPrefs | null;
   cleanAndPress: boolean;
   bedAndBath: boolean;
   pressOnly: boolean;
@@ -79,7 +82,7 @@ export interface OrderState {
 const initialServices: ServicesState = {
   washAndFold: false,
   addPressing: false,
-  pressingPrefs: {},
+  pressingPrefs: null,
   cleanAndPress: false,
   bedAndBath: false,
   pressOnly: false,
