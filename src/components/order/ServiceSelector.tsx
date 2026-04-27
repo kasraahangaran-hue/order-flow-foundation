@@ -1,4 +1,4 @@
-import { Check, Plus, WashingMachine, Shirt, BedDouble, Wind, Footprints, Pencil } from "lucide-react";
+import { Check, Plus, WashingMachine, Shirt, BedDouble, Footprints, Pencil } from "lucide-react";
 import { ComponentType, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -32,6 +32,26 @@ function HangerIcon({ className }: { className?: string }) {
       <path d="M12 4a2 2 0 1 0-2 2" />
       <path d="M12 6v2" />
       <path d="m12 8-9 8a1 1 0 0 0 .6 1.8h16.8a1 1 0 0 0 .6-1.8L12 8z" />
+    </svg>
+  );
+}
+
+function IronIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
+      <path d="M2 18h20" />
+      <path d="M4 18a8 6 0 0 1 16 0" />
+      <path d="M16 8h2a2 2 0 0 1 2 2v2" />
+      <circle cx="8" cy="14" r="0.5" fill="currentColor" />
     </svg>
   );
 }
@@ -135,10 +155,23 @@ export function ServiceSelector({
             paddingClass="pt-2 px-4 pb-4"
             rightSlot={
               <div
-                className="flex h-6 w-6 items-center justify-center rounded-full border-[1.5px] border-washmen-secondary-300"
+                className={cn(
+                  "flex h-6 w-6 items-center justify-center rounded-full border-[1.5px]",
+                  services.washAndFold
+                    ? "border-washmen-primary"
+                    : "border-washmen-secondary-300"
+                )}
                 aria-hidden
               >
-                <Plus className="h-3.5 w-3.5 text-washmen-secondary-300" strokeWidth={2.5} />
+                <Plus
+                  className={cn(
+                    "h-3.5 w-3.5",
+                    services.washAndFold
+                      ? "text-washmen-primary"
+                      : "text-washmen-secondary-300"
+                  )}
+                  strokeWidth={2.5}
+                />
               </div>
             }
             onPress={goToWashAndFoldInfo}
@@ -167,7 +200,7 @@ export function ServiceSelector({
       />
 
       <ServiceCard
-        icon={Wind}
+        icon={IronIcon}
         iconBgClass="bg-washmen-secondary-100"
         iconFgClass="text-washmen-secondary-700"
         title="Press Only"
