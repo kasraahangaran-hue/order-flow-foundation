@@ -76,6 +76,7 @@ export function ServiceSelector({
   const learnMoreWF = onLearnMoreWashAndFold ?? goToWashAndFoldInfo;
 
   const showExtras = entryPoint === "quick-checkout";
+  const pressActive = services.addPressing && services.washAndFold;
 
   return (
     <div className={cn("flex flex-col gap-2", padding)}>
@@ -128,19 +129,39 @@ export function ServiceSelector({
             className="press-effect flex flex-col text-left"
           >
             <div className="flex items-start gap-3 px-4 pt-3 pb-2">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-washmen-secondary-aqua">
-                <Shirt className="h-6 w-6 text-washmen-primary" />
+              <div
+                className={cn(
+                  "flex h-12 w-12 shrink-0 items-center justify-center rounded-full transition-colors",
+                  pressActive ? "bg-washmen-secondary-aqua" : "bg-washmen-secondary-100"
+                )}
+              >
+                <Shirt
+                  className={cn(
+                    "h-6 w-6 transition-colors",
+                    pressActive ? "text-washmen-primary" : "text-washmen-secondary-400"
+                  )}
+                />
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <p className="truncate text-base font-semibold text-washmen-secondary-900">
+                  <p
+                    className={cn(
+                      "truncate text-base font-semibold transition-colors",
+                      pressActive ? "text-washmen-secondary-900" : "text-washmen-secondary-400"
+                    )}
+                  >
                     Press & Hang
                   </p>
                   <span className="rounded-md bg-washmen-warning/30 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-washmen-secondary-800">
                     NEW
                   </span>
                 </div>
-                <p className="mt-0.5 truncate text-sm text-washmen-secondary-500">
+                <p
+                  className={cn(
+                    "mt-0.5 truncate text-sm transition-colors",
+                    pressActive ? "text-washmen-secondary-500" : "text-washmen-secondary-400"
+                  )}
+                >
                   Press tops after washing
                 </p>
               </div>
@@ -152,7 +173,10 @@ export function ServiceSelector({
                   haptics.light();
                   goToWashAndFoldInfo();
                 }}
-                className="press-effect mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center text-washmen-primary"
+                className={cn(
+                  "press-effect mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center transition-colors",
+                  pressActive ? "text-washmen-primary" : "text-washmen-secondary-400"
+                )}
               >
                 <Pencil className="h-5 w-5" strokeWidth={2.5} />
               </button>
@@ -161,10 +185,22 @@ export function ServiceSelector({
               <div className="flex flex-col gap-1">
                 {PLACEHOLDER_PRESSING_ITEMS.map((item) => (
                   <div key={item.name} className="flex items-center gap-3">
-                    <span className="flex-1 text-[12px] font-light leading-[18px] text-washmen-secondary-700">
+                    <span
+                      className={cn(
+                        "flex-1 text-[12px] font-light leading-[18px] transition-colors",
+                        pressActive ? "text-washmen-secondary-700" : "text-washmen-secondary-400"
+                      )}
+                    >
                       {item.name}
                     </span>
-                    <span className="shrink-0 rounded-md bg-washmen-secondary-aqua px-1.5 py-0.5 text-[12px] font-normal leading-[18px] text-washmen-primary">
+                    <span
+                      className={cn(
+                        "shrink-0 rounded-md px-1.5 py-0.5 text-[12px] font-normal leading-[18px] transition-colors",
+                        pressActive
+                          ? "bg-washmen-secondary-aqua text-washmen-primary"
+                          : "bg-washmen-secondary-100 text-washmen-secondary-400"
+                      )}
+                    >
                       {item.price}
                     </span>
                   </div>
@@ -173,7 +209,10 @@ export function ServiceSelector({
               <button
                 type="button"
                 onClick={(e) => e.stopPropagation()}
-                className="press-effect mt-2 inline-flex text-sm font-medium text-washmen-primary underline underline-offset-2"
+                className={cn(
+                  "press-effect mt-2 inline-flex text-sm font-medium underline underline-offset-2 transition-colors",
+                  pressActive ? "text-washmen-primary" : "text-washmen-secondary-400"
+                )}
               >
                 View Terms & Conditions
               </button>
