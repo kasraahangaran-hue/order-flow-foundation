@@ -7,7 +7,7 @@ import { useOrderStore } from "@/stores/orderStore";
 import { nativeBridge, NativeSheetName } from "@/lib/nativeBridge";
 import { haptics } from "@/lib/haptics";
 import { cn } from "@/lib/utils";
-import { formatPickupSchedule, formatDropoffSchedule } from "@/lib/dateFormat";
+import { formatScheduleLines } from "@/lib/dateFormat";
 
 interface DetailCardProps {
   title: string;
@@ -77,6 +77,20 @@ function ValueRow({
 function EmptyRow({ text }: { text: string }) {
   return (
     <p className="text-base font-light italic text-washmen-secondary-400">{text}</p>
+  );
+}
+
+function TimeRow({ day, time }: { day: string; time: string }) {
+  return (
+    <div className="flex items-center gap-3">
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-washmen-secondary-aqua">
+        <Clock className="h-4 w-4 text-washmen-primary" />
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="text-base leading-tight text-washmen-secondary-900">{day}</p>
+        <p className="text-base leading-tight text-washmen-secondary-900">{time}</p>
+      </div>
+    </div>
   );
 }
 
@@ -164,7 +178,10 @@ export default function OrderDetails() {
           {pickup ? (
             <div className="flex flex-col gap-2">
               <ValueRow icon={Package} text={pickupModeLabel} />
-              <ValueRow icon={Clock} text={formatPickupSchedule(pickup.date, pickup.slot)} />
+              {(() => {
+                const { day, time } = formatScheduleLines(pickup.date, pickup.slot);
+                return <TimeRow day={day} time={time} />;
+              })()}
             </div>
           ) : (
             <EmptyRow text="Schedule pick up" />
@@ -180,7 +197,10 @@ export default function OrderDetails() {
           {dropoff ? (
             <div className="flex flex-col gap-2">
               <ValueRow icon={PackageOpen} text="Drop off at the Door" />
-              <ValueRow icon={Clock} text={formatDropoffSchedule(dropoff.date, dropoff.slot)} />
+              {(() => {
+                const { day, time } = formatScheduleLines(dropoff.date, dropoff.slot);
+                return <TimeRow day={day} time={time} />;
+              })()}
             </div>
           ) : (
             <EmptyRow text="Schedule delivery" />
