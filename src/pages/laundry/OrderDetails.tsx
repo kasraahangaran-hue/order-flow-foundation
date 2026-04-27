@@ -120,9 +120,8 @@ export default function OrderDetails() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const openSheet = (name: NativeSheetName | "driver_instructions") => {
-    // driver_instructions is not yet a typed native sheet — fall through to the bridge stub.
-    nativeBridge.openSheet(name as NativeSheetName);
+  const openSheet = (name: NativeSheetName) => {
+    nativeBridge.openSheet(name);
   };
 
   const ctaEnabled = !!address && !!pickup && !!dropoff;
