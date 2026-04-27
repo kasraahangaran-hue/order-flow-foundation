@@ -184,6 +184,7 @@ export default function OrderInstructions() {
         <InstructionsCard
           title="Folding"
           icon={Shirt}
+          valueIcon={Shirt}
           valueLabel={folding}
           onPress={() => nativeBridge.openSheet("folding")}
         />
@@ -192,6 +193,7 @@ export default function OrderInstructions() {
         <InstructionsCard
           title="Creases"
           icon={Layers}
+          valueIcon={Layers}
           valueLabel={creases}
           onPress={() => nativeBridge.openSheet("creases")}
         />
@@ -200,6 +202,7 @@ export default function OrderInstructions() {
         <InstructionsCard
           title="Starch"
           icon={SprayCan}
+          valueIcon={SprayCan}
           valueLabel={starch}
           onPress={() => nativeBridge.openSheet("starch")}
         />
