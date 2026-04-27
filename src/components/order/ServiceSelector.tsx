@@ -213,8 +213,8 @@ export function ServiceSelector({
 
       <ServiceCard
         icon={HangerIcon}
-        iconBgClass="bg-[#E8F5E9]"
-        iconFgClass="text-[#22C55E]"
+        iconBgClass="bg-washmen-light-green"
+        iconFgClass="text-washmen-primary-green"
         title="Clean & Press"
         pricingLink={{ label: "View Pricing", onPress: () => {} }}
         selected={services.cleanAndPress}
@@ -223,8 +223,8 @@ export function ServiceSelector({
 
       <ServiceCard
         icon={BedDouble}
-        iconBgClass="bg-[#FCE4EC]"
-        iconFgClass="text-[#EC407A]"
+        iconBgClass="bg-washmen-light-pink"
+        iconFgClass="text-washmen-pink"
         title="Bed & Bath"
         pricingLink={{ label: "View Pricing", onPress: () => {} }}
         selected={services.bedAndBath}
@@ -233,8 +233,8 @@ export function ServiceSelector({
 
       <ServiceCard
         icon={IronIcon}
-        iconBgClass="bg-washmen-secondary-100"
-        iconFgClass="text-washmen-secondary-700"
+        iconBgClass="bg-washmen-light-grey"
+        iconFgClass="text-washmen-primary"
         title="Press Only"
         pricingLink={{ label: "View Pricing", onPress: () => {} }}
         selected={services.pressOnly}

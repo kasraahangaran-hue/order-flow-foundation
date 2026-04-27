@@ -42,6 +42,11 @@ export default {
           "secondary-900": "hsl(var(--washmen-secondary-900))",
           "secondary-blue": "hsl(var(--washmen-secondary-blue))",
           "secondary-aqua": "hsl(var(--washmen-secondary-aqua))",
+          "light-green": "hsl(var(--washmen-light-green))",
+          "primary-green": "hsl(var(--washmen-primary-green))",
+          "light-pink": "hsl(var(--washmen-light-pink))",
+          "pink": "hsl(var(--washmen-pink))",
+          "light-grey": "hsl(var(--washmen-light-grey))",
         },
         primary: {
           DEFAULT: "hsl(var(--primary))",
