@@ -35,22 +35,22 @@ export function InstructionsCard({
       }}
       className="press-effect w-full rounded-card bg-card p-4 text-left shadow-[0_1px_2px_rgba(16,24,40,0.04)]"
     >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
-            <Icon className="h-4 w-4 text-washmen-primary" />
-          </div>
+      <div className="flex items-center gap-3">
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
+          <Icon className="h-4 w-4 text-washmen-primary" />
+        </div>
+        <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold leading-tight text-washmen-primary">{title}</p>
+          {hasValue ? (
+            <p className="mt-0.5 text-sm leading-tight text-muted-foreground">{valueLabel}</p>
+          ) : null}
         </div>
         <ActionIcon
-          className={cn("h-4 w-4 text-muted-foreground")}
+          className={cn("h-4 w-4 shrink-0 text-muted-foreground")}
           strokeWidth={2}
           aria-hidden
         />
       </div>
-      {hasValue ? (
-        <p className="mt-0.5 pl-11 text-sm leading-tight text-muted-foreground">{valueLabel}</p>
-      ) : null}
     </div>
   );
 }
