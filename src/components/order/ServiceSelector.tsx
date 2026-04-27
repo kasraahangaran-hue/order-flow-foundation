@@ -146,7 +146,7 @@ export function ServiceSelector({
                 <div className="flex items-center gap-2">
                   <p
                     className={cn(
-                      "truncate text-base font-semibold transition-colors",
+                      "truncate text-base font-semibold leading-tight transition-colors",
                       pressActive ? "text-washmen-secondary-900" : "text-washmen-secondary-400"
                     )}
                   >
@@ -158,7 +158,7 @@ export function ServiceSelector({
                 </div>
                 <p
                   className={cn(
-                    "mt-0.5 truncate text-sm transition-colors",
+                    "mt-0.5 truncate text-sm leading-tight transition-colors",
                     pressActive ? "text-washmen-secondary-500" : "text-washmen-secondary-400"
                   )}
                 >
@@ -437,7 +437,7 @@ function ComboRow({
         {subtitle && (
           <p
             className={cn(
-              "mt-0.5 truncate text-sm transition-colors",
+              "mt-0.5 truncate text-sm leading-tight transition-colors",
               subtitleClass ?? "text-washmen-secondary-500"
             )}
           >
