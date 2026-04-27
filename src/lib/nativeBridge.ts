@@ -15,7 +15,8 @@ export type NativeSheetName =
   | "folding"
   | "creases"
   | "starch"
-  | "auto_approvals";
+  | "auto_approvals"
+  | "photo_upload";
 
 type Listener = (result: unknown) => void;
 const listeners = new Map<NativeSheetName, Set<Listener>>();

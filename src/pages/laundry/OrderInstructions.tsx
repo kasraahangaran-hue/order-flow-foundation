@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   BadgeCheck,
@@ -29,6 +29,28 @@ export default function OrderInstructions() {
   const navigate = useNavigate();
   const orderInstructions = useOrderStore((s) => s.orderInstructions);
   const setOrderInstructions = useOrderStore((s) => s.setOrderInstructions);
+
+  // TEMP: seed defaults for UI dev. Remove when bottom sheets are wired up.
+  useEffect(() => {
+    if (
+      !orderInstructions ||
+      (!orderInstructions.folding &&
+        !orderInstructions.creases &&
+        !orderInstructions.starch &&
+        !orderInstructions.autoApprovals &&
+        !orderInstructions.specialRequests)
+    ) {
+      setOrderInstructions({
+        specialRequests: "Please use a gentle cycle, no fragrance softener.",
+        photos: [],
+        folding: "T-Shirts, Pants",
+        creases: "Shirts: sleeve creases",
+        starch: "Light",
+        autoApprovals: true,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const specialRequests = orderInstructions?.specialRequests ?? "";
   const photos = orderInstructions?.photos ?? [];
@@ -186,6 +208,7 @@ export default function OrderInstructions() {
         <InstructionsCard
           title="Auto-Approvals"
           icon={BadgeCheck}
+          valueIcon={BadgeCheck}
           valueLabel={
             autoApprovals ? "Stain and Damage Approval: Auto-approve" : null
           }
