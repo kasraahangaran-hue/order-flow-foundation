@@ -234,10 +234,10 @@ export default function OrderDetails() {
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-sm leading-tight text-foreground">
-                  Pick up: {driverInstructions.pickup}
+                  <span className="font-semibold">Pick up:</span> {driverInstructions.pickup}
                 </p>
                 <p className="mt-0.5 text-sm leading-tight text-foreground">
-                  Drop off: {driverInstructions.dropoff}
+                  <span className="font-semibold">Drop off:</span> {driverInstructions.dropoff}
                 </p>
               </div>
             </div>
