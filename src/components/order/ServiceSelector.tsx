@@ -146,11 +146,26 @@ export function ServiceSelector({
         ) : (
           <ComboRow
             icon={Shirt}
-            iconBgClass="bg-washmen-secondary-100"
-            iconFgClass="text-washmen-secondary-500"
+            iconBgClass={
+              services.washAndFold ? "bg-[#E0F7FA]" : "bg-washmen-secondary-100"
+            }
+            iconFgClass={
+              services.washAndFold
+                ? "text-washmen-primary"
+                : "text-washmen-secondary-400"
+            }
             title="Add Pressing"
-            titleClass="text-washmen-secondary-400"
+            titleClass={
+              services.washAndFold
+                ? "text-washmen-secondary-900"
+                : "text-washmen-secondary-400"
+            }
             subtitle="Press tops after washing"
+            subtitleClass={
+              services.washAndFold
+                ? "text-washmen-secondary-500"
+                : "text-washmen-secondary-400"
+            }
             badge="NEW"
             paddingClass="pt-2 px-4 pb-4"
             rightSlot={
@@ -264,6 +279,7 @@ interface ComboRowProps {
   title: string;
   titleClass?: string;
   subtitle?: string;
+  subtitleClass?: string;
   badge?: ReactNode;
   priceLabel?: string;
   pricingLink?: { label: string; onPress: () => void };
@@ -282,6 +298,7 @@ function ComboRow({
   title,
   titleClass,
   subtitle,
+  subtitleClass,
   badge,
   priceLabel,
   pricingLink,
@@ -315,17 +332,17 @@ function ComboRow({
     >
       <div
         className={cn(
-          "flex h-12 w-12 shrink-0 items-center justify-center rounded-full",
+          "flex h-12 w-12 shrink-0 items-center justify-center rounded-full transition-colors",
           iconBgClass
         )}
       >
-        <Icon className={cn("h-6 w-6", iconFgClass)} />
+        <Icon className={cn("h-6 w-6 transition-colors", iconFgClass)} />
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <p
             className={cn(
-              "truncate text-base font-semibold",
+              "truncate text-base font-semibold transition-colors",
               titleClass ?? "text-washmen-secondary-900"
             )}
           >
@@ -343,7 +360,12 @@ function ComboRow({
           )}
         </div>
         {subtitle && (
-          <p className="mt-0.5 truncate text-sm text-washmen-secondary-500">
+          <p
+            className={cn(
+              "mt-0.5 truncate text-sm transition-colors",
+              subtitleClass ?? "text-washmen-secondary-500"
+            )}
+          >
             {subtitle}
           </p>
         )}
