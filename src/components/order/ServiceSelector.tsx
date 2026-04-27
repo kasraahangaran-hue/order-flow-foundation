@@ -11,6 +11,7 @@ export type SelectedServicesSnapshot = ServicesState;
 interface ServiceSelectorProps {
   variant: "screen" | "sheet";
   entryPoint: "laundry" | "quick-checkout";
+  userType?: "new" | "returning";
   onContinue?: (selected: SelectedServicesSnapshot) => void;
   onSkip?: () => void;
   onLearnMoreWashAndFold?: () => void;
@@ -19,6 +20,7 @@ interface ServiceSelectorProps {
 export function ServiceSelector({
   variant,
   entryPoint,
+  userType = "returning",
   onLearnMoreWashAndFold,
 }: ServiceSelectorProps) {
   const navigate = useNavigate();
@@ -41,7 +43,7 @@ export function ServiceSelector({
           iconBgClass="bg-[#E0F7FA]"
           iconFgClass="text-washmen-primary"
           title="Wash & Fold"
-          priceLabel="AED 75 per bag"
+          priceLabel={userType === "returning" ? "AED 75 per bag" : undefined}
           selected={services.washAndFold}
           showSelectionIndicator
           onPress={() =>
@@ -50,13 +52,16 @@ export function ServiceSelector({
             })
           }
           pricingLink={{ label: "Learn More", onPress: learnMoreWF }}
+          paddingClass="pt-4 px-4 pb-2"
         />
 
-        {/* Plus separator */}
-        <div className="relative px-4 py-3">
-          <div className="border-t border-washmen-secondary-100" />
-          <div className="absolute left-1/2 top-1/2 flex h-8 w-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-washmen-secondary-50">
-            <Plus className="h-6 w-6 text-washmen-primary" strokeWidth={2.5} />
+        {/* Plus separator — small grey + sitting in the icon column */}
+        <div className="flex items-center px-4 py-1">
+          <div className="flex h-4 w-12 shrink-0 items-center justify-center">
+            <Plus
+              className="h-4 w-4 text-washmen-secondary-300"
+              strokeWidth={2}
+            />
           </div>
         </div>
 
@@ -66,6 +71,7 @@ export function ServiceSelector({
             iconBgClass="bg-washmen-secondary-100"
             iconFgClass="text-washmen-secondary-700"
             title="Press & Hang"
+            paddingClass="pt-2 px-4 pb-4"
             rightSlot={
               <button
                 type="button"
@@ -104,15 +110,16 @@ export function ServiceSelector({
             iconBgClass="bg-washmen-secondary-100"
             iconFgClass="text-washmen-secondary-500"
             title="Add Pressing"
+            titleClass="text-washmen-secondary-400"
             subtitle="Press tops after washing"
             badge="NEW"
+            paddingClass="pt-2 px-4 pb-4"
             rightSlot={
-              <div
-                className="flex h-6 w-6 items-center justify-center rounded-full border-[1.5px] border-washmen-secondary-300"
+              <Plus
+                className="h-6 w-6 text-washmen-primary"
+                strokeWidth={2.5}
                 aria-hidden
-              >
-                <Plus className="h-3.5 w-3.5 text-washmen-secondary-300" strokeWidth={2.5} />
-              </div>
+              />
             }
             onPress={goToWashAndFoldInfo}
           />
@@ -202,6 +209,7 @@ interface ComboRowProps {
   iconBgClass: string;
   iconFgClass: string;
   title: string;
+  titleClass?: string;
   subtitle?: string;
   badge?: ReactNode;
   priceLabel?: string;
@@ -211,6 +219,7 @@ interface ComboRowProps {
   rightSlot?: ReactNode;
   onPress?: () => void;
   children?: ReactNode;
+  paddingClass?: string;
 }
 
 function ComboRow({
@@ -218,6 +227,7 @@ function ComboRow({
   iconBgClass,
   iconFgClass,
   title,
+  titleClass,
   subtitle,
   badge,
   priceLabel,
@@ -227,6 +237,7 @@ function ComboRow({
   rightSlot,
   onPress,
   children,
+  paddingClass,
 }: ComboRowProps) {
   return (
     <div
@@ -244,7 +255,10 @@ function ComboRow({
           onPress?.();
         }
       }}
-      className={cn("press-effect flex w-full items-start gap-3 p-4 text-left")}
+      className={cn(
+        "press-effect flex w-full items-start gap-3 text-left",
+        paddingClass ?? "p-4"
+      )}
     >
       <div
         className={cn(
@@ -256,7 +270,12 @@ function ComboRow({
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <p className="truncate text-base font-semibold text-washmen-secondary-900">
+          <p
+            className={cn(
+              "truncate text-base font-semibold",
+              titleClass ?? "text-washmen-secondary-900"
+            )}
+          >
             {title}
           </p>
           {badge && (

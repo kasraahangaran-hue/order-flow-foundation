@@ -25,9 +25,9 @@ export function OrderLayout({
   const showProgress = typeof step === "number";
 
   return (
-    <div className="flex h-full min-h-screen flex-col bg-background">
+    <div className="flex h-full min-h-screen flex-col bg-subtle-bg">
       {/* Header */}
-      <header className="sticky top-0 z-10 bg-background px-4 pt-6 pb-0">
+      <header className="sticky top-0 z-10 bg-subtle-bg px-4 pt-6 pb-0">
         <div className="flex items-start justify-between gap-3">
           <h1 className="text-[24px] font-bold leading-[1.2] tracking-tight text-washmen-secondary-900">
             {title}
