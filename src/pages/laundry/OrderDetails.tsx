@@ -94,10 +94,6 @@ function TimeRow({ day, time }: { day: string; time: string }) {
   );
 }
 
-function formatDriverInstructions(d: DriverInstructionsState): string {
-  return `Pick up: ${d.pickup} • Drop off: ${d.dropoff}`;
-}
-
 export default function OrderDetails() {
   const navigate = useNavigate();
   const address = useOrderStore((s) => s.address);
