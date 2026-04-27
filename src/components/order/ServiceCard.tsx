@@ -1,4 +1,4 @@
-import { Check } from "lucide-react";
+import { Check, Plus } from "lucide-react";
 import { ComponentType, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { haptics } from "@/lib/haptics";
@@ -67,7 +67,7 @@ export function ServiceCard({
             </span>
           )}
           {priceLabel && (
-            <span className="rounded-md bg-washmen-primary-light px-2 py-1 text-[12px] font-medium text-washmen-primary">
+            <span className="rounded-md bg-washmen-primary-light px-2 py-0.5 text-[12px] font-medium text-washmen-primary">
               {priceLabel}
             </span>
           )}
@@ -80,7 +80,7 @@ export function ServiceCard({
               haptics.light();
               pricingLink.onPress();
             }}
-            className="press-effect mt-1 inline-flex text-sm font-medium text-washmen-primary underline underline-offset-2"
+            className="press-effect mt-1 inline-flex text-sm font-medium text-washmen-primary underline decoration-2 underline-offset-2"
           >
             {pricingLink.label}
           </button>
@@ -89,14 +89,18 @@ export function ServiceCard({
 
       <div
         className={cn(
-          "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 transition-colors",
+          "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-[1.5px] transition-colors",
           selected
             ? "border-washmen-success bg-washmen-success text-white"
-            : "border-washmen-secondary-300 bg-transparent"
+            : "border-washmen-secondary-300 bg-transparent text-washmen-secondary-300"
         )}
         aria-hidden
       >
-        {selected && <Check className="h-3.5 w-3.5" strokeWidth={3} />}
+        {selected ? (
+          <Check className="h-3.5 w-3.5" strokeWidth={3} />
+        ) : (
+          <Plus className="h-3.5 w-3.5" strokeWidth={2.5} />
+        )}
       </div>
     </div>
   );
