@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Clock, Home, Package, PackageOpen, Pencil, Plus } from "lucide-react";
+import { Bell, Clock, Home, Package, PackageOpen, Pencil, Plus } from "lucide-react";
 import { OrderLayout } from "@/components/order/OrderLayout";
 import { Button } from "@/components/ui/button";
 import { useOrderStore } from "@/stores/orderStore";
@@ -15,12 +15,13 @@ interface DetailCardProps {
   hasValue: boolean;
   /** Use Plus instead of Pencil in the header (for empty "add" actions). */
   addAction?: boolean;
+  titleClassName?: string;
   children?: React.ReactNode;
 }
 
-function DetailCard({ title, onPress, hasValue, addAction, children }: DetailCardProps) {
+function DetailCard({ title, onPress, hasValue, addAction, titleClassName, children }: DetailCardProps) {
   const ActionIcon = addAction && !hasValue ? Plus : Pencil;
-  const actionColor = addAction && !hasValue ? "text-washmen-primary" : "text-washmen-secondary-500";
+  const actionColor = "text-washmen-primary";
   return (
     <div
       role="button"
@@ -39,8 +40,8 @@ function DetailCard({ title, onPress, hasValue, addAction, children }: DetailCar
       className="press-effect w-full rounded-card bg-card p-4 text-left shadow-[0_1px_2px_rgba(16,24,40,0.04)]"
     >
       <div className="flex items-center justify-between">
-        <p className="text-base font-semibold text-washmen-secondary-900">{title}</p>
-        <ActionIcon className={cn("h-4 w-4", actionColor)} aria-hidden />
+        <p className={cn("text-base font-semibold text-washmen-secondary-900", titleClassName)}>{title}</p>
+        <ActionIcon className={cn("h-5 w-5", actionColor)} strokeWidth={2} aria-hidden />
       </div>
       {children ? <div className="mt-3">{children}</div> : null}
     </div>
@@ -49,26 +50,18 @@ function DetailCard({ title, onPress, hasValue, addAction, children }: DetailCar
 
 function ValueRow({
   icon: Icon,
-  iconCircle = true,
   text,
   muted,
 }: {
   icon: React.ComponentType<{ className?: string }>;
-  iconCircle?: boolean;
   text: string;
   muted?: boolean;
 }) {
   return (
     <div className="flex items-center gap-3">
-      {iconCircle ? (
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-washmen-secondary-aqua">
-          <Icon className="h-4 w-4 text-washmen-primary" />
-        </div>
-      ) : (
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center">
-          <Icon className="h-5 w-5 text-washmen-primary" />
-        </div>
-      )}
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-washmen-secondary-aqua">
+        <Icon className="h-4 w-4 text-washmen-primary" />
+      </div>
       <p
         className={cn(
           "min-w-0 flex-1 text-base",
@@ -171,11 +164,7 @@ export default function OrderDetails() {
           {pickup ? (
             <div className="flex flex-col gap-2">
               <ValueRow icon={Package} text={pickupModeLabel} />
-              <ValueRow
-                icon={Clock}
-                iconCircle={false}
-                text={formatPickupSchedule(pickup.date, pickup.slot)}
-              />
+              <ValueRow icon={Clock} text={formatPickupSchedule(pickup.date, pickup.slot)} />
             </div>
           ) : (
             <EmptyRow text="Schedule pick up" />
@@ -191,11 +180,7 @@ export default function OrderDetails() {
           {dropoff ? (
             <div className="flex flex-col gap-2">
               <ValueRow icon={PackageOpen} text="Drop off at the Door" />
-              <ValueRow
-                icon={Clock}
-                iconCircle={false}
-                text={formatDropoffSchedule(dropoff.date, dropoff.slot)}
-              />
+              <ValueRow icon={Clock} text={formatDropoffSchedule(dropoff.date, dropoff.slot)} />
             </div>
           ) : (
             <EmptyRow text="Schedule delivery" />
@@ -206,16 +191,26 @@ export default function OrderDetails() {
         <DetailCard
           title="Driver Instructions"
           hasValue={!!driverInstructions}
-          addAction
+          titleClassName="text-washmen-primary"
           onPress={() => openSheet("driver_instructions")}
         >
           {driverInstructions ? (
-            <p className="text-sm text-washmen-secondary-700">
-              {[driverInstructions.pickup, driverInstructions.dropoff]
-                .filter(Boolean)
-                .join(" • ")}
-            </p>
-          ) : null}
+            <ValueRow
+              icon={Bell}
+              text={
+                [driverInstructions.pickup, driverInstructions.dropoff]
+                  .filter(Boolean)
+                  .join(" / ") || "No Preference"
+              }
+            />
+          ) : (
+            <div className="flex items-center gap-3">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-washmen-secondary-aqua">
+                <Bell className="h-4 w-4 text-washmen-primary" />
+              </div>
+              <p className="min-w-0 flex-1 text-base text-washmen-secondary-500">No Preference</p>
+            </div>
+          )}
         </DetailCard>
       </div>
     </OrderLayout>
