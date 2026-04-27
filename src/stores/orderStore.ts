@@ -68,6 +68,7 @@ export interface OrderState {
 
   // actions
   setServices: (patch: Partial<ServicesState>) => void;
+  setPressingPrefs: (prefs: PressingPrefs | null) => void;
   setAddress: (a: AddressState | null) => void;
   setPickup: (p: PickupState | null) => void;
   setDropoff: (d: DropoffState | null) => void;
@@ -112,6 +113,14 @@ export const useOrderStore = create<OrderState>()(
 
       setServices: (patch) =>
         set((s) => ({ services: { ...s.services, ...patch } })),
+      setPressingPrefs: (prefs) =>
+        set((s) => ({
+          services: {
+            ...s.services,
+            pressingPrefs: prefs,
+            addPressing: !!(prefs && prefs.items.length > 0),
+          },
+        })),
       setAddress: (address) => set({ address }),
       setPickup: (pickup) => set({ pickup }),
       setDropoff: (dropoff) => set({ dropoff }),
