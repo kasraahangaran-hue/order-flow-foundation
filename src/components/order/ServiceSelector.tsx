@@ -83,7 +83,7 @@ export function ServiceSelector({
       <div className="rounded-card bg-card shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
         <ComboRow
           icon={WashingMachine}
-          iconBgClass="bg-[#E0F7FA]"
+          iconBgClass="bg-washmen-secondary-aqua"
           iconFgClass="text-washmen-primary"
           title="Wash & Fold"
           priceLabel="AED 75 per bag"
@@ -113,7 +113,7 @@ export function ServiceSelector({
         {services.addPressing ? (
           <ComboRow
             icon={Shirt}
-            iconBgClass="bg-[#E0F7FA]"
+            iconBgClass="bg-washmen-secondary-aqua"
             iconFgClass="text-washmen-primary"
             title="Press & Hang"
             subtitle="Press tops after washing"
@@ -135,16 +135,16 @@ export function ServiceSelector({
             }
             onPress={goToWashAndFoldInfo}
           >
-            <div className="mt-2 flex flex-col gap-1">
+            <div className="mt-2 flex w-full flex-col gap-1">
               {PLACEHOLDER_PRESSING_ITEMS.map((item) => (
                 <div
                   key={item.name}
-                  className="flex items-center justify-between gap-2"
+                  className="flex w-full items-center gap-2"
                 >
-                  <p className="truncate text-xs text-washmen-secondary-700">
+                  <p className="flex-1 truncate text-[12px] font-light leading-[18px] text-washmen-secondary-700">
                     {item.name}
                   </p>
-                  <span className="shrink-0 rounded-md bg-washmen-primary-light px-1.5 py-0.5 text-[11px] font-medium text-washmen-primary">
+                  <span className="ml-auto shrink-0 rounded-md bg-washmen-secondary-blue px-1.5 py-0.5 text-[12px] font-normal leading-[18px] text-washmen-primary">
                     {item.price}
                   </span>
                 </div>
@@ -371,7 +371,7 @@ function ComboRow({
             </span>
           )}
           {priceLabel && (
-            <span className="rounded-md bg-washmen-primary-light px-2 py-0.5 text-[12px] font-medium text-washmen-primary">
+            <span className="rounded-md bg-washmen-secondary-blue px-2 py-0.5 text-[12px] font-medium text-washmen-primary">
               {priceLabel}
             </span>
           )}
