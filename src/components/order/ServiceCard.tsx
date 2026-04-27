@@ -67,7 +67,7 @@ export function ServiceCard({
             </span>
           )}
           {priceLabel && (
-            <span className="rounded-md bg-washmen-primary-light px-2 py-0.5 text-[12px] font-medium text-washmen-primary">
+            <span className="rounded-md bg-washmen-secondary-blue px-2 py-0.5 text-[12px] font-medium text-washmen-primary">
               {priceLabel}
             </span>
           )}
