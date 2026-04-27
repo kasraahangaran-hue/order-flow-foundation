@@ -10,7 +10,12 @@ export type NativeSheetName =
   | "address"        // -> { address, apartment }
   | "pickup_schedule" // -> { mode: 'door' | 'in_person', date, slot }
   | "dropoff_schedule" // -> { date, slot, surcharge }
-  | "payment_method"; // -> { method, last4 }
+  | "payment_method" // -> { method, last4 }
+  | "driver_instructions" // -> { pickup, dropoff }
+  | "folding"
+  | "creases"
+  | "starch"
+  | "auto_approvals";
 
 type Listener = (result: unknown) => void;
 const listeners = new Map<NativeSheetName, Set<Listener>>();
