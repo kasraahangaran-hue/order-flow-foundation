@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { OrderLayout, OrderPrimaryButton } from "@/components/order/OrderLayout";
+import { OrderLayout } from "@/components/order/OrderLayout";
 import { ServiceSelector } from "@/components/order/ServiceSelector";
+import { Button } from "@/components/ui/button";
 import { useOrderStore } from "@/stores/orderStore";
+import { haptics } from "@/lib/haptics";
 
 export default function SelectService() {
   const navigate = useNavigate();
@@ -20,9 +22,15 @@ export default function SelectService() {
       step={1}
       onBack={() => navigate(-1)}
       footerSlot={
-        <OrderPrimaryButton onClick={() => navigate("/laundry/order-details")}>
+        <Button
+          className="flex-1 h-12 text-sm font-semibold"
+          onClick={() => {
+            haptics.medium();
+            navigate("/laundry/order-details");
+          }}
+        >
           {hasSelection ? "Continue to Order" : "Skip"}
-        </OrderPrimaryButton>
+        </Button>
       }
     >
       <ServiceSelector

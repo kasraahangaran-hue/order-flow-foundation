@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import { OrderLayout, OrderPrimaryButton } from "@/components/order/OrderLayout";
+import { OrderLayout } from "@/components/order/OrderLayout";
+import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { ServiceCard } from "@/components/order/ServiceCard";
 import { BottomSheet } from "@/components/order/BottomSheet";
 import { Shirt, LifeBuoy } from "lucide-react";
 import { nativeBridge } from "@/lib/nativeBridge";
+import { haptics } from "@/lib/haptics";
 
 interface PlaceholderScreenProps {
   title: string;
@@ -55,11 +57,19 @@ export default function PlaceholderScreen({
       }
       footerSlot={
         nextTo ? (
-          <OrderPrimaryButton onClick={() => navigate(nextTo)}>
+          <Button
+            className="flex-1 h-12 text-sm font-semibold"
+            onClick={() => {
+              haptics.medium();
+              navigate(nextTo);
+            }}
+          >
             {ctaLabel}
-          </OrderPrimaryButton>
+          </Button>
         ) : (
-          <OrderPrimaryButton disabled>{ctaLabel}</OrderPrimaryButton>
+          <Button disabled className="flex-1 h-12 text-sm font-semibold">
+            {ctaLabel}
+          </Button>
         )
       }
     >
