@@ -4,7 +4,6 @@ import {
   ChevronDown,
   ChevronUp,
   CreditCard,
-  Info,
   Pencil,
   Tag,
 } from "lucide-react";
@@ -53,7 +52,6 @@ export default function LastStep() {
   const [selectedTip, setSelectedTip] = useState(0);
   const [paymentExpanded, setPaymentExpanded] = useState(true);
   const [promosExpanded, setPromosExpanded] = useState(false);
-  const [notesExpanded, setNotesExpanded] = useState(false);
   const [promoInput, setPromoInput] = useState("");
   const [appliedPromo, setAppliedPromo] = useState<string | null>(null);
 
@@ -174,11 +172,11 @@ export default function LastStep() {
         </div>
 
         {/* PAYMENT SUMMARY */}
-        <div className="rounded-card bg-card p-4 shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
+        <div className="overflow-hidden rounded-card bg-card shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
           <button
             type="button"
             onClick={() => toggle(setPaymentExpanded, paymentExpanded)}
-            className="press-effect flex w-full items-center gap-3 text-left"
+            className="press-effect flex w-full items-center gap-3 p-4 text-left"
           >
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
               <CreditCard className="h-4 w-4 text-washmen-primary" />
@@ -193,78 +191,67 @@ export default function LastStep() {
             )}
           </button>
           {paymentExpanded && (
-            <div className="mt-3 space-y-2 border-t border-border pt-3">
-              {hasItems ? (
-                lineItems.map((item) => (
-                  <div
-                    key={item.label}
-                    className="flex justify-between text-sm"
-                  >
-                    <span className="text-muted-foreground">{item.label}</span>
-                    <span className="text-foreground">
-                      AED {item.amount.toFixed(2)}
-                    </span>
-                  </div>
-                ))
-              ) : (
-                <p className="text-sm italic text-muted-foreground">
-                  No services selected
-                </p>
-              )}
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Delivery Fee</span>
-                <span className="text-foreground">
-                  AED {DELIVERY_FEE.toFixed(2)}*
-                </span>
+            <>
+              <div className="space-y-2 border-t border-border px-4 pt-3 pb-4">
+                {hasItems ? (
+                  lineItems.map((item) => (
+                    <div
+                      key={item.label}
+                      className="flex justify-between text-sm"
+                    >
+                      <span className="text-muted-foreground">{item.label}</span>
+                      <span className="text-foreground">
+                        AED {item.amount.toFixed(2)}
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-sm italic text-muted-foreground">
+                    No services selected
+                  </p>
+                )}
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Delivery Fee</span>
+                  <span className="text-foreground">
+                    AED {DELIVERY_FEE.toFixed(2)}*
+                  </span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Driver Tip</span>
+                  <span className="text-foreground">
+                    AED {selectedTip.toFixed(2)}
+                  </span>
+                </div>
+                <div className="mt-2 flex items-center justify-between border-t border-dashed border-border pt-3">
+                  <span className="text-sm font-bold text-washmen-primary">
+                    Estimated Total
+                  </span>
+                  <span className="text-sm font-bold text-washmen-primary">
+                    AED {estimatedTotal.toFixed(2)}**
+                  </span>
+                </div>
               </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Driver Tip</span>
-                <span className="text-foreground">
-                  AED {selectedTip.toFixed(2)}
-                </span>
-              </div>
-              <div className="mt-2 flex items-center justify-between border-t border-dashed border-border pt-3">
-                <span className="text-sm font-bold">Estimated Total</span>
-                <span className="text-sm font-bold">
-                  AED {estimatedTotal.toFixed(2)}*
-                </span>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* NOTES */}
-        <div className="rounded-card border border-washmen-orange/20 bg-washmen-orange/5 p-4">
-          <button
-            type="button"
-            onClick={() => toggle(setNotesExpanded, notesExpanded)}
-            className="press-effect flex w-full items-center gap-3 text-left"
-          >
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-washmen-orange/15">
-              <Info className="h-4 w-4 text-washmen-orange" />
-            </div>
-            <p className="flex-1 text-sm font-semibold leading-tight text-washmen-orange">
-              Notes
-            </p>
-            {notesExpanded ? (
-              <ChevronUp className="h-4 w-4 shrink-0 text-muted-foreground" />
-            ) : (
-              <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
-            )}
-          </button>
-          {notesExpanded && (
-            <div className="mt-3 space-y-3 border-t border-washmen-orange/20 pt-3">
+              {/* Amber notes footer attached to Payment Summary */}
               {/* TEMP: hardcoded copy. Replace with Strapi fetch when keys are confirmed. */}
-              <p className="text-xs leading-relaxed text-muted-foreground">
-                *Due to the increase of diesel & natural gas prices and its
-                impact on our supply chain, delivery fee has been adjusted.
-                Thank you for your support during these times 🇦🇪
-              </p>
-              <p className="text-xs leading-relaxed text-muted-foreground">
-                *The final amount will be determined after the facility weighs
-                your items and confirms the final scope of work.
-              </p>
-            </div>
+              <div className="space-y-3 bg-amber-50 px-4 py-4 text-amber-900">
+                <p className="text-xs font-semibold leading-relaxed">
+                  *Delivery Fee Increase
+                </p>
+                <p className="text-xs leading-relaxed">
+                  Due to the increase of diesel & natural gas prices and its
+                  impact on our supply chain, delivery fee has increased to
+                  AED 15. Once the situation normalizes, we will reduce it
+                  significantly. Thank you for your support during these times
+                  🙏
+                </p>
+                <p className="text-xs leading-relaxed">
+                  **The final amount, with discounts, will be determined after
+                  sorting and processing at our facility. If your total bill
+                  is less than AED 75, the difference will be charged to meet
+                  the minimum order value.
+                </p>
+              </div>
+            </>
           )}
         </div>
 
