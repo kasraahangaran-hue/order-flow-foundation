@@ -49,7 +49,7 @@ export function InstructionsCard({
         />
       </div>
       {hasValue ? (
-        <p className="mt-2 pl-11 text-sm text-muted-foreground">{valueLabel}</p>
+        <p className="mt-1 pl-11 text-sm text-muted-foreground">{valueLabel}</p>
       ) : null}
     </div>
   );
