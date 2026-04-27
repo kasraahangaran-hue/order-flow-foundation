@@ -92,7 +92,7 @@ export function ServiceCard({
           "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-[1.5px] transition-colors",
           selected
             ? "border-washmen-success bg-washmen-success text-white"
-            : "border-washmen-secondary-300 bg-transparent text-washmen-secondary-300"
+            : "border-washmen-primary bg-transparent text-washmen-primary"
         )}
         aria-hidden
       >

@@ -36,6 +36,26 @@ function HangerIcon({ className }: { className?: string }) {
   );
 }
 
+function IronIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
+      <path d="M2 18h20" />
+      <path d="M4 18a8 6 0 0 1 16 0" />
+      <path d="M16 8h2a2 2 0 0 1 2 2v2" />
+      <circle cx="8" cy="14" r="0.5" fill="currentColor" />
+    </svg>
+  );
+}
+
 export function ServiceSelector({
   variant,
   entryPoint,
