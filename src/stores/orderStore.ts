@@ -111,6 +111,9 @@ export const useOrderStore = create<OrderState>()(
       promoCode: null,
       tip: 0,
 
+      // TODO: When washAndFold is false on submit, exclude Press & Hang from the
+      // priced order regardless of addPressing flag — needs to be handled in
+      // cart/checkout logic.
       setServices: (patch) =>
         set((s) => ({ services: { ...s.services, ...patch } })),
       setPressingPrefs: (prefs) =>
