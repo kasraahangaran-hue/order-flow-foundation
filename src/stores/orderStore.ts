@@ -1,0 +1,154 @@
+import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
+
+export type PressingPrefs = Record<string, unknown>;
+
+export interface ServicesState {
+  washAndFold: boolean;
+  addPressing: boolean;
+  pressingPrefs: PressingPrefs;
+  cleanAndPress: boolean;
+  bedAndBath: boolean;
+  pressOnly: boolean;
+}
+
+export interface AddressState {
+  line1: string;
+  apartment?: string;
+  lat?: number;
+  lng?: number;
+}
+
+export interface PickupState {
+  mode: "door" | "in_person";
+  date: string;
+  slot: string;
+}
+
+export interface DropoffState {
+  date: string;
+  slot: string;
+  surcharge?: number;
+}
+
+export interface DriverInstructionsState {
+  pickup: string;
+  dropoff: string;
+}
+
+export interface OrderInstructionsState {
+  specialRequests: string;
+  photos: string[];
+  folding: string | null;
+  creases: string | null;
+  starch: string | null;
+  autoApprovals: boolean;
+}
+
+export interface PaymentState {
+  method: string;
+  last4?: string;
+}
+
+export type TipValue = 0 | 3 | 5 | 10;
+
+export interface OrderState {
+  services: ServicesState;
+  address: AddressState | null;
+  pickup: PickupState | null;
+  dropoff: DropoffState | null;
+  driverInstructions: DriverInstructionsState | null;
+  orderInstructions: OrderInstructionsState | null;
+  payment: PaymentState | null;
+  promoCode: string | null;
+  tip: TipValue;
+
+  // actions
+  setServices: (patch: Partial<ServicesState>) => void;
+  setAddress: (a: AddressState | null) => void;
+  setPickup: (p: PickupState | null) => void;
+  setDropoff: (d: DropoffState | null) => void;
+  setDriverInstructions: (d: DriverInstructionsState | null) => void;
+  setOrderInstructions: (o: Partial<OrderInstructionsState> | null) => void;
+  setPayment: (p: PaymentState | null) => void;
+  setPromoCode: (c: string | null) => void;
+  setTip: (t: TipValue) => void;
+  reset: () => void;
+}
+
+const initialServices: ServicesState = {
+  washAndFold: false,
+  addPressing: false,
+  pressingPrefs: {},
+  cleanAndPress: false,
+  bedAndBath: false,
+  pressOnly: false,
+};
+
+const initialOrderInstructions: OrderInstructionsState = {
+  specialRequests: "",
+  photos: [],
+  folding: null,
+  creases: null,
+  starch: null,
+  autoApprovals: false,
+};
+
+export const useOrderStore = create<OrderState>()(
+  persist(
+    (set) => ({
+      services: initialServices,
+      address: null,
+      pickup: null,
+      dropoff: null,
+      driverInstructions: null,
+      orderInstructions: null,
+      payment: null,
+      promoCode: null,
+      tip: 0,
+
+      setServices: (patch) =>
+        set((s) => ({ services: { ...s.services, ...patch } })),
+      setAddress: (address) => set({ address }),
+      setPickup: (pickup) => set({ pickup }),
+      setDropoff: (dropoff) => set({ dropoff }),
+      setDriverInstructions: (driverInstructions) => set({ driverInstructions }),
+      setOrderInstructions: (patch) =>
+        set((s) => ({
+          orderInstructions: patch
+            ? { ...(s.orderInstructions ?? initialOrderInstructions), ...patch }
+            : null,
+        })),
+      setPayment: (payment) => set({ payment }),
+      setPromoCode: (promoCode) => set({ promoCode }),
+      setTip: (tip) => set({ tip }),
+      reset: () =>
+        set({
+          services: initialServices,
+          address: null,
+          pickup: null,
+          dropoff: null,
+          driverInstructions: null,
+          orderInstructions: null,
+          payment: null,
+          promoCode: null,
+          tip: 0,
+        }),
+    }),
+    {
+      name: "washmen.laundry-order.v1",
+      storage: createJSONStorage(() => localStorage),
+      partialize: (s) => ({
+        services: s.services,
+        address: s.address,
+        pickup: s.pickup,
+        dropoff: s.dropoff,
+        driverInstructions: s.driverInstructions,
+        orderInstructions: s.orderInstructions,
+        payment: s.payment,
+        promoCode: s.promoCode,
+        tip: s.tip,
+      }),
+    }
+  )
+);
