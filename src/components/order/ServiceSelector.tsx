@@ -17,6 +17,25 @@ interface ServiceSelectorProps {
   onLearnMoreWashAndFold?: () => void;
 }
 
+function HangerIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
+      <path d="M12 4a2 2 0 1 0-2 2" />
+      <path d="M12 6v2" />
+      <path d="m12 8-9 8a1 1 0 0 0 .6 1.8h16.8a1 1 0 0 0 .6-1.8L12 8z" />
+    </svg>
+  );
+}
+
 export function ServiceSelector({
   variant,
   entryPoint,
@@ -59,7 +78,7 @@ export function ServiceSelector({
         <div className="flex items-center px-4 py-1">
           <div className="flex h-4 w-12 shrink-0 items-center justify-center">
             <Plus
-              className="h-4 w-4 text-washmen-secondary-300"
+              className="h-4 w-4 text-washmen-primary"
               strokeWidth={2}
             />
           </div>
@@ -115,11 +134,12 @@ export function ServiceSelector({
             badge="NEW"
             paddingClass="pt-2 px-4 pb-4"
             rightSlot={
-              <Plus
-                className="h-6 w-6 text-washmen-primary"
-                strokeWidth={2.5}
+              <div
+                className="flex h-6 w-6 items-center justify-center rounded-full border-[1.5px] border-washmen-secondary-300"
                 aria-hidden
-              />
+              >
+                <Plus className="h-3.5 w-3.5 text-washmen-secondary-300" strokeWidth={2.5} />
+              </div>
             }
             onPress={goToWashAndFoldInfo}
           />
@@ -127,7 +147,7 @@ export function ServiceSelector({
       </div>
 
       <ServiceCard
-        icon={Shirt}
+        icon={HangerIcon}
         iconBgClass="bg-[#E8F5E9]"
         iconFgClass="text-[#22C55E]"
         title="Clean & Press"
