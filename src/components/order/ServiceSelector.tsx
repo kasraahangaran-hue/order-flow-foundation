@@ -79,7 +79,7 @@ export function ServiceSelector({
         <div className="flex items-center px-4 py-1">
           <div className="flex h-4 w-12 shrink-0 items-center justify-center">
             <Plus
-              className="h-4 w-4 text-washmen-secondary-300"
+              className="h-4 w-4 text-washmen-primary"
               strokeWidth={2}
             />
           </div>
@@ -135,11 +135,12 @@ export function ServiceSelector({
             badge="NEW"
             paddingClass="pt-2 px-4 pb-4"
             rightSlot={
-              <Plus
-                className="h-6 w-6 text-washmen-primary"
-                strokeWidth={2.5}
+              <div
+                className="flex h-6 w-6 items-center justify-center rounded-full border-[1.5px] border-washmen-secondary-300"
                 aria-hidden
-              />
+              >
+                <Plus className="h-3.5 w-3.5 text-washmen-secondary-300" strokeWidth={2.5} />
+              </div>
             }
             onPress={goToWashAndFoldInfo}
           />
@@ -147,7 +148,7 @@ export function ServiceSelector({
       </div>
 
       <ServiceCard
-        icon={Shirt}
+        icon={HangerIcon}
         iconBgClass="bg-[#E8F5E9]"
         iconFgClass="text-[#22C55E]"
         title="Clean & Press"
