@@ -144,7 +144,7 @@ export function ServiceSelector({
                   <span className="flex-1 text-[12px] font-light leading-[18px] text-washmen-secondary-700">
                     {item.name}
                   </span>
-                  <span className="shrink-0 rounded-md bg-washmen-secondary-blue px-1.5 py-0.5 text-[12px] font-normal leading-[18px] text-washmen-primary">
+                  <span className="shrink-0 rounded-md bg-washmen-secondary-aqua px-1.5 py-0.5 text-[12px] font-normal leading-[18px] text-washmen-primary">
                     {item.price}
                   </span>
                 </div>
@@ -371,7 +371,7 @@ function ComboRow({
             </span>
           )}
           {priceLabel && (
-            <span className="rounded-md bg-washmen-secondary-blue px-2 py-0.5 text-[12px] font-medium text-washmen-primary">
+            <span className="rounded-md bg-washmen-secondary-aqua px-2 py-0.5 text-[12px] font-medium text-washmen-primary">
               {priceLabel}
             </span>
           )}
