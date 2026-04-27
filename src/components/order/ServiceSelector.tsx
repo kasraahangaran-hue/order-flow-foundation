@@ -11,11 +11,16 @@ export type SelectedServicesSnapshot = ServicesState;
 interface ServiceSelectorProps {
   variant: "screen" | "sheet";
   entryPoint: "laundry" | "quick-checkout";
-  userType?: "new" | "returning";
   onContinue?: (selected: SelectedServicesSnapshot) => void;
   onSkip?: () => void;
   onLearnMoreWashAndFold?: () => void;
 }
+
+const PLACEHOLDER_PRESSING_ITEMS: { name: string; price: string }[] = [
+  { name: "All T-Shirts / Polos", price: "+ AED 9 /item" },
+  { name: "All Tank / Crop Tops", price: "+ AED 9 /item" },
+  { name: "All Shirts / Blouses", price: "+ AED 10 /item" },
+];
 
 function HangerIcon({ className }: { className?: string }) {
   return (
@@ -59,7 +64,6 @@ function IronIcon({ className }: { className?: string }) {
 export function ServiceSelector({
   variant,
   entryPoint,
-  userType = "returning",
   onLearnMoreWashAndFold,
 }: ServiceSelectorProps) {
   const navigate = useNavigate();
@@ -82,7 +86,7 @@ export function ServiceSelector({
           iconBgClass="bg-[#E0F7FA]"
           iconFgClass="text-washmen-primary"
           title="Wash & Fold"
-          priceLabel={userType === "returning" ? "AED 75 per bag" : undefined}
+          priceLabel="AED 75 per bag"
           selected={services.washAndFold}
           showSelectionIndicator
           onPress={() =>
@@ -91,26 +95,30 @@ export function ServiceSelector({
             })
           }
           pricingLink={{ label: "Learn More", onPress: learnMoreWF }}
-          paddingClass="pt-4 px-4 pb-2"
+          paddingClass={services.addPressing ? "pt-4 px-4 pb-4" : "pt-4 px-4 pb-2"}
         />
 
-        {/* Plus separator — small grey + sitting in the icon column */}
-        <div className="flex items-center px-4 py-1">
-          <div className="flex h-4 w-12 shrink-0 items-center justify-center">
-            <Plus
-              className="h-4 w-4 text-washmen-primary"
-              strokeWidth={2}
-            />
+        {!services.addPressing && (
+          /* Plus separator — sits in the icon column, only when inactive */
+          <div className="flex items-center px-4 py-1">
+            <div className="flex h-4 w-12 shrink-0 items-center justify-center">
+              <Plus
+                className="h-4 w-4 text-washmen-primary"
+                strokeWidth={2}
+              />
+            </div>
           </div>
-        </div>
+        )}
 
         {services.addPressing ? (
           <ComboRow
             icon={Shirt}
-            iconBgClass="bg-washmen-secondary-100"
-            iconFgClass="text-washmen-secondary-700"
+            iconBgClass="bg-[#E0F7FA]"
+            iconFgClass="text-washmen-primary"
             title="Press & Hang"
-            paddingClass="pt-2 px-4 pb-4"
+            subtitle="Press tops after washing"
+            badge="NEW"
+            paddingClass="pt-3 px-4 pb-4"
             rightSlot={
               <button
                 type="button"
@@ -120,24 +128,33 @@ export function ServiceSelector({
                   haptics.light();
                   goToWashAndFoldInfo();
                 }}
-                className="press-effect flex h-8 w-8 items-center justify-center rounded-full text-washmen-primary"
+                className="press-effect flex h-6 w-6 items-center justify-center text-washmen-primary"
               >
-                <Pencil className="h-4 w-4" strokeWidth={2.5} />
+                <Pencil className="h-5 w-5" strokeWidth={2.5} />
               </button>
             }
             onPress={goToWashAndFoldInfo}
           >
-            <div className="mt-2 flex items-center justify-between gap-2">
-              <p className="truncate text-sm text-washmen-secondary-700">
-                All T-Shirts / Polos
-              </p>
-              <span className="shrink-0 rounded-md bg-washmen-primary-light px-2 py-1 text-[12px] font-medium text-washmen-primary">
-                + AED 9 /item
-              </span>
+            <div className="mt-2 flex flex-col gap-1.5">
+              {PLACEHOLDER_PRESSING_ITEMS.map((item) => (
+                <div
+                  key={item.name}
+                  className="flex items-center justify-between gap-2"
+                >
+                  <p className="truncate text-sm text-washmen-secondary-700">
+                    {item.name}
+                  </p>
+                  <span className="shrink-0 rounded-md bg-washmen-primary-light px-2 py-0.5 text-[12px] font-medium text-washmen-primary">
+                    {item.price}
+                  </span>
+                </div>
+              ))}
             </div>
             <button
               type="button"
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
               className="press-effect mt-1 inline-flex text-sm font-medium text-washmen-primary underline underline-offset-2"
             >
               View Terms & Conditions
