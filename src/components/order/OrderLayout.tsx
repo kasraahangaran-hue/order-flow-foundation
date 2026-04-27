@@ -1,4 +1,4 @@
-import { ChevronLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { haptics } from "@/lib/haptics";
@@ -70,10 +70,10 @@ export function OrderLayout({
       {/* Footer */}
       {footerSlot !== undefined && (
         <footer
-          className="sticky bottom-0 z-10 bg-washmen-primary-light px-4 pt-4"
-          style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 16px)" }}
+          className="sticky bottom-0 z-10 bg-washmen-primary-light px-4 py-4"
+          style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 1rem)" }}
         >
-          <div className="flex items-stretch gap-2">
+          <div className="flex items-center gap-3">
             {onBack && (
               <button
                 type="button"
@@ -82,46 +82,15 @@ export function OrderLayout({
                   haptics.light();
                   onBack();
                 }}
-                className="press-effect flex h-[42px] w-[50px] shrink-0 items-center justify-center rounded-btn border-[1.5px] border-washmen-primary bg-background text-washmen-primary"
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-primary bg-background text-primary transition-transform active:scale-95"
               >
-                <ChevronLeft className="h-5 w-5" strokeWidth={2.5} />
+                <ArrowLeft className="h-5 w-5" />
               </button>
             )}
-            <div className="flex-1">{footerSlot}</div>
+            {footerSlot}
           </div>
         </footer>
       )}
     </div>
-  );
-}
-
-/** Standard primary CTA used in the footer. */
-export function OrderPrimaryButton({
-  children,
-  onClick,
-  disabled,
-  type = "button",
-}: {
-  children: ReactNode;
-  onClick?: () => void;
-  disabled?: boolean;
-  type?: "button" | "submit";
-}) {
-  return (
-    <button
-      type={type}
-      disabled={disabled}
-      onClick={() => {
-        if (disabled) return;
-        haptics.medium();
-        onClick?.();
-      }}
-      className={cn(
-        "press-effect flex h-[42px] w-full items-center justify-center rounded-btn bg-washmen-primary px-6 text-sm font-semibold text-primary-foreground",
-        "disabled:opacity-50 disabled:active:scale-100 disabled:active:opacity-50"
-      )}
-    >
-      {children}
-    </button>
   );
 }

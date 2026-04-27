@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { OrderLayout, OrderPrimaryButton } from "@/components/order/OrderLayout";
+import { OrderLayout } from "@/components/order/OrderLayout";
 import { ServiceSelector } from "@/components/order/ServiceSelector";
+import { Button } from "@/components/ui/button";
 
 export default function QuickCheckout() {
   const navigate = useNavigate();
@@ -8,7 +9,11 @@ export default function QuickCheckout() {
     <OrderLayout
       title="Quick Checkout"
       onBack={() => navigate(-1)}
-      footerSlot={<OrderPrimaryButton disabled>Place Order</OrderPrimaryButton>}
+      footerSlot={
+        <Button disabled className="flex-1 h-12 text-sm font-semibold">
+          Place Order
+        </Button>
+      }
     >
       <ServiceSelector variant="screen" entryPoint="quick-checkout" />
     </OrderLayout>
