@@ -128,23 +128,23 @@ export function ServiceSelector({
                   haptics.light();
                   goToWashAndFoldInfo();
                 }}
-                className="press-effect flex h-6 w-6 items-center justify-center text-washmen-primary"
+                className="press-effect mt-0.5 flex h-6 w-6 items-center justify-center text-washmen-primary"
               >
                 <Pencil className="h-5 w-5" strokeWidth={2.5} />
               </button>
             }
             onPress={goToWashAndFoldInfo}
           >
-            <div className="mt-2 flex flex-col gap-1.5">
+            <div className="mt-2 flex flex-col gap-1">
               {PLACEHOLDER_PRESSING_ITEMS.map((item) => (
                 <div
                   key={item.name}
                   className="flex items-center justify-between gap-2"
                 >
-                  <p className="truncate text-sm text-washmen-secondary-700">
+                  <p className="truncate text-xs text-washmen-secondary-700">
                     {item.name}
                   </p>
-                  <span className="shrink-0 rounded-md bg-washmen-primary-light px-2 py-0.5 text-[12px] font-medium text-washmen-primary">
+                  <span className="shrink-0 rounded-md bg-washmen-primary-light px-1.5 py-0.5 text-[11px] font-medium text-washmen-primary">
                     {item.price}
                   </span>
                 </div>
@@ -402,7 +402,7 @@ function ComboRow({
         {children}
       </div>
       {rightSlot ? (
-        <div className="shrink-0 self-center">{rightSlot}</div>
+        <div className="shrink-0 self-start">{rightSlot}</div>
       ) : showSelectionIndicator ? (
         <div
           className={cn(
