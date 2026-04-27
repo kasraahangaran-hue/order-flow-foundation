@@ -417,7 +417,7 @@ function ComboRow({
         <div className="flex items-center gap-2">
           <p
             className={cn(
-              "truncate text-base font-semibold transition-colors",
+              "truncate text-base font-semibold leading-tight transition-colors",
               titleClass ?? "text-washmen-secondary-900"
             )}
           >
@@ -452,7 +452,7 @@ function ComboRow({
               haptics.light();
               pricingLink.onPress();
             }}
-            className="press-effect mt-1 inline-flex text-sm font-medium text-washmen-primary underline decoration-2 underline-offset-2"
+            className="press-effect mt-0.5 inline-flex text-sm font-medium leading-tight text-washmen-primary underline decoration-2 underline-offset-2"
           >
             {pricingLink.label}
           </button>
