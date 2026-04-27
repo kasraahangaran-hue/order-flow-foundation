@@ -1,5 +1,4 @@
 import { Check, Plus, WashingMachine, Shirt, BedDouble, Wind, Footprints, Pencil } from "lucide-react";
-import { cn as _cn } from "@/lib/utils";
 import { ComponentType, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
