@@ -135,16 +135,16 @@ export function ServiceSelector({
             }
             onPress={goToWashAndFoldInfo}
           >
-            <div className="mt-2 flex w-full flex-col gap-1">
+            <div className="mt-2 flex flex-col gap-1">
               {PLACEHOLDER_PRESSING_ITEMS.map((item) => (
                 <div
                   key={item.name}
-                  className="flex w-full items-center gap-2"
+                  className="flex items-center gap-3"
                 >
-                  <p className="flex-1 truncate text-[12px] font-light leading-[18px] text-washmen-secondary-700">
+                  <span className="flex-1 text-[12px] font-light leading-[18px] text-washmen-secondary-700">
                     {item.name}
-                  </p>
-                  <span className="ml-auto shrink-0 rounded-md bg-washmen-secondary-blue px-1.5 py-0.5 text-[12px] font-normal leading-[18px] text-washmen-primary">
+                  </span>
+                  <span className="shrink-0 rounded-md bg-washmen-secondary-blue px-1.5 py-0.5 text-[12px] font-normal leading-[18px] text-washmen-primary">
                     {item.price}
                   </span>
                 </div>
@@ -164,7 +164,7 @@ export function ServiceSelector({
           <ComboRow
             icon={Shirt}
             iconBgClass={
-              services.washAndFold ? "bg-[#E0F7FA]" : "bg-washmen-secondary-100"
+                  services.washAndFold ? "bg-washmen-secondary-aqua" : "bg-washmen-secondary-100"
             }
             iconFgClass={
               services.washAndFold
