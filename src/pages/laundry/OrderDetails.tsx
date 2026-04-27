@@ -94,10 +94,6 @@ function TimeRow({ day, time }: { day: string; time: string }) {
   );
 }
 
-function formatDriverInstructions(d: DriverInstructionsState): string {
-  return `Pick up: ${d.pickup} • Drop off: ${d.dropoff}`;
-}
-
 export default function OrderDetails() {
   const navigate = useNavigate();
   const address = useOrderStore((s) => s.address);
@@ -232,10 +228,19 @@ export default function OrderDetails() {
           addAction
         >
           {driverInstructions ? (
-            <ValueRow
-              icon={Bell}
-              text={formatDriverInstructions(driverInstructions)}
-            />
+            <div className="flex items-start gap-3">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
+                <Bell className="h-4 w-4 text-washmen-primary" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm leading-tight text-foreground">
+                  Pick up: {driverInstructions.pickup}
+                </p>
+                <p className="mt-0.5 text-sm leading-tight text-foreground">
+                  Drop off: {driverInstructions.dropoff}
+                </p>
+              </div>
+            </div>
           ) : null}
         </DetailCard>
       </div>
