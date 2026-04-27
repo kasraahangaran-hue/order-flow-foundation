@@ -6,8 +6,6 @@ import { cn } from "@/lib/utils";
 interface InstructionsCardProps {
   title: string;
   icon: ComponentType<{ className?: string }>;
-  /** Icon shown in the value row's aqua circle. Defaults to `icon`. */
-  valueIcon?: ComponentType<{ className?: string }>;
   valueLabel?: string | null;
   onPress: () => void;
 }
@@ -15,13 +13,11 @@ interface InstructionsCardProps {
 export function InstructionsCard({
   title,
   icon: Icon,
-  valueIcon,
   valueLabel,
   onPress,
 }: InstructionsCardProps) {
   const hasValue = !!valueLabel;
   const ActionIcon = hasValue ? Pencil : Plus;
-  const ValueIcon = valueIcon ?? Icon;
   return (
     <div
       role="button"
@@ -53,12 +49,7 @@ export function InstructionsCard({
         />
       </div>
       {hasValue ? (
-        <div className="mt-3 flex items-center gap-3">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-washmen-secondary-aqua">
-            <ValueIcon className="h-4 w-4 text-washmen-primary" />
-          </div>
-          <p className="min-w-0 flex-1 text-base text-washmen-secondary-900">{valueLabel}</p>
-        </div>
+        <p className="mt-2 pl-11 text-base text-washmen-secondary-700">{valueLabel}</p>
       ) : null}
     </div>
   );

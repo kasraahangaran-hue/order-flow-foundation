@@ -123,17 +123,24 @@ export default function OrderDetails() {
     if (!address) setAddress({ line1: "108, Azurite tower" });
     if (!pickup) setPickup({ mode: "door", date: dayPlus(0), slot: "02:00 pm - 04:00 pm" });
     if (!dropoff) setDropoff({ date: dayPlus(2), slot: "Anytime during the day", surcharge: 0 });
-    if (!driverInstructions) {
-      setDriverInstructions({
-        pickup: "At concierge / reception",
-        dropoff: "Hang on door handle",
-      });
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const openSheet = (name: NativeSheetName) => {
     nativeBridge.openSheet(name);
+  };
+
+  // TEMP: tap to toggle dummy driver instructions for UI dev. Replace with nativeBridge.openSheet() when wired up.
+  const toggleDriverInstructions = () => {
+    haptics.light();
+    if (driverInstructions) {
+      setDriverInstructions(null);
+    } else {
+      setDriverInstructions({
+        pickup: "At concierge / reception",
+        dropoff: "Hang on door handle",
+      });
+    }
   };
 
   const ctaEnabled = !!address && !!pickup && !!dropoff;
@@ -222,21 +229,14 @@ export default function OrderDetails() {
         <DetailCard
           title="Driver Instructions"
           hasValue={!!driverInstructions}
-          onPress={() => openSheet("driver_instructions")}
+          onPress={toggleDriverInstructions}
+          addAction
         >
           {driverInstructions ? (
-            <ValueRow
-              icon={Bell}
-              text={formatDriverInstructions(driverInstructions)}
-            />
-          ) : (
-            <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-washmen-secondary-aqua">
-                <Bell className="h-4 w-4 text-washmen-primary" />
-              </div>
-              <p className="min-w-0 flex-1 text-base text-washmen-secondary-500">No Preference</p>
-            </div>
-          )}
+            <p className="text-base text-washmen-secondary-700">
+              {formatDriverInstructions(driverInstructions)}
+            </p>
+          ) : null}
         </DetailCard>
       </div>
     </OrderLayout>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   BadgeCheck,
@@ -14,7 +14,7 @@ import { OrderLayout } from "@/components/order/OrderLayout";
 import { InstructionsCard } from "@/components/order/InstructionsCard";
 import { Button } from "@/components/ui/button";
 import { useOrderStore } from "@/stores/orderStore";
-import { nativeBridge } from "@/lib/nativeBridge";
+import type { OrderInstructionsState } from "@/stores/orderStore";
 import { haptics } from "@/lib/haptics";
 
 // TEMP: dummy photos for UI dev. Replace with real native camera/picker when bridge is ready.
@@ -29,28 +29,6 @@ export default function OrderInstructions() {
   const navigate = useNavigate();
   const orderInstructions = useOrderStore((s) => s.orderInstructions);
   const setOrderInstructions = useOrderStore((s) => s.setOrderInstructions);
-
-  // TEMP: seed defaults for UI dev. Remove when bottom sheets are wired up.
-  useEffect(() => {
-    if (
-      !orderInstructions ||
-      (!orderInstructions.folding &&
-        !orderInstructions.creases &&
-        !orderInstructions.starch &&
-        !orderInstructions.autoApprovals &&
-        !orderInstructions.specialRequests)
-    ) {
-      setOrderInstructions({
-        specialRequests: "Please use a gentle cycle, no fragrance softener.",
-        photos: [],
-        folding: "T-Shirts, Pants",
-        creases: "Shirts: sleeve creases",
-        starch: "Light",
-        autoApprovals: true,
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const specialRequests = orderInstructions?.specialRequests ?? "";
   const photos = orderInstructions?.photos ?? [];
@@ -83,6 +61,17 @@ export default function OrderInstructions() {
   const togglePhotoCard = () => {
     haptics.light();
     setPhotoExpanded((v) => !v);
+  };
+
+  // TEMP: tap to toggle dummy data for UI dev. Replace with nativeBridge.openSheet() when sheets are wired up.
+  const toggle = <K extends keyof OrderInstructionsState>(
+    key: K,
+    dummyValue: OrderInstructionsState[K],
+  ) => {
+    const current = orderInstructions?.[key];
+    const cleared = key === "autoApprovals" ? (false as OrderInstructionsState[K]) : (null as OrderInstructionsState[K]);
+    setOrderInstructions({ [key]: current ? cleared : dummyValue } as Partial<OrderInstructionsState>);
+    haptics.light();
   };
 
   return (
@@ -184,38 +173,34 @@ export default function OrderInstructions() {
         <InstructionsCard
           title="Folding"
           icon={Shirt}
-          valueIcon={Shirt}
           valueLabel={folding}
-          onPress={() => nativeBridge.openSheet("folding")}
+          onPress={() => toggle("folding", "T-Shirts, Pants")}
         />
 
         {/* 4. Creases */}
         <InstructionsCard
           title="Creases"
           icon={Layers}
-          valueIcon={Layers}
           valueLabel={creases}
-          onPress={() => nativeBridge.openSheet("creases")}
+          onPress={() => toggle("creases", "Shirts: sleeve creases")}
         />
 
         {/* 5. Starch */}
         <InstructionsCard
           title="Starch"
           icon={SprayCan}
-          valueIcon={SprayCan}
           valueLabel={starch}
-          onPress={() => nativeBridge.openSheet("starch")}
+          onPress={() => toggle("starch", "Light")}
         />
 
         {/* 6. Auto-Approvals */}
         <InstructionsCard
           title="Auto-Approvals"
           icon={BadgeCheck}
-          valueIcon={BadgeCheck}
           valueLabel={
             autoApprovals ? "Stain and Damage Approval: Auto-approve" : null
           }
-          onPress={() => nativeBridge.openSheet("auto_approvals")}
+          onPress={() => toggle("autoApprovals", true)}
         />
       </div>
     </OrderLayout>
