@@ -155,10 +155,23 @@ export function ServiceSelector({
             paddingClass="pt-2 px-4 pb-4"
             rightSlot={
               <div
-                className="flex h-6 w-6 items-center justify-center rounded-full border-[1.5px] border-washmen-secondary-300"
+                className={cn(
+                  "flex h-6 w-6 items-center justify-center rounded-full border-[1.5px]",
+                  services.washAndFold
+                    ? "border-washmen-primary"
+                    : "border-washmen-secondary-300"
+                )}
                 aria-hidden
               >
-                <Plus className="h-3.5 w-3.5 text-washmen-secondary-300" strokeWidth={2.5} />
+                <Plus
+                  className={cn(
+                    "h-3.5 w-3.5",
+                    services.washAndFold
+                      ? "text-washmen-primary"
+                      : "text-washmen-secondary-300"
+                  )}
+                  strokeWidth={2.5}
+                />
               </div>
             }
             onPress={goToWashAndFoldInfo}
@@ -187,7 +200,7 @@ export function ServiceSelector({
       />
 
       <ServiceCard
-        icon={Wind}
+        icon={IronIcon}
         iconBgClass="bg-washmen-secondary-100"
         iconFgClass="text-washmen-secondary-700"
         title="Press Only"
