@@ -232,9 +232,10 @@ export default function OrderDetails() {
           addAction
         >
           {driverInstructions ? (
-            <p className="pl-11 mt-2 text-sm text-muted-foreground">
-              {formatDriverInstructions(driverInstructions)}
-            </p>
+            <ValueRow
+              icon={Bell}
+              text={formatDriverInstructions(driverInstructions)}
+            />
           ) : null}
         </DetailCard>
       </div>
