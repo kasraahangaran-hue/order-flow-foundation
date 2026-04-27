@@ -36,7 +36,6 @@ export default function SelectService() {
       <ServiceSelector
         variant="screen"
         entryPoint="laundry"
-        userType="new"
         onLearnMoreWashAndFold={() => navigate("/laundry/wash-and-fold-info")}
       />
     </OrderLayout>
