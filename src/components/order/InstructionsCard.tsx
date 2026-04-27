@@ -40,7 +40,7 @@ export function InstructionsCard({
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
             <Icon className="h-4 w-4 text-washmen-primary" />
           </div>
-          <p className="text-sm font-semibold text-washmen-primary">{title}</p>
+          <p className="text-sm font-semibold leading-tight text-washmen-primary">{title}</p>
         </div>
         <ActionIcon
           className={cn("h-4 w-4 text-muted-foreground")}
@@ -49,7 +49,7 @@ export function InstructionsCard({
         />
       </div>
       {hasValue ? (
-        <p className="mt-1 pl-11 text-sm text-muted-foreground">{valueLabel}</p>
+        <p className="mt-0.5 pl-11 text-sm leading-tight text-muted-foreground">{valueLabel}</p>
       ) : null}
     </div>
   );
