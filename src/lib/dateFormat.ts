@@ -27,3 +27,13 @@ export function formatPickupSchedule(date: string, slot: string): string {
 export function formatDropoffSchedule(date: string, slot: string): string {
   return formatRelativeDay(date) + " " + slot;
 }
+
+export function formatScheduleLines(
+  date: string,
+  slot: string
+): { day: string; time: string } {
+  return {
+    day: formatRelativeDay(date),
+    time: slot,
+  };
+}
