@@ -15,7 +15,6 @@ import { InstructionsCard } from "@/components/order/InstructionsCard";
 import { Button } from "@/components/ui/button";
 import { useOrderStore } from "@/stores/orderStore";
 import type { OrderInstructionsState } from "@/stores/orderStore";
-import { nativeBridge } from "@/lib/nativeBridge";
 import { haptics } from "@/lib/haptics";
 
 // TEMP: dummy photos for UI dev. Replace with real native camera/picker when bridge is ready.
