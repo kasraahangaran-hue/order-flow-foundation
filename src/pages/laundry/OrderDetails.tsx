@@ -15,10 +15,11 @@ interface DetailCardProps {
   hasValue: boolean;
   /** Use Plus instead of Pencil in the header (for empty "add" actions). */
   addAction?: boolean;
+  titleClassName?: string;
   children?: React.ReactNode;
 }
 
-function DetailCard({ title, onPress, hasValue, addAction, children }: DetailCardProps) {
+function DetailCard({ title, onPress, hasValue, addAction, titleClassName, children }: DetailCardProps) {
   const ActionIcon = addAction && !hasValue ? Plus : Pencil;
   const actionColor = "text-washmen-primary";
   return (
@@ -39,7 +40,7 @@ function DetailCard({ title, onPress, hasValue, addAction, children }: DetailCar
       className="press-effect w-full rounded-card bg-card p-4 text-left shadow-[0_1px_2px_rgba(16,24,40,0.04)]"
     >
       <div className="flex items-center justify-between">
-        <p className="text-base font-semibold text-washmen-secondary-900">{title}</p>
+        <p className={cn("text-base font-semibold text-washmen-secondary-900", titleClassName)}>{title}</p>
         <ActionIcon className={cn("h-5 w-5", actionColor)} strokeWidth={2} aria-hidden />
       </div>
       {children ? <div className="mt-3">{children}</div> : null}
@@ -190,6 +191,7 @@ export default function OrderDetails() {
         <DetailCard
           title="Driver Instructions"
           hasValue={!!driverInstructions}
+          titleClassName="text-washmen-primary"
           onPress={() => openSheet("driver_instructions")}
         >
           {driverInstructions ? (
