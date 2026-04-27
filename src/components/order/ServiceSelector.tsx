@@ -1,4 +1,5 @@
 import { Check, Plus, WashingMachine, Shirt, BedDouble, Wind, Footprints, Pencil } from "lucide-react";
+import { cn as _cn } from "@/lib/utils";
 import { ComponentType, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -15,6 +16,25 @@ interface ServiceSelectorProps {
   onContinue?: (selected: SelectedServicesSnapshot) => void;
   onSkip?: () => void;
   onLearnMoreWashAndFold?: () => void;
+}
+
+function HangerIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
+      <path d="M12 4a2 2 0 1 0-2 2" />
+      <path d="M12 6v2" />
+      <path d="m12 8-9 8a1 1 0 0 0 .6 1.8h16.8a1 1 0 0 0 .6-1.8L12 8z" />
+    </svg>
+  );
 }
 
 export function ServiceSelector({
