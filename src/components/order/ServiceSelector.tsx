@@ -33,7 +33,7 @@ export function ServiceSelector({
   const showExtras = entryPoint === "quick-checkout";
 
   return (
-    <div className={cn("space-y-3 pt-2", padding)}>
+    <div className={cn("flex flex-col gap-2", padding)}>
       {/* Wash & Fold + Add Pressing combo card */}
       <div className="rounded-card bg-card shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
         <ComboRow
@@ -53,13 +53,10 @@ export function ServiceSelector({
         />
 
         {/* Plus separator */}
-        <div className="relative px-4">
+        <div className="relative px-4 py-3">
           <div className="border-t border-washmen-secondary-100" />
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2">
-            <Plus
-              className="h-7 w-7 text-washmen-primary"
-              strokeWidth={2.75}
-            />
+          <div className="absolute left-1/2 top-1/2 flex h-8 w-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-washmen-secondary-50">
+            <Plus className="h-6 w-6 text-washmen-primary" strokeWidth={2.5} />
           </div>
         </div>
 
@@ -111,7 +108,7 @@ export function ServiceSelector({
             badge="NEW"
             rightSlot={
               <div
-                className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-washmen-secondary-300"
+                className="flex h-6 w-6 items-center justify-center rounded-full border-[1.5px] border-washmen-secondary-300"
                 aria-hidden
               >
                 <Plus className="h-3.5 w-3.5 text-washmen-secondary-300" strokeWidth={2.5} />
@@ -191,7 +188,7 @@ function FineryCard() {
         </button>
       </div>
       <div
-        className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 border-washmen-secondary-300"
+        className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-[1.5px] border-washmen-secondary-300"
         aria-hidden
       >
         <Plus className="h-3.5 w-3.5 text-washmen-secondary-300" strokeWidth={2.5} />
@@ -268,7 +265,7 @@ function ComboRow({
             </span>
           )}
           {priceLabel && (
-            <span className="rounded-md bg-washmen-primary-light px-2 py-1 text-[12px] font-medium text-washmen-primary">
+            <span className="rounded-md bg-washmen-primary-light px-2 py-0.5 text-[12px] font-medium text-washmen-primary">
               {priceLabel}
             </span>
           )}
@@ -286,7 +283,7 @@ function ComboRow({
               haptics.light();
               pricingLink.onPress();
             }}
-            className="press-effect mt-1 inline-flex text-sm font-medium text-washmen-primary underline underline-offset-2"
+            className="press-effect mt-1 inline-flex text-sm font-medium text-washmen-primary underline decoration-2 underline-offset-2"
           >
             {pricingLink.label}
           </button>
@@ -298,14 +295,18 @@ function ComboRow({
       ) : showSelectionIndicator ? (
         <div
           className={cn(
-            "flex h-6 w-6 shrink-0 items-center justify-center self-center rounded-full border-2 transition-colors",
+            "flex h-6 w-6 shrink-0 items-center justify-center self-center rounded-full border-[1.5px] transition-colors",
             selected
               ? "border-washmen-success bg-washmen-success text-white"
-              : "border-washmen-secondary-300 bg-transparent"
+              : "border-washmen-secondary-300 bg-transparent text-washmen-secondary-300"
           )}
           aria-hidden
         >
-          {selected && <Check className="h-3.5 w-3.5" strokeWidth={3} />}
+          {selected ? (
+            <Check className="h-3.5 w-3.5" strokeWidth={3} />
+          ) : (
+            <Plus className="h-3.5 w-3.5" strokeWidth={2.5} />
+          )}
         </div>
       ) : null}
     </div>

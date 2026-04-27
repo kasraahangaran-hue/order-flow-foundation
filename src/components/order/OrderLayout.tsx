@@ -27,9 +27,9 @@ export function OrderLayout({
   return (
     <div className="flex h-full min-h-screen flex-col bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-10 bg-background px-4 pt-4 pb-3">
+      <header className="sticky top-0 z-10 bg-background px-4 pt-6 pb-0">
         <div className="flex items-start justify-between gap-3">
-          <h1 className="text-[24px] font-bold leading-tight tracking-tight text-washmen-secondary-900">
+          <h1 className="text-[24px] font-bold leading-[1.2] tracking-tight text-washmen-secondary-900">
             {title}
           </h1>
           {supportSlot ? <div className="shrink-0">{supportSlot}</div> : null}
@@ -37,7 +37,7 @@ export function OrderLayout({
 
         {showProgress && (
           <div
-            className="mt-3 flex w-full gap-1.5"
+            className="mt-6 flex w-full gap-1"
             role="progressbar"
             aria-valuemin={1}
             aria-valuemax={totalSteps}
@@ -52,9 +52,9 @@ export function OrderLayout({
                 <span
                   key={i}
                   className={cn(
-                    "h-[3px] flex-1 rounded-full transition-colors",
+                    "h-[2px] flex-1 rounded-full transition-colors",
                     isActive && "bg-washmen-orange",
-                    isCompleted && "bg-washmen-orange/60",
+                    isCompleted && "bg-washmen-orange",
                     !isActive && !isCompleted && "bg-washmen-secondary-200"
                   )}
                 />
@@ -65,15 +65,15 @@ export function OrderLayout({
       </header>
 
       {/* Scrollable content */}
-      <main className="flex-1 overflow-y-auto px-4 pb-4">{children}</main>
+      <main className="flex-1 overflow-y-auto px-4 pb-4 pt-[26px]">{children}</main>
 
       {/* Footer */}
       {footerSlot !== undefined && (
         <footer
-          className="sticky bottom-0 z-10 border-t border-washmen-secondary-100 bg-background px-4 pt-3"
-          style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 12px)" }}
+          className="sticky bottom-0 z-10 bg-washmen-primary-light px-4 pt-4"
+          style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 16px)" }}
         >
-          <div className="flex items-stretch gap-3">
+          <div className="flex items-stretch gap-2">
             {onBack && (
               <button
                 type="button"
@@ -82,9 +82,9 @@ export function OrderLayout({
                   haptics.light();
                   onBack();
                 }}
-                className="press-effect flex h-14 w-14 items-center justify-center rounded-btn border-2 border-washmen-primary text-washmen-primary"
+                className="press-effect flex h-[42px] w-[50px] shrink-0 items-center justify-center rounded-btn border-[1.5px] border-washmen-primary bg-background text-washmen-primary"
               >
-                <ChevronLeft className="h-6 w-6" strokeWidth={2.5} />
+                <ChevronLeft className="h-5 w-5" strokeWidth={2.5} />
               </button>
             )}
             <div className="flex-1">{footerSlot}</div>
@@ -117,7 +117,7 @@ export function OrderPrimaryButton({
         onClick?.();
       }}
       className={cn(
-        "press-effect flex h-14 w-full items-center justify-center rounded-btn bg-washmen-primary px-6 text-base font-semibold text-primary-foreground",
+        "press-effect flex h-[42px] w-full items-center justify-center rounded-btn bg-washmen-primary px-6 text-sm font-semibold text-primary-foreground",
         "disabled:opacity-50 disabled:active:scale-100 disabled:active:opacity-50"
       )}
     >
