@@ -16,7 +16,7 @@ interface OrderLayoutProps {
 export function OrderLayout({
   title,
   step,
-  totalSteps = 3,
+  totalSteps = 4,
   onBack,
   footerSlot,
   supportSlot,
@@ -37,7 +37,7 @@ export function OrderLayout({
 
         {showProgress && (
           <div
-            className="mt-2 flex w-full max-w-[260px] gap-[2px]"
+            className="mt-3 flex w-full gap-1.5"
             role="progressbar"
             aria-valuemin={1}
             aria-valuemax={totalSteps}

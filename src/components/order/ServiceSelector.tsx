@@ -1,5 +1,6 @@
-import { Check, Plus, WashingMachine, Shirt, BedDouble, Wind, Footprints } from "lucide-react";
+import { Check, Plus, WashingMachine, Shirt, BedDouble, Wind, Footprints, Pencil } from "lucide-react";
 import { ComponentType, ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { haptics } from "@/lib/haptics";
 import { ServiceCard } from "./ServiceCard";
@@ -9,6 +10,7 @@ export type SelectedServicesSnapshot = ServicesState;
 
 interface ServiceSelectorProps {
   variant: "screen" | "sheet";
+  entryPoint: "laundry" | "quick-checkout";
   onContinue?: (selected: SelectedServicesSnapshot) => void;
   onSkip?: () => void;
   onLearnMoreWashAndFold?: () => void;
@@ -16,12 +18,19 @@ interface ServiceSelectorProps {
 
 export function ServiceSelector({
   variant,
+  entryPoint,
   onLearnMoreWashAndFold,
 }: ServiceSelectorProps) {
+  const navigate = useNavigate();
   const services = useOrderStore((s) => s.services);
   const setServices = useOrderStore((s) => s.setServices);
 
-  const padding = variant === "screen" ? "px-4" : "px-0";
+  const padding = variant === "screen" ? "px-0" : "px-0";
+
+  const goToWashAndFoldInfo = () => navigate("/laundry/wash-and-fold-info");
+  const learnMoreWF = onLearnMoreWashAndFold ?? goToWashAndFoldInfo;
+
+  const showExtras = entryPoint === "quick-checkout";
 
   return (
     <div className={cn("space-y-3 pt-2", padding)}>
@@ -32,17 +41,15 @@ export function ServiceSelector({
           iconBgClass="bg-[#E0F7FA]"
           iconFgClass="text-washmen-primary"
           title="Wash & Fold"
-          subtitle="Everyday laundry, washed & folded"
+          priceLabel="AED 75 per bag"
           selected={services.washAndFold}
+          showSelectionIndicator
           onPress={() =>
             setServices({
               washAndFold: !services.washAndFold,
-              // If turning off, also clear addPressing
-              ...(services.washAndFold ? { addPressing: false } : {}),
             })
           }
-          learnMoreText="Learn more"
-          onLearnMore={onLearnMoreWashAndFold}
+          pricingLink={{ label: "Learn More", onPress: learnMoreWF }}
         />
 
         {/* Plus separator */}
@@ -50,30 +57,69 @@ export function ServiceSelector({
           <div className="border-t border-washmen-secondary-100" />
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2">
             <Plus
-              className={cn(
-                "h-4 w-4",
-                services.washAndFold
-                  ? "text-washmen-secondary-400"
-                  : "text-washmen-secondary-200"
-              )}
+              className="h-7 w-7 text-washmen-primary"
+              strokeWidth={2.75}
             />
           </div>
         </div>
 
-        <ComboRow
-          icon={Shirt}
-          iconBgClass="bg-washmen-secondary-100"
-          iconFgClass="text-washmen-secondary-500"
-          title="Add Pressing"
-          subtitle="Press tops after washing"
-          badge="NEW"
-          selected={services.addPressing}
-          disabled={!services.washAndFold}
-          onPress={() =>
-            services.washAndFold &&
-            setServices({ addPressing: !services.addPressing })
-          }
-        />
+        {services.addPressing ? (
+          <ComboRow
+            icon={Shirt}
+            iconBgClass="bg-washmen-secondary-100"
+            iconFgClass="text-washmen-secondary-700"
+            title="Press & Hang"
+            rightSlot={
+              <button
+                type="button"
+                aria-label="Edit pressing selections"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  haptics.light();
+                  goToWashAndFoldInfo();
+                }}
+                className="press-effect flex h-8 w-8 items-center justify-center rounded-full text-washmen-primary"
+              >
+                <Pencil className="h-4 w-4" strokeWidth={2.5} />
+              </button>
+            }
+            onPress={goToWashAndFoldInfo}
+          >
+            <div className="mt-2 flex items-center justify-between gap-2">
+              <p className="truncate text-sm text-washmen-secondary-700">
+                All T-Shirts / Polos
+              </p>
+              <span className="shrink-0 rounded-md bg-washmen-primary-light px-2 py-1 text-[12px] font-medium text-washmen-primary">
+                + AED 9 /item
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={(e) => e.stopPropagation()}
+              className="press-effect mt-1 inline-flex text-sm font-medium text-washmen-primary underline underline-offset-2"
+            >
+              View Terms & Conditions
+            </button>
+          </ComboRow>
+        ) : (
+          <ComboRow
+            icon={Shirt}
+            iconBgClass="bg-washmen-secondary-100"
+            iconFgClass="text-washmen-secondary-500"
+            title="Add Pressing"
+            subtitle="Press tops after washing"
+            badge="NEW"
+            rightSlot={
+              <div
+                className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-washmen-secondary-300"
+                aria-hidden
+              >
+                <Plus className="h-3.5 w-3.5 text-washmen-secondary-300" strokeWidth={2.5} />
+              </div>
+            }
+            onPress={goToWashAndFoldInfo}
+          />
+        )}
       </div>
 
       <ServiceCard
@@ -81,7 +127,7 @@ export function ServiceSelector({
         iconBgClass="bg-[#E8F5E9]"
         iconFgClass="text-[#22C55E]"
         title="Clean & Press"
-        subtitle="Dry cleaning & pressing"
+        pricingLink={{ label: "View Pricing", onPress: () => {} }}
         selected={services.cleanAndPress}
         onPress={() => setServices({ cleanAndPress: !services.cleanAndPress })}
       />
@@ -91,7 +137,7 @@ export function ServiceSelector({
         iconBgClass="bg-[#FCE4EC]"
         iconFgClass="text-[#EC407A]"
         title="Bed & Bath"
-        subtitle="Bedding, towels & linens"
+        pricingLink={{ label: "View Pricing", onPress: () => {} }}
         selected={services.bedAndBath}
         onPress={() => setServices({ bedAndBath: !services.bedAndBath })}
       />
@@ -101,20 +147,23 @@ export function ServiceSelector({
         iconBgClass="bg-washmen-secondary-100"
         iconFgClass="text-washmen-secondary-700"
         title="Press Only"
-        subtitle="Pressing without washing"
+        pricingLink={{ label: "View Pricing", onPress: () => {} }}
         selected={services.pressOnly}
         onPress={() => setServices({ pressOnly: !services.pressOnly })}
       />
 
-      <ServiceCard
-        icon={Footprints}
-        iconBgClass="bg-[#FFF3E0]"
-        iconFgClass="text-[#FB923C]"
-        title="Shoe & Bag Care"
-        subtitle="Cleaning & restoration"
-      />
-
-      <FineryCard />
+      {showExtras && (
+        <>
+          <ServiceCard
+            icon={Footprints}
+            iconBgClass="bg-[#FFF3E0]"
+            iconFgClass="text-[#FB923C]"
+            title="Shoe & Bag Care"
+            pricingLink={{ label: "View Pricing", onPress: () => {} }}
+          />
+          <FineryCard />
+        </>
+      )}
     </div>
   );
 }
@@ -134,9 +183,12 @@ function FineryCard() {
         <p className="truncate text-base font-semibold text-washmen-secondary-900">
           The Finery
         </p>
-        <p className="mt-0.5 truncate text-sm text-washmen-secondary-500">
-          Premium garment care
-        </p>
+        <button
+          type="button"
+          className="press-effect mt-1 inline-flex text-sm font-medium text-washmen-primary underline underline-offset-2"
+        >
+          View Pricing
+        </button>
       </div>
       <div
         className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 border-washmen-secondary-300"
@@ -155,11 +207,13 @@ interface ComboRowProps {
   title: string;
   subtitle?: string;
   badge?: ReactNode;
+  priceLabel?: string;
+  pricingLink?: { label: string; onPress: () => void };
   selected?: boolean;
-  disabled?: boolean;
+  showSelectionIndicator?: boolean;
+  rightSlot?: ReactNode;
   onPress?: () => void;
-  learnMoreText?: string;
-  onLearnMore?: () => void;
+  children?: ReactNode;
 }
 
 function ComboRow({
@@ -169,36 +223,31 @@ function ComboRow({
   title,
   subtitle,
   badge,
+  priceLabel,
+  pricingLink,
   selected,
-  disabled,
+  showSelectionIndicator,
+  rightSlot,
   onPress,
-  learnMoreText,
-  onLearnMore,
+  children,
 }: ComboRowProps) {
   return (
     <div
       role="button"
-      tabIndex={disabled ? -1 : 0}
+      tabIndex={0}
       aria-pressed={!!selected}
-      aria-disabled={!!disabled}
       onClick={() => {
-        if (disabled) return;
         haptics.light();
         onPress?.();
       }}
       onKeyDown={(e) => {
-        if (disabled) return;
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
           haptics.light();
           onPress?.();
         }
       }}
-      className={cn(
-        "flex w-full items-center gap-3 p-4 text-left",
-        !disabled && "press-effect",
-        disabled && "opacity-50"
-      )}
+      className={cn("press-effect flex w-full items-start gap-3 p-4 text-left")}
     >
       <div
         className={cn(
@@ -218,41 +267,47 @@ function ComboRow({
               {badge}
             </span>
           )}
+          {priceLabel && (
+            <span className="rounded-md bg-washmen-primary-light px-2 py-1 text-[12px] font-medium text-washmen-primary">
+              {priceLabel}
+            </span>
+          )}
         </div>
         {subtitle && (
           <p className="mt-0.5 truncate text-sm text-washmen-secondary-500">
             {subtitle}
           </p>
         )}
-        {learnMoreText && onLearnMore && (
+        {pricingLink && (
           <button
             type="button"
             onClick={(e) => {
               e.stopPropagation();
               haptics.light();
-              onLearnMore();
+              pricingLink.onPress();
             }}
-            className="press-effect mt-1 inline-flex text-sm font-medium text-washmen-primary"
+            className="press-effect mt-1 inline-flex text-sm font-medium text-washmen-primary underline underline-offset-2"
           >
-            {learnMoreText}
+            {pricingLink.label}
           </button>
         )}
+        {children}
       </div>
-      <div
-        className={cn(
-          "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 transition-colors",
-          selected
-            ? "border-washmen-success bg-washmen-success text-white"
-            : "border-washmen-secondary-300 bg-transparent"
-        )}
-        aria-hidden
-      >
-        {selected ? (
-          <Check className="h-3.5 w-3.5" strokeWidth={3} />
-        ) : (
-          <Plus className="h-3.5 w-3.5 text-washmen-secondary-300" strokeWidth={2.5} />
-        )}
-      </div>
+      {rightSlot ? (
+        <div className="shrink-0 self-center">{rightSlot}</div>
+      ) : showSelectionIndicator ? (
+        <div
+          className={cn(
+            "flex h-6 w-6 shrink-0 items-center justify-center self-center rounded-full border-2 transition-colors",
+            selected
+              ? "border-washmen-success bg-washmen-success text-white"
+              : "border-washmen-secondary-300 bg-transparent"
+          )}
+          aria-hidden
+        >
+          {selected && <Check className="h-3.5 w-3.5" strokeWidth={3} />}
+        </div>
+      ) : null}
     </div>
   );
 }
