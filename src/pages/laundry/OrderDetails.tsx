@@ -7,7 +7,7 @@ import { useOrderStore } from "@/stores/orderStore";
 import { nativeBridge, NativeSheetName } from "@/lib/nativeBridge";
 import { haptics } from "@/lib/haptics";
 import { cn } from "@/lib/utils";
-import { formatPickupDate, formatDropoffDate } from "@/lib/dateFormat";
+import { formatPickupSchedule, formatDropoffSchedule } from "@/lib/dateFormat";
 
 interface DetailCardProps {
   title: string;
@@ -174,7 +174,7 @@ export default function OrderDetails() {
               <ValueRow
                 icon={Clock}
                 iconCircle={false}
-                text={`${formatPickupDate(pickup.date)} ${pickup.slot}`}
+                text={formatPickupSchedule(pickup.date, pickup.slot)}
               />
             </div>
           ) : (
@@ -194,7 +194,7 @@ export default function OrderDetails() {
               <ValueRow
                 icon={Clock}
                 iconCircle={false}
-                text={`${formatDropoffDate(dropoff.date)} ${dropoff.slot}`}
+                text={formatDropoffSchedule(dropoff.date, dropoff.slot)}
               />
             </div>
           ) : (
