@@ -8,12 +8,11 @@ interface ServiceCardProps {
   iconBgClass?: string; // tailwind bg color for icon circle, e.g. "bg-washmen-primary-light"
   iconFgClass?: string; // tailwind text color for icon, e.g. "text-washmen-primary"
   title: string;
-  subtitle?: string;
   badge?: ReactNode;
+  priceLabel?: string;
+  pricingLink?: { label: string; onPress: () => void };
   selected?: boolean;
   onPress?: () => void;
-  learnMoreText?: string;
-  onLearnMore?: () => void;
 }
 
 export function ServiceCard({
@@ -21,12 +20,11 @@ export function ServiceCard({
   iconBgClass = "bg-washmen-primary-light",
   iconFgClass = "text-washmen-primary",
   title,
-  subtitle,
   badge,
+  priceLabel,
+  pricingLink,
   selected,
   onPress,
-  learnMoreText,
-  onLearnMore,
 }: ServiceCardProps) {
   return (
     <div
@@ -68,23 +66,23 @@ export function ServiceCard({
               {badge}
             </span>
           )}
+          {priceLabel && (
+            <span className="rounded-md bg-washmen-primary-light px-2 py-1 text-[12px] font-medium text-washmen-primary">
+              {priceLabel}
+            </span>
+          )}
         </div>
-        {subtitle && (
-          <p className="mt-0.5 truncate text-sm text-washmen-secondary-500">
-            {subtitle}
-          </p>
-        )}
-        {learnMoreText && onLearnMore && (
+        {pricingLink && (
           <button
             type="button"
             onClick={(e) => {
               e.stopPropagation();
               haptics.light();
-              onLearnMore();
+              pricingLink.onPress();
             }}
-            className="press-effect mt-1 inline-flex text-sm font-medium text-washmen-primary"
+            className="press-effect mt-1 inline-flex text-sm font-medium text-washmen-primary underline underline-offset-2"
           >
-            {learnMoreText}
+            {pricingLink.label}
           </button>
         )}
       </div>
