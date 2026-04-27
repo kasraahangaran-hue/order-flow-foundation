@@ -40,7 +40,7 @@ function DetailCard({ title, onPress, hasValue, addAction, titleClassName, child
       className="press-effect w-full rounded-card bg-card p-4 text-left shadow-[0_1px_2px_rgba(16,24,40,0.04)]"
     >
       <div className="flex items-center justify-between">
-        <p className={cn("text-sm font-semibold text-washmen-primary", titleClassName)}>{title}</p>
+        <p className={cn("text-sm font-semibold leading-tight text-washmen-primary", titleClassName)}>{title}</p>
         <ActionIcon className="h-4 w-4 text-muted-foreground" strokeWidth={2} aria-hidden />
       </div>
       {children ? <div className="mt-1">{children}</div> : null}
