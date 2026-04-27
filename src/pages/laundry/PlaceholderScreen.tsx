@@ -76,12 +76,11 @@ export default function PlaceholderScreen({
             <ServiceCard
               icon={Shirt}
               title="Wash &amp; Fold"
-              subtitle="Everyday laundry, washed &amp; folded"
               badge="NEW"
+              priceLabel="AED 75 per bag"
               selected={sampleSelected}
               onPress={() => setSampleSelected((v) => !v)}
-              learnMoreText="Learn more"
-              onLearnMore={() => setSheetOpen(true)}
+              pricingLink={{ label: "Learn More", onPress: () => setSheetOpen(true) }}
             />
 
             <button
