@@ -111,15 +111,39 @@ export function ServiceSelector({
         )}
 
         {services.addPressing ? (
-          <ComboRow
-            icon={Shirt}
-            iconBgClass="bg-washmen-secondary-aqua"
-            iconFgClass="text-washmen-primary"
-            title="Press & Hang"
-            subtitle="Press tops after washing"
-            badge="NEW"
-            paddingClass="pt-3 px-4 pb-4"
-            rightSlot={
+          <div
+            role="button"
+            tabIndex={0}
+            onClick={() => {
+              haptics.light();
+              goToWashAndFoldInfo();
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                haptics.light();
+                goToWashAndFoldInfo();
+              }
+            }}
+            className="press-effect flex flex-col text-left"
+          >
+            <div className="flex items-start gap-3 px-4 pt-3 pb-2">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-washmen-secondary-aqua">
+                <Shirt className="h-6 w-6 text-washmen-primary" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <p className="truncate text-base font-semibold text-washmen-secondary-900">
+                    Press & Hang
+                  </p>
+                  <span className="rounded-md bg-washmen-warning/30 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-washmen-secondary-800">
+                    NEW
+                  </span>
+                </div>
+                <p className="mt-0.5 truncate text-sm text-washmen-secondary-500">
+                  Press tops after washing
+                </p>
+              </div>
               <button
                 type="button"
                 aria-label="Edit pressing selections"
@@ -128,38 +152,33 @@ export function ServiceSelector({
                   haptics.light();
                   goToWashAndFoldInfo();
                 }}
-                className="press-effect mt-0.5 flex h-6 w-6 items-center justify-center text-washmen-primary"
+                className="press-effect mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center text-washmen-primary"
               >
                 <Pencil className="h-5 w-5" strokeWidth={2.5} />
               </button>
-            }
-            onPress={goToWashAndFoldInfo}
-          >
-            <div className="mt-2 flex flex-col gap-1">
-              {PLACEHOLDER_PRESSING_ITEMS.map((item) => (
-                <div
-                  key={item.name}
-                  className="flex items-center gap-3"
-                >
-                  <span className="flex-1 text-[12px] font-light leading-[18px] text-washmen-secondary-700">
-                    {item.name}
-                  </span>
-                  <span className="shrink-0 rounded-md bg-washmen-secondary-aqua px-1.5 py-0.5 text-[12px] font-normal leading-[18px] text-washmen-primary">
-                    {item.price}
-                  </span>
-                </div>
-              ))}
             </div>
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-              className="press-effect mt-1 inline-flex text-sm font-medium text-washmen-primary underline underline-offset-2"
-            >
-              View Terms & Conditions
-            </button>
-          </ComboRow>
+            <div className="px-4 pb-4 pl-[76px]">
+              <div className="flex flex-col gap-1">
+                {PLACEHOLDER_PRESSING_ITEMS.map((item) => (
+                  <div key={item.name} className="flex items-center gap-3">
+                    <span className="flex-1 text-[12px] font-light leading-[18px] text-washmen-secondary-700">
+                      {item.name}
+                    </span>
+                    <span className="shrink-0 rounded-md bg-washmen-secondary-aqua px-1.5 py-0.5 text-[12px] font-normal leading-[18px] text-washmen-primary">
+                      {item.price}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={(e) => e.stopPropagation()}
+                className="press-effect mt-2 inline-flex text-sm font-medium text-washmen-primary underline underline-offset-2"
+              >
+                View Terms & Conditions
+              </button>
+            </div>
+          </div>
         ) : (
           <ComboRow
             icon={Shirt}
