@@ -37,19 +37,19 @@ export function InstructionsCard({
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-washmen-secondary-aqua">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
             <Icon className="h-4 w-4 text-washmen-primary" />
           </div>
-          <p className="text-base font-semibold text-washmen-secondary-900">{title}</p>
+          <p className="text-sm font-semibold text-washmen-primary">{title}</p>
         </div>
         <ActionIcon
-          className={cn("h-5 w-5 text-washmen-primary")}
+          className={cn("h-4 w-4 text-muted-foreground")}
           strokeWidth={2}
           aria-hidden
         />
       </div>
       {hasValue ? (
-        <p className="mt-2 pl-11 text-base text-washmen-secondary-700">{valueLabel}</p>
+        <p className="mt-2 pl-11 text-sm text-muted-foreground">{valueLabel}</p>
       ) : null}
     </div>
   );
