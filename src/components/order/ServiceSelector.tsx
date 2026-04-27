@@ -209,6 +209,7 @@ interface ComboRowProps {
   iconBgClass: string;
   iconFgClass: string;
   title: string;
+  titleClass?: string;
   subtitle?: string;
   badge?: ReactNode;
   priceLabel?: string;
@@ -218,6 +219,7 @@ interface ComboRowProps {
   rightSlot?: ReactNode;
   onPress?: () => void;
   children?: ReactNode;
+  paddingClass?: string;
 }
 
 function ComboRow({
@@ -225,6 +227,7 @@ function ComboRow({
   iconBgClass,
   iconFgClass,
   title,
+  titleClass,
   subtitle,
   badge,
   priceLabel,
@@ -234,6 +237,7 @@ function ComboRow({
   rightSlot,
   onPress,
   children,
+  paddingClass,
 }: ComboRowProps) {
   return (
     <div
@@ -251,7 +255,10 @@ function ComboRow({
           onPress?.();
         }
       }}
-      className={cn("press-effect flex w-full items-start gap-3 p-4 text-left")}
+      className={cn(
+        "press-effect flex w-full items-start gap-3 text-left",
+        paddingClass ?? "p-4"
+      )}
     >
       <div
         className={cn(
@@ -263,7 +270,12 @@ function ComboRow({
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <p className="truncate text-base font-semibold text-washmen-secondary-900">
+          <p
+            className={cn(
+              "truncate text-base font-semibold",
+              titleClass ?? "text-washmen-secondary-900"
+            )}
+          >
             {title}
           </p>
           {badge && (
