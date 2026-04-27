@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { OrderLayout, OrderPrimaryButton } from "@/components/order/OrderLayout";
+import { ServiceSelector } from "@/components/order/ServiceSelector";
 
 export default function QuickCheckout() {
   const navigate = useNavigate();
@@ -9,9 +10,7 @@ export default function QuickCheckout() {
       onBack={() => navigate(-1)}
       footerSlot={<OrderPrimaryButton disabled>Place Order</OrderPrimaryButton>}
     >
-      <div className="rounded-card bg-subtle-bg p-4 text-sm text-washmen-secondary-600">
-        Screen content goes here.
-      </div>
+      <ServiceSelector variant="screen" entryPoint="quick-checkout" />
     </OrderLayout>
   );
 }
