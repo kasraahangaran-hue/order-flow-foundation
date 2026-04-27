@@ -4,6 +4,7 @@ import { Bell, Clock, Home, Package, PackageOpen, Pencil, Plus } from "lucide-re
 import { OrderLayout } from "@/components/order/OrderLayout";
 import { Button } from "@/components/ui/button";
 import { useOrderStore } from "@/stores/orderStore";
+import type { DriverInstructionsState } from "@/stores/orderStore";
 import { nativeBridge, NativeSheetName } from "@/lib/nativeBridge";
 import { haptics } from "@/lib/haptics";
 import { cn } from "@/lib/utils";
@@ -94,6 +95,10 @@ function TimeRow({ day, time }: { day: string; time: string }) {
   );
 }
 
+function formatDriverInstructions(d: DriverInstructionsState): string {
+  return `Pick up: ${d.pickup} • Drop off: ${d.dropoff}`;
+}
+
 export default function OrderDetails() {
   const navigate = useNavigate();
   const address = useOrderStore((s) => s.address);
@@ -103,6 +108,7 @@ export default function OrderDetails() {
   const setAddress = useOrderStore((s) => s.setAddress);
   const setPickup = useOrderStore((s) => s.setPickup);
   const setDropoff = useOrderStore((s) => s.setDropoff);
+  const setDriverInstructions = useOrderStore((s) => s.setDriverInstructions);
 
   // TEMP: seed defaults for UI dev. Remove when bottom sheets are wired up.
   useEffect(() => {
@@ -117,6 +123,12 @@ export default function OrderDetails() {
     if (!address) setAddress({ line1: "108, Azurite tower" });
     if (!pickup) setPickup({ mode: "door", date: dayPlus(0), slot: "02:00 pm - 04:00 pm" });
     if (!dropoff) setDropoff({ date: dayPlus(2), slot: "Anytime during the day", surcharge: 0 });
+    if (!driverInstructions) {
+      setDriverInstructions({
+        pickup: "At concierge / reception",
+        dropoff: "Hang on door handle",
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -215,11 +227,7 @@ export default function OrderDetails() {
           {driverInstructions ? (
             <ValueRow
               icon={Bell}
-              text={
-                [driverInstructions.pickup, driverInstructions.dropoff]
-                  .filter(Boolean)
-                  .join(" / ") || "No Preference"
-              }
+              text={formatDriverInstructions(driverInstructions)}
             />
           ) : (
             <div className="flex items-center gap-3">
