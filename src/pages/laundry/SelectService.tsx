@@ -16,7 +16,8 @@ export default function SelectService() {
 
   return (
     <OrderLayout
-      title="Laundry Order"
+      title="Select Service(s)"
+      step={1}
       onBack={() => navigate(-1)}
       footerSlot={
         <OrderPrimaryButton onClick={() => navigate("/laundry/order-details")}>
@@ -26,6 +27,7 @@ export default function SelectService() {
     >
       <ServiceSelector
         variant="screen"
+        entryPoint="laundry"
         onLearnMoreWashAndFold={() => navigate("/laundry/wash-and-fold-info")}
       />
     </OrderLayout>
