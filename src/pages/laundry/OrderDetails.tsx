@@ -191,7 +191,6 @@ export default function OrderDetails() {
         <DetailCard
           title="Driver Instructions"
           hasValue={!!driverInstructions}
-          titleClassName="text-washmen-primary"
           onPress={() => openSheet("driver_instructions")}
         >
           {driverInstructions ? (
