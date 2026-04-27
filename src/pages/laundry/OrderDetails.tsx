@@ -22,7 +22,6 @@ interface DetailCardProps {
 
 function DetailCard({ title, onPress, hasValue, addAction, titleClassName, children }: DetailCardProps) {
   const ActionIcon = addAction && !hasValue ? Plus : Pencil;
-  const actionColor = "text-washmen-primary";
   return (
     <div
       role="button"
@@ -40,11 +39,11 @@ function DetailCard({ title, onPress, hasValue, addAction, titleClassName, child
       }}
       className="press-effect w-full rounded-card bg-card p-4 text-left shadow-[0_1px_2px_rgba(16,24,40,0.04)]"
     >
-      <div className="flex items-center justify-between">
-        <p className={cn("text-base font-semibold text-washmen-secondary-900", titleClassName)}>{title}</p>
-        <ActionIcon className={cn("h-5 w-5", actionColor)} strokeWidth={2} aria-hidden />
+      <div className={cn("flex items-center justify-between", children ? "mb-3" : null)}>
+        <p className={cn("text-sm font-semibold text-washmen-primary", titleClassName)}>{title}</p>
+        <ActionIcon className="h-4 w-4 text-muted-foreground" strokeWidth={2} aria-hidden />
       </div>
-      {children ? <div className="mt-3">{children}</div> : null}
+      {children ?? null}
     </div>
   );
 }
@@ -60,13 +59,13 @@ function ValueRow({
 }) {
   return (
     <div className="flex items-center gap-3">
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-washmen-secondary-aqua">
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
         <Icon className="h-4 w-4 text-washmen-primary" />
       </div>
       <p
         className={cn(
-          "min-w-0 flex-1 text-base",
-          muted ? "italic font-light text-washmen-secondary-400" : "text-washmen-secondary-900"
+          "min-w-0 flex-1 text-sm",
+          muted ? "italic font-light text-washmen-secondary-400" : "text-foreground"
         )}
       >
         {text}
@@ -77,19 +76,19 @@ function ValueRow({
 
 function EmptyRow({ text }: { text: string }) {
   return (
-    <p className="text-base font-light italic text-washmen-secondary-400">{text}</p>
+    <p className="text-sm font-light italic text-washmen-secondary-400">{text}</p>
   );
 }
 
 function TimeRow({ day, time }: { day: string; time: string }) {
   return (
     <div className="flex items-center gap-3">
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-washmen-secondary-aqua">
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
         <Clock className="h-4 w-4 text-washmen-primary" />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-base leading-tight text-washmen-secondary-900">{day}</p>
-        <p className="text-base leading-tight text-washmen-secondary-900">{time}</p>
+        <p className="text-sm leading-tight text-foreground">{day}</p>
+        <p className="text-xs leading-tight text-muted-foreground">{time}</p>
       </div>
     </div>
   );
@@ -233,7 +232,7 @@ export default function OrderDetails() {
           addAction
         >
           {driverInstructions ? (
-            <p className="text-base text-washmen-secondary-700">
+            <p className="pl-11 mt-2 text-sm text-muted-foreground">
               {formatDriverInstructions(driverInstructions)}
             </p>
           ) : null}
