@@ -46,8 +46,6 @@ export function ServiceCard({
       }}
       className={cn(
         "press-effect flex w-full items-center gap-3 rounded-card bg-card p-4 text-left",
-        "border-2 transition-colors",
-        selected ? "border-washmen-primary" : "border-transparent",
         "shadow-[0_1px_2px_rgba(16,24,40,0.04)]"
       )}
     >

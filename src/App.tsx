@@ -9,6 +9,7 @@ import WashAndFoldInfo from "./pages/laundry/WashAndFoldInfo";
 import OrderDetails from "./pages/laundry/OrderDetails";
 import OrderInstructions from "./pages/laundry/OrderInstructions";
 import LastStep from "./pages/laundry/LastStep";
+import QuickCheckout from "./pages/quick-checkout/QuickCheckout";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/laundry/order-details" element={<OrderDetails />} />
           <Route path="/laundry/order-instructions" element={<OrderInstructions />} />
           <Route path="/laundry/last-step" element={<LastStep />} />
+          <Route path="/quick-checkout" element={<QuickCheckout />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

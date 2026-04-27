@@ -1,15 +1,33 @@
-import PlaceholderScreen from "./PlaceholderScreen";
+import { useNavigate } from "react-router-dom";
+import { OrderLayout, OrderPrimaryButton } from "@/components/order/OrderLayout";
+import { ServiceSelector } from "@/components/order/ServiceSelector";
+import { useOrderStore } from "@/stores/orderStore";
 
 export default function SelectService() {
-  // No `step` prop -> progress underline is hidden on this screen.
+  const navigate = useNavigate();
+  const services = useOrderStore((s) => s.services);
+
+  const hasSelection =
+    services.washAndFold ||
+    services.addPressing ||
+    services.cleanAndPress ||
+    services.bedAndBath ||
+    services.pressOnly;
+
   return (
-    <PlaceholderScreen
+    <OrderLayout
       title="Laundry Order"
-      backTo={-1}
-      nextTo="/laundry/order-details"
-      ctaLabel="Continue"
-      showSamples
-      showSupport
-    />
+      onBack={() => navigate(-1)}
+      footerSlot={
+        <OrderPrimaryButton onClick={() => navigate("/laundry/order-details")}>
+          {hasSelection ? "Continue to Order" : "Skip"}
+        </OrderPrimaryButton>
+      }
+    >
+      <ServiceSelector
+        variant="screen"
+        onLearnMoreWashAndFold={() => navigate("/laundry/wash-and-fold-info")}
+      />
+    </OrderLayout>
   );
 }
