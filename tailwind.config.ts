@@ -40,6 +40,8 @@ export default {
           "secondary-700": "hsl(var(--washmen-secondary-700))",
           "secondary-800": "hsl(var(--washmen-secondary-800))",
           "secondary-900": "hsl(var(--washmen-secondary-900))",
+          "secondary-blue": "hsl(var(--washmen-secondary-blue))",
+          "secondary-aqua": "hsl(var(--washmen-secondary-aqua))",
         },
         primary: {
           DEFAULT: "hsl(var(--primary))",

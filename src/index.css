@@ -26,6 +26,10 @@
     --washmen-secondary-800: 240 12% 16%;
     --washmen-secondary-900: 240 16% 10%;
 
+    /* Tinted accents */
+    --washmen-secondary-blue: 245 86% 93%;   /* #E1DEFB */
+    --washmen-secondary-aqua: 177 100% 95%;  /* #E5FFFE */
+
     --subtle-bg: 240 20% 97%;                /* #F7F7FA */
 
     /* shadcn aliases mapped to Washmen */
