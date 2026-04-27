@@ -123,17 +123,24 @@ export default function OrderDetails() {
     if (!address) setAddress({ line1: "108, Azurite tower" });
     if (!pickup) setPickup({ mode: "door", date: dayPlus(0), slot: "02:00 pm - 04:00 pm" });
     if (!dropoff) setDropoff({ date: dayPlus(2), slot: "Anytime during the day", surcharge: 0 });
-    if (!driverInstructions) {
-      setDriverInstructions({
-        pickup: "At concierge / reception",
-        dropoff: "Hang on door handle",
-      });
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const openSheet = (name: NativeSheetName) => {
     nativeBridge.openSheet(name);
+  };
+
+  // TEMP: tap to toggle dummy driver instructions for UI dev. Replace with nativeBridge.openSheet() when wired up.
+  const toggleDriverInstructions = () => {
+    haptics.light();
+    if (driverInstructions) {
+      setDriverInstructions(null);
+    } else {
+      setDriverInstructions({
+        pickup: "At concierge / reception",
+        dropoff: "Hang on door handle",
+      });
+    }
   };
 
   const ctaEnabled = !!address && !!pickup && !!dropoff;
