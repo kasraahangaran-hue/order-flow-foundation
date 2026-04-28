@@ -320,9 +320,7 @@ function VariantRow({ variant }: { variant: Variant }) {
   );
 }
 
-export function StateInspector() {
-  if (!import.meta.env.DEV) return null;
-
+function StateInspectorInner() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -413,6 +411,11 @@ export function StateInspector() {
       </Sheet>
     </>
   );
+}
+
+export function StateInspector() {
+  if (!import.meta.env.DEV) return null;
+  return <StateInspectorInner />;
 }
 
 export default StateInspector;
