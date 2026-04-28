@@ -19,6 +19,19 @@ import { haptics } from "@/lib/haptics";
 import { useOrderStore, type ServicesState } from "@/stores/orderStore";
 import { nativeBridge } from "@/lib/nativeBridge";
 
+/**
+ * PROMO CODE LOGIC — checkout-stage only ("Available/Selected" state per spec).
+ *
+ * Backend integration TODO:
+ * - Fetch user's eligible promos (replace AVAILABLE_PROMOS const)
+ * - Check ALREADY_APPLIED_CODES against in-progress orders (single-use de-dupe)
+ * - Validate typed codes server-side for eligibility
+ * - On Place Order: commit selected promo (state moves to "Applied")
+ * - Handle rollback when card fails / order cancelled / pickup failed
+ *
+ * Spec: https://www.notion.so/washmen/Promo-Code-Journey-Status-231e9f936ef18071a202ca9a837a7e26
+ */
+
 interface LineItem {
   label: string;
   amount: number;
@@ -61,9 +74,13 @@ interface PromoData {
 // Mock list of available promos. Replace with backend fetch when available.
 const AVAILABLE_PROMOS: PromoData[] = [
   { code: "MYLAUNDRY25", subtitle: "AED 50 off on 3 laundry orders!", used: 1, total: 11, discountAed: 50 },
-  { code: "FIRSTORDER", subtitle: "10% off your first order", used: 0, total: 1, discountPct: 10 },
+  { code: "FIRSTORDER10", subtitle: "10% off your first order", used: 0, total: 1, discountPct: 10 },
   { code: "WEEKEND15", subtitle: "AED 15 off weekend orders", used: 1, total: 3, discountAed: 15 },
 ];
+
+// Codes already applied to in-progress orders (single-use de-dupe).
+// TODO: populate from backend when wired up.
+const ALREADY_APPLIED_CODES = new Set<string>();
 
 function calculatePromoDiscount(code: string | null, itemsTotal: number): number {
   if (!code) return 0;
@@ -180,7 +197,9 @@ export default function LastStep() {
   const [paymentExpanded, setPaymentExpanded] = useState(true);
   const [promosExpanded, setPromosExpanded] = useState(false);
   const [promoInput, setPromoInput] = useState("");
-  const [promoError, setPromoError] = useState<string | null>(null);
+  const [inputMessage, setInputMessage] = useState<
+    { type: "error" | "success"; text: string } | null
+  >(null);
   const [selectedPromoCode, setSelectedPromoCode] = useState<string | null>(null);
 
   const lineItems = useMemo(() => buildLineItems(services), [services]);
@@ -212,21 +231,35 @@ export default function LastStep() {
     haptics.light();
     setSelectedPromoCode((curr) => (curr === code ? null : code));
     setPromoInput("");
-    setPromoError(null);
+    setInputMessage(null);
+  };
+
+  const flashMessage = (msg: { type: "error" | "success"; text: string }, ms = 2500) => {
+    setInputMessage(msg);
+    window.setTimeout(() => setInputMessage(null), ms);
   };
 
   const tryApplyTypedCode = () => {
     const code = promoInput.trim().toUpperCase();
     if (!code) return;
+    if (ALREADY_APPLIED_CODES.has(code)) {
+      flashMessage({
+        type: "error",
+        text: "This promo code has already been applied. Please try another one.",
+      }, 3000);
+      return;
+    }
     const match = AVAILABLE_PROMOS.find((p) => p.code === code);
     if (match) {
       setSelectedPromoCode(match.code);
       setPromoInput("");
-      setPromoError(null);
       haptics.success();
+      flashMessage({ type: "success", text: "✔ Code Applied" }, 2000);
     } else {
-      setPromoError("Code not valid");
-      window.setTimeout(() => setPromoError(null), 3000);
+      flashMessage({
+        type: "error",
+        text: "Invalid promo code. Please try a different one.",
+      }, 3000);
     }
   };
 
@@ -331,11 +364,19 @@ export default function LastStep() {
                     className="w-full bg-transparent text-center text-[14px] text-washmen-primary placeholder:text-[#C3C8DB] focus:outline-none"
                   />
                 </div>
-                {promoError && (
-                  <p className="mt-1 text-center text-[11px] text-washmen-error">
-                    {promoError}
-                  </p>
-                )}
+                <div className="mt-1 h-4 text-center text-[11px]">
+                  {inputMessage && (
+                    <p
+                      className={cn(
+                        inputMessage.type === "error"
+                          ? "text-red-500"
+                          : "text-washmen-success"
+                      )}
+                    >
+                      {inputMessage.text}
+                    </p>
+                  )}
+                </div>
               </div>
               <div className="flex items-center gap-8 border-t border-[#EFEFF4] pt-4">
                 <div className="flex flex-1 items-center gap-3">
@@ -386,6 +427,9 @@ export default function LastStep() {
                       </span>
                     </div>
                   ))}
+                {/* TODO: Per spec, when no basket is applied, hide subtotal/total
+                    and show promo as a standalone value. Implement when
+                    minimum-order state is added. */}
                 {selectedPromoCode && promoDiscount > 0 && (
                   <div className="flex justify-between text-sm">
                     <span className="text-emerald-700">
