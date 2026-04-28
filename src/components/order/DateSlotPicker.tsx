@@ -118,7 +118,11 @@ export function DateSlotPicker({
                     <p className="text-[12px] font-light leading-[18px] tracking-[0.1px]">
                       {d.subLabel}
                     </p>
-                    {d.freeDelivery ? <FreeDeliveryTag isSelected={isSel} /> : null}
+                    {d.daySurchargePct ? (
+                      <DaySurchargeTag pct={d.daySurchargePct} />
+                    ) : d.freeDelivery ? (
+                      <FreeDeliveryTag isSelected={isSel} />
+                    ) : null}
                   </button>
                 </div>
               );
@@ -142,7 +146,11 @@ export function DateSlotPicker({
                 <p className="text-[12px] font-light leading-[18px] tracking-[0.1px]">
                   {d.subLabel}
                 </p>
-                {d.freeDelivery ? <FreeDeliveryTag isSelected={isSel} /> : null}
+                {d.daySurchargePct ? (
+                  <DaySurchargeTag pct={d.daySurchargePct} />
+                ) : d.freeDelivery ? (
+                  <FreeDeliveryTag isSelected={isSel} />
+                ) : null}
               </button>
             );
           })}
