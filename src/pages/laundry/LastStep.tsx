@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ChevronDown,
@@ -7,8 +7,10 @@ import {
   Pencil,
   Tag,
   Apple,
-  CheckCircle2,
-  Circle,
+  Check,
+  Plus,
+  Info,
+  Coins,
 } from "lucide-react";
 import { OrderLayout } from "@/components/order/OrderLayout";
 import { Button } from "@/components/ui/button";
@@ -38,6 +40,7 @@ function buildLineItems(services: ServicesState): LineItem[] {
   return items;
 }
 
+const MIN_ORDER_AED = 75; // Minimum order value threshold
 const DELIVERY_FEE = 15;
 const TIP_OPTIONS: { label: string; value: number }[] = [
   { label: "No", value: 0 },
@@ -46,22 +49,125 @@ const TIP_OPTIONS: { label: string; value: number }[] = [
   { label: "AED 10", value: 10 },
 ];
 
-// Mock list of available promos. Replace with backend fetch when available.
-const AVAILABLE_PROMOS: {
+interface PromoData {
   code: string;
-  title: string;
   subtitle: string;
-}[] = [
-  { code: "FIRST10", title: "10% off your first order", subtitle: "Min. AED 50 spend" },
-  { code: "SUMMER25", title: "AED 25 off select services", subtitle: "Valid until June 30" },
-  { code: "VIP15", title: "VIP discount 15%", subtitle: "Members only" },
+  used: number;
+  total: number;
+  discountAed?: number;
+  discountPct?: number;
+}
+
+// Mock list of available promos. Replace with backend fetch when available.
+const AVAILABLE_PROMOS: PromoData[] = [
+  { code: "MYLAUNDRY25", subtitle: "AED 50 off on 3 laundry orders!", used: 1, total: 11, discountAed: 50 },
+  { code: "FIRSTORDER", subtitle: "10% off your first order", used: 0, total: 1, discountPct: 10 },
+  { code: "WEEKEND15", subtitle: "AED 15 off weekend orders", used: 1, total: 3, discountAed: 15 },
 ];
 
 function calculatePromoDiscount(code: string | null, itemsTotal: number): number {
   if (!code) return 0;
-  if (code === "FIRST10") return 10;
-  if (code === "SUMMER25") return 25;
-  return Math.round(itemsTotal * 0.15 * 100) / 100;
+  const promo = AVAILABLE_PROMOS.find((p) => p.code === code);
+  if (!promo) return 0;
+  let amount = 0;
+  if (promo.discountAed) amount = promo.discountAed;
+  else if (promo.discountPct) amount = (itemsTotal * promo.discountPct) / 100;
+  return Math.min(amount, itemsTotal);
+}
+
+interface PromoProgressDotsProps {
+  used: number;
+  total: number;
+}
+
+function PromoProgressDots({ used, total }: PromoProgressDotsProps) {
+  return (
+    <div className="flex h-[9px] items-center overflow-hidden" style={{ width: 139 }}>
+      {Array.from({ length: total }).map((_, i) => (
+        <Fragment key={i}>
+          <div
+            className={cn(
+              "h-[9px] w-[9px] shrink-0 rounded-full",
+              i < used
+                ? "bg-washmen-primary"
+                : "border border-washmen-primary bg-transparent"
+            )}
+          />
+          {i < total - 1 && (
+            <div
+              className={cn(
+                "h-[2px] w-[4px] shrink-0",
+                i < used - 1 ? "bg-washmen-primary" : "bg-[#EFEFF4]"
+              )}
+            />
+          )}
+        </Fragment>
+      ))}
+    </div>
+  );
+}
+
+interface PromoCardProps {
+  promo: PromoData;
+  selected: boolean;
+  onToggle: () => void;
+}
+
+function PromoCard({ promo, selected, onToggle }: PromoCardProps) {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      className={cn(
+        "press-effect w-[227px] shrink-0 rounded-[8px] border border-washmen-primary p-2 text-left",
+        selected ? "bg-washmen-light-green" : "bg-white"
+      )}
+    >
+      <div className="flex flex-col gap-2">
+        <div className="flex items-start gap-1">
+          <div className="flex-1 min-w-0">
+            <p className="text-[12px] font-semibold leading-[18px] tracking-[0.1px] text-washmen-primary">
+              {promo.code}
+            </p>
+            <p className="mt-0.5 text-[10px] font-light leading-[14px] tracking-[0.3px] text-washmen-primary">
+              {promo.subtitle}
+            </p>
+          </div>
+          <div
+            className={cn(
+              "flex h-6 w-6 shrink-0 items-center justify-center rounded-[6px] border border-washmen-primary",
+              selected ? "bg-washmen-primary" : "bg-white"
+            )}
+          >
+            {selected ? (
+              <Check className="h-3 w-3 text-white" strokeWidth={3} />
+            ) : (
+              <Plus className="h-3 w-3 text-washmen-primary" strokeWidth={2.5} />
+            )}
+          </div>
+        </div>
+        <div className="flex items-center gap-1">
+          <PromoProgressDots used={promo.used} total={promo.total} />
+          <span className="text-[8px] font-light tracking-[0.3px] text-washmen-primary">
+            {promo.used}/{promo.total}
+          </span>
+        </div>
+        <div
+          className="flex items-center gap-1"
+          onClick={(e) => {
+            e.stopPropagation();
+            // eslint-disable-next-line no-console
+            console.log("View promo details", promo.code);
+          }}
+        >
+          <Info className="h-4 w-4 text-washmen-primary" strokeWidth={2} />
+          <span className="text-[10px] font-light tracking-[0.3px] text-washmen-primary underline underline-offset-2">
+            View Details
+          </span>
+        </div>
+      </div>
+    </button>
+  );
 }
 
 export default function LastStep() {
@@ -74,11 +180,12 @@ export default function LastStep() {
   const [paymentExpanded, setPaymentExpanded] = useState(true);
   const [promosExpanded, setPromosExpanded] = useState(false);
   const [promoInput, setPromoInput] = useState("");
-  const [appliedPromo, setAppliedPromo] = useState<string | null>(null);
+  const [promoError, setPromoError] = useState<string | null>(null);
+  const [selectedPromoCode, setSelectedPromoCode] = useState<string | null>(null);
 
   const lineItems = useMemo(() => buildLineItems(services), [services]);
   const itemsTotal = lineItems.reduce((s, i) => s + i.amount, 0);
-  const promoDiscount = calculatePromoDiscount(appliedPromo, itemsTotal);
+  const promoDiscount = calculatePromoDiscount(selectedPromoCode, itemsTotal);
   const estimatedTotal = Math.max(
     0,
     itemsTotal + DELIVERY_FEE + selectedTip - promoDiscount
@@ -100,6 +207,28 @@ export default function LastStep() {
 
   const availableCount = AVAILABLE_PROMOS.length;
   const hasAvailablePromos = availableCount > 0;
+
+  const togglePromo = (code: string) => {
+    haptics.light();
+    setSelectedPromoCode((curr) => (curr === code ? null : code));
+    setPromoInput("");
+    setPromoError(null);
+  };
+
+  const tryApplyTypedCode = () => {
+    const code = promoInput.trim().toUpperCase();
+    if (!code) return;
+    const match = AVAILABLE_PROMOS.find((p) => p.code === code);
+    if (match) {
+      setSelectedPromoCode(match.code);
+      setPromoInput("");
+      setPromoError(null);
+      haptics.success();
+    } else {
+      setPromoError("Code not valid");
+      window.setTimeout(() => setPromoError(null), 3000);
+    }
+  };
 
   const ctaEnabled = !!payment;
   const ctaLabel = payment
@@ -140,122 +269,85 @@ export default function LastStep() {
     >
       <div className="flex flex-col gap-4">
         {/* PROMOS */}
-        <div className="rounded-card bg-card p-4 shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
+        <div className="overflow-hidden rounded-card bg-card shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
           <button
             type="button"
             onClick={() => toggle(setPromosExpanded, promosExpanded)}
-            className="press-effect flex w-full items-center gap-3 text-left"
+            className="press-effect flex h-[52px] w-full items-center gap-3 px-3 py-0 text-left"
           >
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary">
               <Tag className="h-4 w-4 text-washmen-primary" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold leading-tight text-washmen-primary">
+              <p className="text-sm leading-tight text-washmen-primary">
                 Promos
-                {hasAvailablePromos && !appliedPromo && (
-                  <span className="ml-2 text-xs font-normal text-muted-foreground">
-                    ({availableCount} available)
+                {selectedPromoCode ? (
+                  <span className="text-xs font-light">
+                    {" "}(Applied: {selectedPromoCode})
                   </span>
-                )}
+                ) : hasAvailablePromos ? (
+                  <span className="text-xs font-light">
+                    {" "}({availableCount} codes available)
+                  </span>
+                ) : null}
               </p>
             </div>
-            {appliedPromo && !promosExpanded ? (
-              <span className="rounded-md bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">
-                Applied: {appliedPromo}
-              </span>
-            ) : promosExpanded ? (
-              <ChevronUp className="h-4 w-4 shrink-0 text-muted-foreground" />
+            {promosExpanded ? (
+              <ChevronUp className="h-3 w-3 shrink-0 text-washmen-primary" />
             ) : (
-              <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <ChevronDown className="h-3 w-3 shrink-0 text-washmen-primary" />
             )}
           </button>
           {promosExpanded && (
-            <div className="mt-3 border-t border-border pt-3">
+            <div className="flex flex-col gap-3 border-t border-[#efeff4] px-4 pt-1 pb-4">
               {hasAvailablePromos && (
-                <div className="mb-3 space-y-2">
-                  {AVAILABLE_PROMOS.map((promo) => {
-                    const selected = appliedPromo === promo.code;
-                    return (
-                      <button
-                        key={promo.code}
-                        type="button"
-                        onClick={() => {
-                          haptics.light();
-                          if (selected) {
-                            setAppliedPromo(null);
-                            setPromoInput("");
-                          } else {
-                            setAppliedPromo(promo.code);
-                            setPromoInput("");
-                            haptics.success();
-                          }
-                        }}
-                        className={cn(
-                          "press-effect flex w-full items-center gap-3 rounded-lg border p-3 text-left transition-colors",
-                          selected
-                            ? "border-emerald-500 bg-emerald-50"
-                            : "border-border bg-background"
-                        )}
-                      >
-                        <div className="min-w-0 flex-1">
-                          <p className="text-sm font-semibold leading-tight text-foreground">
-                            {promo.title}
-                          </p>
-                          <p className="mt-0.5 text-xs leading-tight text-muted-foreground">
-                            {promo.subtitle}
-                          </p>
-                        </div>
-                        {selected ? (
-                          <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
-                        ) : (
-                          <Circle className="h-5 w-5 shrink-0 text-muted-foreground" />
-                        )}
-                      </button>
-                    );
-                  })}
+                <div className="-mx-4 flex items-center gap-4 overflow-x-auto px-4 pt-3">
+                  {AVAILABLE_PROMOS.map((promo) => (
+                    <PromoCard
+                      key={promo.code}
+                      promo={promo}
+                      selected={selectedPromoCode === promo.code}
+                      onToggle={() => togglePromo(promo.code)}
+                    />
+                  ))}
                 </div>
               )}
-              <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  value={promoInput}
-                  onChange={(e) => setPromoInput(e.target.value)}
-                  placeholder="Enter promo code"
-                  className="h-10 flex-1 rounded-lg border border-border bg-background px-3 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none"
-                />
-                <Button
-                  type="button"
-                  className="h-10 px-4 text-sm font-semibold"
-                  disabled={
-                    !promoInput.trim() ||
-                    appliedPromo === promoInput.trim().toUpperCase()
-                  }
-                  onClick={() => {
-                    setAppliedPromo(promoInput.trim().toUpperCase());
-                    setPromoInput("");
-                    haptics.success();
-                  }}
-                >
-                  Apply
-                </Button>
-              </div>
-              {appliedPromo && (
-                <div className="mt-3 flex items-center justify-between">
-                  <p className="text-sm font-semibold text-emerald-700">
-                    Applied: {appliedPromo}
-                  </p>
-                  <button
-                    type="button"
-                    className="press-effect text-xs text-muted-foreground underline"
-                    onClick={() => {
-                      haptics.light();
-                      setAppliedPromo(null);
+              <div>
+                <div className="rounded-[6px] border border-[#F2F3F8] bg-white px-4 py-3">
+                  <input
+                    type="text"
+                    value={promoInput}
+                    onChange={(e) => setPromoInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        tryApplyTypedCode();
+                      }
                     }}
-                  >
-                    Remove
-                  </button>
+                    onBlur={() => {
+                      if (promoInput.trim()) tryApplyTypedCode();
+                    }}
+                    placeholder="Type your promocode here"
+                    className="w-full bg-transparent text-center text-[14px] text-washmen-primary placeholder:text-[#C3C8DB] focus:outline-none"
+                  />
                 </div>
-              )}
+                {promoError && (
+                  <p className="mt-1 text-center text-[11px] text-washmen-error">
+                    {promoError}
+                  </p>
+                )}
+              </div>
+              <div className="flex items-center gap-8 border-t border-[#EFEFF4] pt-4">
+                <div className="flex flex-1 items-center gap-3">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary">
+                    <Coins className="h-4 w-4 text-washmen-primary" />
+                  </div>
+                  <span className="text-sm text-washmen-primary">Credits</span>
+                </div>
+                <p className="text-[10px] text-washmen-secondary-700">
+                  You have <span className="font-semibold">AED 0 in Credits</span>
+                </p>
+              </div>
             </div>
           )}
         </div>
@@ -294,10 +386,10 @@ export default function LastStep() {
                       </span>
                     </div>
                   ))}
-                {appliedPromo && promoDiscount > 0 && (
+                {selectedPromoCode && promoDiscount > 0 && (
                   <div className="flex justify-between text-sm">
                     <span className="text-emerald-700">
-                      Promo Discount ({appliedPromo})
+                      Promo Discount ({selectedPromoCode})
                     </span>
                     <span className="text-emerald-700">
                       - AED {promoDiscount.toFixed(2)}
