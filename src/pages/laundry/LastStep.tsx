@@ -101,8 +101,19 @@ export default function LastStep() {
   const availableCount = AVAILABLE_PROMOS.length;
   const hasAvailablePromos = availableCount > 0;
 
+  const ctaEnabled = !!payment;
+  const ctaLabel = payment
+    ? payment.method === "Apple Pay"
+      ? "Pay with Apple Pay"
+      : `Pay AED ${estimatedTotal.toFixed(2)}`
+    : "Add Payment Method";
+
   const onPay = () => {
-    if (!hasItems) return;
+    if (!ctaEnabled) {
+      haptics.light();
+      nativeBridge.openSheet("payment_method", payment ?? undefined);
+      return;
+    }
     haptics.medium();
     navigate("/order-confirmation");
   };
@@ -120,20 +131,14 @@ export default function LastStep() {
       footerSlot={
         <Button
           className="flex-1 h-12 text-sm font-semibold"
-          disabled={!hasItems}
+          disabled={!ctaEnabled}
           onClick={onPay}
         >
-          Pay with Apple Pay
+          {ctaLabel}
         </Button>
       }
     >
       <div className="flex flex-col gap-4">
-        {!hasItems && (
-          <div className="rounded-card bg-card p-4 text-sm text-muted-foreground">
-            Add at least one service to continue.
-          </div>
-        )}
-
         {/* PROMOS */}
         <div className="rounded-card bg-card p-4 shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
           <button
@@ -277,7 +282,7 @@ export default function LastStep() {
           {paymentExpanded && (
             <>
               <div className="space-y-2 border-t border-border px-4 pt-3 pb-4">
-                {hasItems ? (
+                {hasItems &&
                   lineItems.map((item) => (
                     <div
                       key={item.label}
@@ -288,12 +293,7 @@ export default function LastStep() {
                         AED {item.amount.toFixed(2)}
                       </span>
                     </div>
-                  ))
-                ) : (
-                  <p className="text-sm italic text-muted-foreground">
-                    No services selected
-                  </p>
-                )}
+                  ))}
                 {appliedPromo && promoDiscount > 0 && (
                   <div className="flex justify-between text-sm">
                     <span className="text-emerald-700">
