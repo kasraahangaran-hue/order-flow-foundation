@@ -25,6 +25,7 @@ import {
   type CartItem,
 } from "@/stores/orderStore";
 import { cn } from "@/lib/utils";
+import { getDefaultPickup, getDefaultDropoff } from "@/data/scheduleDefaults";
 
 type StoreApi = OrderState;
 
@@ -101,8 +102,8 @@ function applyFlowType(store: OrderState, flow: FlowType) {
 
   if (flow === "newUser") {
     store.setAddress(null);
-    store.setPickup(null);
-    store.setDropoff(null);
+    store.setPickup(getDefaultPickup());
+    store.setDropoff(getDefaultDropoff());
     store.setDriverInstructions(null);
     store.setPayment(null);
     store.setOrderInstructions({
@@ -133,6 +134,7 @@ function applyFlowType(store: OrderState, flow: FlowType) {
     slot: "02:00 pm - 04:00 pm",
   });
   store.setDropoff({
+    mode: "door",
     date: todayPlus(2),
     slot: "Anytime during the day",
     surcharge: 0,
@@ -218,7 +220,7 @@ const ROUTE_VARIANTS: Record<string, Variant[]> = {
       read: (s) => !!s.dropoff,
       write: (s, v) =>
         v
-          ? s.setDropoff({ date: "In 2 days", slot: "6:00 - 8:00 PM" })
+          ? s.setDropoff({ mode: "door", date: "In 2 days", slot: "6:00 - 8:00 PM" })
           : s.setDropoff(null),
     },
     {
