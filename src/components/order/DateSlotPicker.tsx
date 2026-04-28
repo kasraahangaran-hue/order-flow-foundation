@@ -180,8 +180,8 @@ export function DateSlotPicker({
           })}
         </div>
 
-        {/* Slot list — 191px fixed */}
-        <div className="no-scrollbar flex w-[191px] shrink-0 flex-col gap-[9px] overflow-y-auto">
+        {/* Slot list — fills remaining width */}
+        <div className="no-scrollbar flex flex-1 min-w-0 flex-col gap-[9px] overflow-y-auto">
           {activeDay.slots.map((slot) => {
             const isSel = slot.time === selectedSlotTime;
 
