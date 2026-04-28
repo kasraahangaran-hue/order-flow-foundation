@@ -237,14 +237,14 @@ export default function LastStep() {
                 <p className="text-xs font-semibold leading-relaxed">
                   *Delivery Fee Increase
                 </p>
-                <p className="text-xs leading-relaxed">
+                <p className="text-[10px] leading-relaxed">
                   Due to the increase of diesel & natural gas prices and its
                   impact on our supply chain, delivery fee has increased to
                   AED 15. Once the situation normalizes, we will reduce it
                   significantly. Thank you for your support during these times
                   🙏
                 </p>
-                <p className="text-xs leading-relaxed">
+                <p className="text-[10px] leading-relaxed">
                   **The final amount, with discounts, will be determined after
                   sorting and processing at our facility. If your total bill
                   is less than AED 75, the difference will be charged to meet
