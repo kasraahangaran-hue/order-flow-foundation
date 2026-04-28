@@ -427,6 +427,9 @@ export default function LastStep() {
                       </span>
                     </div>
                   ))}
+                {/* TODO: Per spec, when no basket is applied, hide subtotal/total
+                    and show promo as a standalone value. Implement when
+                    minimum-order state is added. */}
                 {selectedPromoCode && promoDiscount > 0 && (
                   <div className="flex justify-between text-sm">
                     <span className="text-emerald-700">
