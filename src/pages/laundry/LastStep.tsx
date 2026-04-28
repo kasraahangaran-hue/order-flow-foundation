@@ -11,12 +11,18 @@ import {
   Plus,
   Info,
   Coins,
+  Minus,
+  ShoppingBag,
 } from "lucide-react";
 import { OrderLayout } from "@/components/order/OrderLayout";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { haptics } from "@/lib/haptics";
-import { useOrderStore, type ServicesState } from "@/stores/orderStore";
+import {
+  useOrderStore,
+  type ServicesState,
+  type CartItem,
+} from "@/stores/orderStore";
 import { nativeBridge } from "@/lib/nativeBridge";
 
 /**
