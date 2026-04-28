@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Bell, Clock, Home, Package, PackageOpen, Pencil, Plus } from "lucide-react";
 import { OrderLayout } from "@/components/order/OrderLayout";
@@ -9,6 +9,8 @@ import { nativeBridge, NativeSheetName } from "@/lib/nativeBridge";
 import { haptics } from "@/lib/haptics";
 import { cn } from "@/lib/utils";
 import { formatScheduleLines } from "@/lib/dateFormat";
+import { PickupSchedulingSheet } from "@/components/order/PickupSchedulingSheet";
+import { DropOffSheet } from "@/components/order/DropOffSheet";
 
 interface DetailCardProps {
   title: string;
@@ -105,6 +107,9 @@ export default function OrderDetails() {
   const setDropoff = useOrderStore((s) => s.setDropoff);
   const setDriverInstructions = useOrderStore((s) => s.setDriverInstructions);
 
+  const [pickupSheetOpen, setPickupSheetOpen] = useState(false);
+  const [dropoffSheetOpen, setDropoffSheetOpen] = useState(false);
+
   // TEMP: seed defaults for UI dev. Remove when bottom sheets are wired up.
   useEffect(() => {
     const today = new Date();
@@ -186,7 +191,7 @@ export default function OrderDetails() {
         <DetailCard
           title="Pick Up"
           hasValue={!!pickup}
-          onPress={() => openSheet("pickup_schedule")}
+          onPress={() => setPickupSheetOpen(true)}
         >
           {pickup ? (
             <div className="flex flex-col gap-2">
@@ -205,7 +210,7 @@ export default function OrderDetails() {
         <DetailCard
           title="Drop Off"
           hasValue={!!dropoff}
-          onPress={() => openSheet("dropoff_schedule")}
+          onPress={() => setDropoffSheetOpen(true)}
         >
           {dropoff ? (
             <div className="flex flex-col gap-2">
@@ -244,6 +249,8 @@ export default function OrderDetails() {
           ) : null}
         </DetailCard>
       </div>
+      <PickupSchedulingSheet open={pickupSheetOpen} onOpenChange={setPickupSheetOpen} />
+      <DropOffSheet open={dropoffSheetOpen} onOpenChange={setDropoffSheetOpen} />
     </OrderLayout>
   );
 }
