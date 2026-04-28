@@ -73,7 +73,11 @@ export function DateSlotPicker({
             const handleSelect = () => {
               haptics.light();
               onSelectDate(d.date);
-              onSelectSlot(null);
+              // Toggle behavior — auto-pick earliest FREE slot of new day, never empty
+              const earliestFree = d.slots.find((s) => !s.surcharge) ?? d.slots[0];
+              if (earliestFree) {
+                onSelectSlot(earliestFree);
+              }
             };
 
             if (hasBadge) {
