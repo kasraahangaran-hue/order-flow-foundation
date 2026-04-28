@@ -55,7 +55,18 @@ export interface PaymentState {
 
 export type TipValue = 0 | 3 | 5 | 10;
 
+export type FlowType = "newUser" | "existingUser" | "pricingPage";
+
+export interface CartItem {
+  service: "washAndFold" | "cleanAndPress" | "bedAndBath" | "pressOnly";
+  itemLabel: string;
+  unitPrice: number;
+  quantity: number;
+  discountedPrice?: number;
+}
+
 export interface OrderState {
+  flowType: FlowType;
   services: ServicesState;
   address: AddressState | null;
   pickup: PickupState | null;
@@ -65,8 +76,10 @@ export interface OrderState {
   payment: PaymentState | null;
   promoCode: string | null;
   tip: TipValue;
+  cart: CartItem[];
 
   // actions
+  setFlowType: (t: FlowType) => void;
   setServices: (patch: Partial<ServicesState>) => void;
   setPressingPrefs: (prefs: PressingPrefs | null) => void;
   setAddress: (a: AddressState | null) => void;
@@ -77,6 +90,8 @@ export interface OrderState {
   setPayment: (p: PaymentState | null) => void;
   setPromoCode: (c: string | null) => void;
   setTip: (t: TipValue) => void;
+  setCart: (items: CartItem[]) => void;
+  updateCartItemQuantity: (index: number, quantity: number) => void;
   reset: () => void;
 }
 
@@ -101,6 +116,7 @@ const initialOrderInstructions: OrderInstructionsState = {
 export const useOrderStore = create<OrderState>()(
   persist(
     (set) => ({
+      flowType: "existingUser",
       services: initialServices,
       address: null,
       pickup: null,
@@ -110,10 +126,12 @@ export const useOrderStore = create<OrderState>()(
       payment: null,
       promoCode: null,
       tip: 0,
+      cart: [],
 
       // TODO: When washAndFold is false on submit, exclude Press & Hang from the
       // priced order regardless of addPressing flag — needs to be handled in
       // cart/checkout logic.
+      setFlowType: (flowType) => set({ flowType }),
       setServices: (patch) =>
         set((s) => ({ services: { ...s.services, ...patch } })),
       setPressingPrefs: (prefs) =>
@@ -137,8 +155,16 @@ export const useOrderStore = create<OrderState>()(
       setPayment: (payment) => set({ payment }),
       setPromoCode: (promoCode) => set({ promoCode }),
       setTip: (tip) => set({ tip }),
+      setCart: (cart) => set({ cart }),
+      updateCartItemQuantity: (index, quantity) =>
+        set((s) => ({
+          cart: s.cart.map((item, i) =>
+            i === index ? { ...item, quantity: Math.max(0, quantity) } : item
+          ),
+        })),
       reset: () =>
         set({
+          flowType: "existingUser",
           services: initialServices,
           address: null,
           pickup: null,
@@ -148,12 +174,14 @@ export const useOrderStore = create<OrderState>()(
           payment: null,
           promoCode: null,
           tip: 0,
+          cart: [],
         }),
     }),
     {
       name: "washmen.laundry-order.v1",
       storage: createJSONStorage(() => localStorage),
       partialize: (s) => ({
+        flowType: s.flowType,
         services: s.services,
         address: s.address,
         pickup: s.pickup,
@@ -163,6 +191,7 @@ export const useOrderStore = create<OrderState>()(
         payment: s.payment,
         promoCode: s.promoCode,
         tip: s.tip,
+        cart: s.cart,
       }),
     }
   )
