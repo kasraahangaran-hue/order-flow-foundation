@@ -219,7 +219,7 @@ export default function OrderDetails() {
                 text={dropoff.mode === "in_person" ? "Receive from driver in person" : "Drop off at the Door"}
               />
               {(() => {
-                const { day, time } = formatScheduleLines(dropoff.date, dropoff.slot);
+                const { day, time } = formatScheduleLines(dropoff.date, dropoff.slot, { showOffset: true });
                 return <TimeRow day={day} time={time} />;
               })()}
             </div>

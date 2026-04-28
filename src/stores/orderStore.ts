@@ -185,7 +185,9 @@ export const useOrderStore = create<OrderState>()(
         }),
     }),
     {
-      name: "washmen.laundry-order.v1",
+      // v2: bumped from v1 to invalidate old locale-formatted date strings.
+      // Old persisted state had pickup.date like "Tue, Apr 28" which broke formatRelativeDay.
+      name: "washmen.laundry-order.v2",
       storage: createJSONStorage(() => localStorage),
       partialize: (s) => ({
         flowType: s.flowType,
