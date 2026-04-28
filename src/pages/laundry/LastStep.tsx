@@ -242,10 +242,10 @@ const SERVICE_META: Record<
   CartItem["service"],
   { label: string; bagColor: string }
 > = {
-  washAndFold: { label: "Wash & Fold", bagColor: "text-blue-500" },
-  cleanAndPress: { label: "Clean & Press", bagColor: "text-purple-500" },
-  bedAndBath: { label: "Bed & Bath", bagColor: "text-emerald-500" },
-  pressOnly: { label: "Press Only", bagColor: "text-amber-500" },
+  washAndFold: { label: "Wash & Fold", bagColor: "text-washmen-aqua-stroke" },
+  cleanAndPress: { label: "Clean & Press", bagColor: "text-washmen-primary-green" },
+  bedAndBath: { label: "Bed & Bath", bagColor: "text-washmen-pink" },
+  pressOnly: { label: "Press Only", bagColor: "text-washmen-secondary-300" },
 };
 
 interface PaymentSummaryFlatProps {
