@@ -23,7 +23,7 @@ export function getDefaultDropoff(): DropoffState {
   return {
     mode: "door",
     date: todayIso(2),
-    slot: firstFree?.time ?? "Anytime during the day",
+    slot: firstFree?.time ?? "Anytime",
     surcharge: 0,
   };
 }
