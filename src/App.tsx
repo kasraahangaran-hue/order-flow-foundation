@@ -11,6 +11,7 @@ import OrderInstructions from "./pages/laundry/OrderInstructions";
 import LastStep from "./pages/laundry/LastStep";
 import QuickCheckout from "./pages/quick-checkout/QuickCheckout";
 import OrderConfirmation from "./pages/OrderConfirmation";
+import { StateInspector } from "./components/dev/StateInspector";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <StateInspector />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
