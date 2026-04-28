@@ -546,8 +546,18 @@ function StateInspectorInner() {
   );
 }
 
+// TODO: Tighten this gate before shipping. Currently shows in all non-production
+// environments (Lovable preview, localhost). Production hostnames are the
+// allowlist — update washmen.com check when we deploy to a real domain.
 export function StateInspector() {
-  if (!import.meta.env.DEV) return null;
+  // Show inspector everywhere EXCEPT the production custom domain.
+  // Lovable previews and dev all show it. Update the production hostname
+  // when we deploy to a real domain.
+  if (typeof window !== "undefined") {
+    const host = window.location.hostname;
+    const isProduction = host === "washmen.com" || host.endsWith(".washmen.com");
+    if (isProduction) return null;
+  }
   return <StateInspectorInner />;
 }
 
