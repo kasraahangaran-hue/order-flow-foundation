@@ -331,6 +331,7 @@ interface PaymentSummaryItemizedProps {
   expanded: boolean;
   onToggleExpanded: () => void;
   onUpdateQuantity: (index: number, quantity: number) => void;
+  onViewPromoDetails: (promo: PromoData) => void;
 }
 
 function PaymentSummaryItemized({
@@ -343,6 +344,7 @@ function PaymentSummaryItemized({
   expanded,
   onToggleExpanded,
   onUpdateQuantity,
+  onViewPromoDetails,
 }: PaymentSummaryItemizedProps) {
   // Group items by service, preserving original cart index for stepper updates
   const groups = useMemo(() => {
@@ -452,9 +454,28 @@ function PaymentSummaryItemized({
             })}
 
             {selectedPromoCode && promoDiscount > 0 && (
-              <div className="flex justify-between text-sm">
-                <span className="text-emerald-700">Promo Discount ({selectedPromoCode})</span>
-                <span className="text-emerald-700">- AED {promoDiscount.toFixed(2)}</span>
+              <div className="flex items-center justify-between text-sm">
+                <span className="flex items-center gap-1.5 text-washmen-primary">
+                  <span>{selectedPromoCode}</span>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      haptics.light();
+                      const promo = AVAILABLE_PROMOS.find(
+                        (p) => p.code === selectedPromoCode
+                      );
+                      if (promo) onViewPromoDetails(promo);
+                    }}
+                    className="press-effect flex h-5 w-5 items-center justify-center rounded-full bg-secondary"
+                    aria-label="View promo details"
+                  >
+                    <Info className="h-3 w-3 text-washmen-primary" strokeWidth={2} />
+                  </button>
+                </span>
+                <span className="text-washmen-primary">
+                  -AED {promoDiscount.toFixed(2)}
+                </span>
               </div>
             )}
             <div className="flex justify-between text-sm">
