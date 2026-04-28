@@ -18,7 +18,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { useOrderStore, type OrderState } from "@/stores/orderStore";
+import {
+  useOrderStore,
+  type OrderState,
+  type FlowType,
+  type CartItem,
+} from "@/stores/orderStore";
 import { cn } from "@/lib/utils";
 
 type StoreApi = OrderState;
@@ -60,6 +65,90 @@ const DUMMY_PHOTOS = [
   "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200",
   "https://images.unsplash.com/photo-1551232864-3f0890e580d9?w=200",
 ];
+
+const PRICING_PAGE_SEED_CART: CartItem[] = [
+  { service: "washAndFold", itemLabel: "Bag", unitPrice: 75, quantity: 1 },
+  { service: "cleanAndPress", itemLabel: "Shirt", unitPrice: 18, quantity: 1 },
+  {
+    service: "cleanAndPress",
+    itemLabel: "Blouse",
+    unitPrice: 18,
+    quantity: 1,
+    discountedPrice: 18,
+  },
+  { service: "bedAndBath", itemLabel: "Bag", unitPrice: 85, quantity: 1 },
+  { service: "pressOnly", itemLabel: "Shirt", unitPrice: 11, quantity: 1 },
+];
+
+const FLOW_TYPE_OPTIONS: { label: string; value: FlowType }[] = [
+  { label: "New User", value: "newUser" },
+  { label: "Existing User", value: "existingUser" },
+  { label: "Pricing Page", value: "pricingPage" },
+];
+
+function todayPlus(days: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return d.toLocaleDateString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+}
+
+function applyFlowType(store: OrderState, flow: FlowType) {
+  store.setFlowType(flow);
+
+  if (flow === "newUser") {
+    store.setAddress(null);
+    store.setPickup(null);
+    store.setDropoff(null);
+    store.setDriverInstructions(null);
+    store.setPayment(null);
+    store.setOrderInstructions({
+      specialRequests: "",
+      photos: [],
+      folding: null,
+      creases: null,
+      starch: null,
+      autoApprovals: false,
+    });
+    store.setServices({
+      washAndFold: false,
+      addPressing: false,
+      pressingPrefs: null,
+      cleanAndPress: false,
+      bedAndBath: false,
+      pressOnly: false,
+    });
+    store.setCart([]);
+    return;
+  }
+
+  // existingUser + pricingPage share the seeded address/pickup/dropoff/payment
+  store.setAddress({ line1: "108, Azurite tower" });
+  store.setPickup({
+    mode: "door",
+    date: todayPlus(0),
+    slot: "02:00 pm - 04:00 pm",
+  });
+  store.setDropoff({
+    date: todayPlus(2),
+    slot: "Anytime during the day",
+    surcharge: 0,
+  });
+  store.setDriverInstructions({
+    pickup: "At concierge / reception",
+    dropoff: "Hang on door handle",
+  });
+  store.setPayment({ method: "Apple Pay" });
+
+  if (flow === "pricingPage") {
+    store.setCart(PRICING_PAGE_SEED_CART);
+  } else {
+    store.setCart([]);
+  }
+}
 
 const ROUTE_VARIANTS: Record<string, Variant[]> = {
   "/laundry/select-service": [
