@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { haptics } from "@/lib/haptics";
 import { ServiceCard } from "./ServiceCard";
+import { PricingLink } from "./PricingLink";
 import { useOrderStore, ServicesState } from "@/stores/orderStore";
 
 export type SelectedServicesSnapshot = ServicesState;
@@ -330,12 +331,7 @@ function FineryCard() {
         <p className="truncate text-base font-semibold text-washmen-secondary-900">
           The Finery
         </p>
-        <button
-          type="button"
-          className="press-effect mt-1 inline-flex text-sm font-medium text-washmen-primary underline underline-offset-2"
-        >
-          View Pricing
-        </button>
+        <PricingLink label="View Pricing" onPress={() => {}} />
       </div>
       <div
         className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-[1.5px] border-washmen-secondary-300"
@@ -445,17 +441,7 @@ function ComboRow({
           </p>
         )}
         {pricingLink && (
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              haptics.light();
-              pricingLink.onPress();
-            }}
-            className="press-effect mt-0.5 inline-flex text-sm font-medium leading-tight text-washmen-primary underline decoration-2 underline-offset-2"
-          >
-            {pricingLink.label}
-          </button>
+          <PricingLink label={pricingLink.label} onPress={pricingLink.onPress} />
         )}
         {children}
       </div>
