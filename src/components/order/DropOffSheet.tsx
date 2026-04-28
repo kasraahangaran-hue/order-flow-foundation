@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { useOrderStore } from "@/stores/orderStore";
 import { haptics } from "@/lib/haptics";
 import { cn } from "@/lib/utils";
-import { DateSlotPicker, type DayOption, type SlotOption } from "./DateSlotPicker";
+import { DateSlotPicker, type SlotOption } from "./DateSlotPicker";
+import { buildDropoffMockDays } from "@/data/slots";
 import dropoffDoorImg from "@/assets/dropoff-at-door.jpg";
 // TODO: Replace with proper drop-off-in-person illustration when designed.
 import dropoffPersonImg from "@/assets/dropoff-in-person.jpg";
@@ -16,45 +17,6 @@ interface DropOffSheetProps {
 }
 
 type DropoffMode = "door" | "in_person";
-
-// TODO: Replace with API call returning available drop-off slots per day per zone.
-// Surcharge values are placeholders — real prices come from backend.
-const DROPOFF_SLOTS: SlotOption[] = [
-  { time: "Anytime during the day", variant: "wide", freeDelivery: true },
-  { time: "Anytime before 08:00 pm", variant: "wide", freeDelivery: true },
-  { time: "Anytime after 08:00 pm", variant: "wide", freeDelivery: true },
-  { time: "06:00 pm - 08:00 pm", variant: "between", surcharge: 5 },
-  { time: "08:00 pm - 10:00 pm", variant: "between", surcharge: 5 },
-];
-
-function buildDropoffMockDays(): DayOption[] {
-  const days: DayOption[] = [];
-  // Day 0 (today) is not a drop-off option for laundry — start at +1
-  for (let i = 1; i <= 6; i++) {
-    const d = new Date();
-    d.setHours(0, 0, 0, 0);
-    d.setDate(d.getDate() + i);
-    const iso = d.toISOString().slice(0, 10);
-    let label: string;
-    if (i === 1) label = "Tomorrow";
-    else label = `+${i} days`;
-    const subLabel = d.toLocaleDateString("en-US", {
-      weekday: "short",
-      month: "short",
-      day: "numeric",
-    });
-    const isFirst = i === 1;
-    days.push({
-      date: iso,
-      label,
-      subLabel,
-      badge: isFirst ? "next-day-delivery" : undefined,
-      freeDelivery: !isFirst,
-      slots: DROPOFF_SLOTS,
-    });
-  }
-  return days;
-}
 
 interface TypeTileProps {
   selected: boolean;
@@ -122,8 +84,7 @@ export function DropOffSheet({ open, onOpenChange }: DropOffSheetProps) {
       const stored = storedDropoff?.slot
         ? day.slots.find((s) => s.time === storedDropoff.slot)
         : null;
-      // Fallback to earliest FREE slot, not just first slot
-      const earliestFree = day.slots.find((s) => !s.surcharge) ?? day.slots[0];
+      const earliestFree = day.slots.find((s) => s.freeDelivery) ?? day.slots[0];
       setSelectedSlot(stored ?? earliestFree ?? null);
     }
   }, [open, storedDropoff, days]);
@@ -140,7 +101,7 @@ export function DropOffSheet({ open, onOpenChange }: DropOffSheetProps) {
     onOpenChange(false);
   };
 
-  const step2Title = dropoffMode === "in_person" ? "Drop Off in Person" : "Drop Off at Door";
+  const step2Title = dropoffMode === "in_person" ? "Delivery in Person" : "Delivery at Door";
   const title = step === 1 ? "Schedule Your Drop Off" : step2Title;
 
   return (

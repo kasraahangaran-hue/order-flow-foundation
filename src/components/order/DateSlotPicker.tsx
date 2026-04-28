@@ -15,6 +15,8 @@ export interface DayOption {
   subLabel: string;
   badge?: "next-day-delivery";
   freeDelivery?: boolean;
+  /** Day-level surcharge percentage shown as a red pill (e.g. 50 → "+50% surcharge"). */
+  daySurchargePct?: number;
   slots: SlotOption[];
 }
 
@@ -37,6 +39,16 @@ function FreeDeliveryTag({ isSelected }: { isSelected: boolean }) {
     >
       <span className="text-[10px] font-medium leading-[14px] tracking-[0.3px] text-washmen-primary">
         Free delivery
+      </span>
+    </div>
+  );
+}
+
+function DaySurchargeTag({ pct }: { pct: number }) {
+  return (
+    <div className="mt-1 inline-flex w-fit rounded-[2px] bg-washmen-secondary-red px-[3px] py-px">
+      <span className="text-[10px] font-medium leading-[14px] tracking-[0.3px] text-washmen-red">
+        +{pct}% surcharge
       </span>
     </div>
   );
@@ -106,7 +118,11 @@ export function DateSlotPicker({
                     <p className="text-[12px] font-light leading-[18px] tracking-[0.1px]">
                       {d.subLabel}
                     </p>
-                    {d.freeDelivery ? <FreeDeliveryTag isSelected={isSel} /> : null}
+                    {d.daySurchargePct ? (
+                      <DaySurchargeTag pct={d.daySurchargePct} />
+                    ) : d.freeDelivery ? (
+                      <FreeDeliveryTag isSelected={isSel} />
+                    ) : null}
                   </button>
                 </div>
               );
@@ -130,7 +146,11 @@ export function DateSlotPicker({
                 <p className="text-[12px] font-light leading-[18px] tracking-[0.1px]">
                   {d.subLabel}
                 </p>
-                {d.freeDelivery ? <FreeDeliveryTag isSelected={isSel} /> : null}
+                {d.daySurchargePct ? (
+                  <DaySurchargeTag pct={d.daySurchargePct} />
+                ) : d.freeDelivery ? (
+                  <FreeDeliveryTag isSelected={isSel} />
+                ) : null}
               </button>
             );
           })}
