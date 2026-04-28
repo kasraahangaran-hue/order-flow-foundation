@@ -89,12 +89,9 @@ const FLOW_TYPE_OPTIONS: { label: string; value: FlowType }[] = [
 
 function todayPlus(days: number): string {
   const d = new Date();
+  d.setHours(0, 0, 0, 0);
   d.setDate(d.getDate() + days);
-  return d.toLocaleDateString(undefined, {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-  });
+  return d.toISOString().slice(0, 10); // ISO YYYY-MM-DD to match sheet day cards
 }
 
 function applyFlowType(store: OrderState, flow: FlowType) {
