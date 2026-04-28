@@ -64,48 +64,47 @@ export function DateSlotPicker({
       ) : null}
 
       <div className="flex gap-4">
-        {/* Day rail */}
-        <div className="flex w-[120px] shrink-0 flex-col gap-[9px] overflow-y-auto pr-1">
+        {/* Day rail — 120px fixed */}
+        <div className="flex w-[120px] shrink-0 flex-col gap-[9px]">
           {days.map((d) => {
             const isSel = d.date === selectedDate;
             const hasBadge = d.badge === "next-day-delivery";
 
+            const handleSelect = () => {
+              haptics.light();
+              onSelectDate(d.date);
+              onSelectSlot(null);
+            };
+
             if (hasBadge) {
               return (
-                <button
-                  key={d.date}
-                  type="button"
-                  onClick={() => {
-                    haptics.light();
-                    onSelectDate(d.date);
-                    onSelectSlot(null);
-                  }}
-                  className={cn(
-                    "press-effect overflow-hidden rounded-[6px] border text-left",
-                    isSel ? "border-washmen-primary" : "border-transparent"
-                  )}
-                >
-                  <div className="flex items-center gap-1 bg-washmen-primary px-2 py-1">
-                    <Clock className="h-3 w-3 text-white" strokeWidth={2} />
-                    <span className="text-[9px] font-bold uppercase leading-[12px] tracking-[0.3px] text-white">
-                      Next-day delivery
+                <div key={d.date} className="flex flex-col">
+                  {/* Purple badge header — stays purple even when selected */}
+                  <div className="flex h-[19px] items-center justify-center gap-[2px] rounded-t-[6px] border-x border-t border-[#F2F3F8] bg-[#9176FF] px-1">
+                    <Clock className="h-[10px] w-[10px] text-white" strokeWidth={2.5} />
+                    <span className="whitespace-nowrap text-[9px] font-bold italic leading-[7px] tracking-[0.4px] text-white">
+                      NEXT-DAY DELIVERY
                     </span>
                   </div>
-                  <div
+                  <button
+                    type="button"
+                    onClick={handleSelect}
                     className={cn(
-                      "px-2 py-2",
-                      isSel ? "bg-washmen-light-green" : "bg-white"
+                      "press-effect flex w-full flex-col gap-px rounded-b-[6px] border-x border-b px-3 py-2 text-left text-washmen-primary",
+                      isSel
+                        ? "border-washmen-primary bg-washmen-light-green"
+                        : "border-[#F2F3F8] bg-white"
                     )}
                   >
-                    <p className="text-[14px] font-semibold leading-[18px] text-washmen-primary">
+                    <p className="text-[14px] font-normal leading-[20px] tracking-[0.1px]">
                       {d.label}
                     </p>
-                    <p className="mt-0.5 text-[11px] font-light leading-[14px] text-washmen-secondary-500">
+                    <p className="text-[12px] font-light leading-[18px] tracking-[0.1px]">
                       {d.subLabel}
                     </p>
                     {d.freeDelivery ? <FreeDeliveryTag isSelected={isSel} /> : null}
-                  </div>
-                </button>
+                  </button>
+                </div>
               );
             }
 
@@ -113,22 +112,18 @@ export function DateSlotPicker({
               <button
                 key={d.date}
                 type="button"
-                onClick={() => {
-                  haptics.light();
-                  onSelectDate(d.date);
-                  onSelectSlot(null);
-                }}
+                onClick={handleSelect}
                 className={cn(
-                  "press-effect rounded-[6px] border px-2 py-2 text-left",
+                  "press-effect flex w-full flex-col gap-px rounded-[6px] border px-3 py-2 text-left text-washmen-primary",
                   isSel
                     ? "border-washmen-primary bg-washmen-light-green"
                     : "border-[#F2F3F8] bg-white"
                 )}
               >
-                <p className="text-[14px] font-semibold leading-[18px] text-washmen-primary">
+                <p className="text-[14px] font-normal leading-[20px] tracking-[0.1px]">
                   {d.label}
                 </p>
-                <p className="mt-0.5 text-[11px] font-light leading-[14px] text-washmen-secondary-500">
+                <p className="text-[12px] font-light leading-[18px] tracking-[0.1px]">
                   {d.subLabel}
                 </p>
                 {d.freeDelivery ? <FreeDeliveryTag isSelected={isSel} /> : null}
@@ -137,42 +132,33 @@ export function DateSlotPicker({
           })}
         </div>
 
-        {/* Slot list */}
-        <div className="flex w-[191px] flex-col gap-[9px] overflow-y-auto pr-1">
+        {/* Slot list — 191px fixed */}
+        <div className="flex w-[191px] shrink-0 flex-col gap-[9px]">
           {activeDay.slots.map((slot) => {
             const isSel = slot.time === selectedSlotTime;
+
+            const handleSelect = () => {
+              haptics.light();
+              onSelectSlot(slot);
+            };
 
             if (slot.variant === "wide") {
               return (
                 <button
                   key={slot.time}
                   type="button"
-                  onClick={() => {
-                    haptics.light();
-                    onSelectSlot(slot);
-                  }}
+                  onClick={handleSelect}
                   className={cn(
-                    "press-effect rounded-[6px] border px-3 py-2 text-left",
+                    "press-effect flex w-full flex-col items-start gap-0.5 rounded-[6px] border px-3 py-2 text-left",
                     isSel
                       ? "border-washmen-primary bg-washmen-light-green"
                       : "border-[#F2F3F8] bg-white"
                   )}
                 >
-                  <p className="text-[13px] font-medium leading-[18px] text-washmen-primary">
+                  <p className="text-[14px] font-normal leading-[20px] tracking-[0.1px] text-washmen-primary">
                     {slot.time}
                   </p>
-                  {slot.freeDelivery ? (
-                    <div
-                      className={cn(
-                        "mt-1 inline-flex w-fit rounded-[2px] px-[3px] py-px",
-                        isSel ? "bg-[#A4FF00]" : "bg-washmen-light-green"
-                      )}
-                    >
-                      <span className="text-[10px] font-medium leading-[14px] tracking-[0.3px] text-washmen-primary">
-                        Free delivery
-                      </span>
-                    </div>
-                  ) : null}
+                  {slot.freeDelivery ? <FreeDeliveryTag isSelected={isSel} /> : null}
                 </button>
               );
             }
@@ -181,26 +167,23 @@ export function DateSlotPicker({
               <button
                 key={slot.time}
                 type="button"
-                onClick={() => {
-                  haptics.light();
-                  onSelectSlot(slot);
-                }}
+                onClick={handleSelect}
                 className={cn(
-                  "press-effect flex h-[73px] flex-col justify-center rounded-[6px] border px-3 py-2 text-left",
+                  "press-effect flex w-full flex-col items-start gap-0.5 rounded-[6px] border px-3 py-2 text-left",
                   isSel
                     ? "border-washmen-primary bg-washmen-light-green"
                     : "border-[#F2F3F8] bg-white"
                 )}
               >
-                <p className="text-[11px] font-light leading-[14px] text-washmen-secondary-500">
+                <p className="text-[12px] font-light leading-[18px] tracking-[0.1px] text-washmen-primary">
                   between
                 </p>
-                <p className="text-[13px] font-medium leading-[18px] text-washmen-primary">
+                <p className="text-[14px] font-normal leading-[20px] tracking-[0.1px] text-washmen-primary">
                   {slot.time}
                 </p>
                 {slot.surcharge ? (
-                  <div className="mt-1 inline-flex w-fit rounded-[2px] bg-washmen-secondary-red px-[3px] py-px">
-                    <span className="text-[10px] font-medium leading-[14px] tracking-[0.3px] text-washmen-red">
+                  <div className="mt-1 inline-flex items-start rounded-[2px] bg-washmen-secondary-red px-[3px] py-px">
+                    <span className="text-[10px] leading-[14px] tracking-[0.3px] text-washmen-red">
                       AED {slot.surcharge} service
                     </span>
                   </div>
