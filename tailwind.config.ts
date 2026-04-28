@@ -49,6 +49,7 @@ export default {
           "light-grey": "hsl(var(--washmen-light-grey))",
           "secondary-red": "hsl(var(--washmen-secondary-red))",
           "red": "hsl(var(--washmen-red))",
+          "aqua-stroke": "hsl(var(--washmen-aqua-stroke))",
         },
         primary: {
           DEFAULT: "hsl(var(--primary))",
