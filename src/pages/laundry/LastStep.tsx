@@ -518,6 +518,7 @@ export default function LastStep() {
     { type: "error" | "success"; text: string } | null
   >(null);
   const [selectedPromoCode, setSelectedPromoCode] = useState<string | null>(null);
+  const [detailsPromo, setDetailsPromo] = useState<PromoData | null>(null);
 
   const lineItems = useMemo(() => buildLineItems(services), [services]);
   const flatItemsTotal = lineItems.reduce((s, i) => s + i.amount, 0);
@@ -662,6 +663,7 @@ export default function LastStep() {
                       promo={promo}
                       selected={selectedPromoCode === promo.code}
                       onToggle={() => togglePromo(promo.code)}
+                      onViewDetails={() => setDetailsPromo(promo)}
                     />
                   ))}
                 </div>
@@ -726,6 +728,7 @@ export default function LastStep() {
             expanded={paymentExpanded}
             onToggleExpanded={() => toggle(setPaymentExpanded, paymentExpanded)}
             onUpdateQuantity={updateCartItemQuantity}
+            onViewPromoDetails={(p) => setDetailsPromo(p)}
           />
         ) : (
           <PaymentSummaryFlat
@@ -799,6 +802,11 @@ export default function LastStep() {
           </div>
         </div>
       </div>
+      <PromoDetailsSheet
+        open={!!detailsPromo}
+        onOpenChange={(open) => !open && setDetailsPromo(null)}
+        promo={detailsPromo}
+      />
     </OrderLayout>
   );
 }
