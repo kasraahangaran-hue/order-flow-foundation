@@ -414,6 +414,8 @@ function StateInspectorInner() {
   const location = useLocation();
   const navigate = useNavigate();
   const reset = useOrderStore((s) => s.reset);
+  const store = useOrderStore();
+  const flowType = store.flowType;
 
   const variants = ROUTE_VARIANTS[location.pathname];
 
@@ -440,6 +442,48 @@ function StateInspectorInner() {
                 {location.pathname}
               </SheetDescription>
             </SheetHeader>
+
+            <div className="border-b border-border px-4 py-3">
+              <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                Flow Type
+              </p>
+              <p className="mb-2 text-[11px] text-muted-foreground">
+                Switches the customer journey variant — affects all screens
+              </p>
+              <Select
+                value={flowType}
+                onValueChange={(v) => {
+                  const next = v as FlowType;
+                  applyFlowType(store, next);
+                  if (next === "pricingPage") {
+                    navigate("/laundry/last-step");
+                  }
+                }}
+              >
+                <SelectTrigger className="h-8 w-full text-xs">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {FLOW_TYPE_OPTIONS.map((opt) => (
+                    <SelectItem
+                      key={opt.value}
+                      value={opt.value}
+                      className="text-xs"
+                    >
+                      {opt.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {flowType === "pricingPage" && (
+                <p className="mt-2 rounded-md bg-muted px-2 py-1.5 text-[11px] leading-snug text-muted-foreground">
+                  Pricing-page flow skips the Select Service / Order Details /
+                  Order Instructions steps and goes straight to Last Step with
+                  an itemized cart. Selecting this auto-navigates to
+                  /laundry/last-step.
+                </p>
+              )}
+            </div>
 
             <div className="border-b border-border px-4 py-3">
               <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
