@@ -15,6 +15,8 @@ export interface DayOption {
   subLabel: string;
   badge?: "next-day-delivery";
   freeDelivery?: boolean;
+  /** Day-level surcharge percentage shown as a red pill (e.g. 50 → "+50% surcharge"). */
+  daySurchargePct?: number;
   slots: SlotOption[];
 }
 
@@ -37,6 +39,16 @@ function FreeDeliveryTag({ isSelected }: { isSelected: boolean }) {
     >
       <span className="text-[10px] font-medium leading-[14px] tracking-[0.3px] text-washmen-primary">
         Free delivery
+      </span>
+    </div>
+  );
+}
+
+function DaySurchargeTag({ pct }: { pct: number }) {
+  return (
+    <div className="mt-1 inline-flex w-fit rounded-[2px] bg-washmen-secondary-red px-[3px] py-px">
+      <span className="text-[10px] font-medium leading-[14px] tracking-[0.3px] text-washmen-red">
+        +{pct}% surcharge
       </span>
     </div>
   );
