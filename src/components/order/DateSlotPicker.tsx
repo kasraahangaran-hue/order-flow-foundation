@@ -114,22 +114,26 @@ export function DateSlotPicker({
 
             if (hasBadge) {
               return (
-                <div key={d.date} className="flex flex-col">
-                  {/* Purple badge header — stays purple even when selected */}
-                  <div className="flex h-[19px] items-center justify-center gap-[2px] rounded-t-[6px] border-x border-t border-[#F2F3F8] bg-[#9176FF] px-1">
+                <button
+                  key={d.date}
+                  type="button"
+                  onClick={handleSelect}
+                  className={cn(
+                    "press-effect flex w-full flex-col overflow-hidden rounded-[6px] border text-left",
+                    isSel ? "border-washmen-primary" : "border-[#F2F3F8]"
+                  )}
+                >
+                  {/* Purple badge — no border, the outer wrapper carries it. Stays purple regardless of selection. */}
+                  <div className="flex h-[19px] items-center justify-center gap-[2px] bg-[#9176FF] px-1">
                     <Clock className="h-[10px] w-[10px] text-white" strokeWidth={2.5} />
                     <span className="whitespace-nowrap text-[9px] font-bold italic leading-[7px] tracking-[0.4px] text-white">
                       NEXT-DAY DELIVERY
                     </span>
                   </div>
-                  <button
-                    type="button"
-                    onClick={handleSelect}
+                  <div
                     className={cn(
-                      "press-effect flex w-full flex-col gap-px rounded-b-[6px] border-x border-b px-3 py-2 text-left text-washmen-primary",
-                      isSel
-                        ? "border-washmen-primary bg-washmen-light-green"
-                        : "border-[#F2F3F8] bg-white"
+                      "flex w-full flex-col gap-px px-3 py-2 text-washmen-primary",
+                      isSel ? "bg-washmen-light-green" : "bg-white"
                     )}
                   >
                     <p className="text-[14px] font-normal leading-[20px] tracking-[0.1px]">
@@ -143,8 +147,8 @@ export function DateSlotPicker({
                     ) : d.freeDelivery ? (
                       <FreeDeliveryTag isSelected={isSel} />
                     ) : null}
-                  </button>
-                </div>
+                  </div>
+                </button>
               );
             }
 
