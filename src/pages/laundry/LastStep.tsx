@@ -364,11 +364,19 @@ export default function LastStep() {
                     className="w-full bg-transparent text-center text-[14px] text-washmen-primary placeholder:text-[#C3C8DB] focus:outline-none"
                   />
                 </div>
-                {promoError && (
-                  <p className="mt-1 text-center text-[11px] text-washmen-error">
-                    {promoError}
-                  </p>
-                )}
+                <div className="mt-1 h-4 text-center text-[11px]">
+                  {inputMessage && (
+                    <p
+                      className={cn(
+                        inputMessage.type === "error"
+                          ? "text-red-500"
+                          : "text-washmen-success"
+                      )}
+                    >
+                      {inputMessage.text}
+                    </p>
+                  )}
+                </div>
               </div>
               <div className="flex items-center gap-8 border-t border-[#EFEFF4] pt-4">
                 <div className="flex flex-1 items-center gap-3">
