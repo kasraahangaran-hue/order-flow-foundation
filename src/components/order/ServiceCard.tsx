@@ -2,6 +2,7 @@ import { Check, Plus } from "lucide-react";
 import { ComponentType, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { haptics } from "@/lib/haptics";
+import { PricingLink } from "./PricingLink";
 
 interface ServiceCardProps {
   icon: ComponentType<{ className?: string }>;
@@ -73,17 +74,7 @@ export function ServiceCard({
           )}
         </div>
         {pricingLink && (
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              haptics.light();
-              pricingLink.onPress();
-            }}
-            className="press-effect mt-0.5 inline-flex text-xs font-normal leading-tight text-washmen-primary underline underline-offset-2"
-          >
-            {pricingLink.label}
-          </button>
+          <PricingLink label={pricingLink.label} onPress={pricingLink.onPress} />
         )}
       </div>
 
