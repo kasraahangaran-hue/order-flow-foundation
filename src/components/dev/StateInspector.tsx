@@ -432,7 +432,7 @@ function StateInspectorInner() {
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent
           side="right"
-          className="w-[340px] overflow-y-auto p-0 sm:max-w-[340px]"
+          className="no-scrollbar w-[340px] overflow-y-auto p-0 sm:max-w-[340px]"
         >
           <div className="flex flex-col">
             <SheetHeader className="space-y-1 border-b border-border px-4 py-4 text-left">
@@ -488,7 +488,7 @@ function StateInspectorInner() {
               <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                 Quick nav
               </p>
-              <div className="flex gap-2 overflow-x-auto pb-1">
+              <div className="no-scrollbar flex gap-2 overflow-x-auto pb-1">
                 {QUICK_NAV.map((item) => {
                   const active = location.pathname === item.path;
                   return (

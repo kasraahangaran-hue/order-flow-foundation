@@ -65,7 +65,7 @@ export function OrderLayout({
       </header>
 
       {/* Scrollable content */}
-      <main className="flex-1 overflow-y-auto px-4 pb-4 pt-[26px]">{children}</main>
+      <main className="no-scrollbar flex-1 overflow-y-auto px-4 pb-4 pt-[26px]">{children}</main>
 
       {/* Footer */}
       {footerSlot !== undefined && (

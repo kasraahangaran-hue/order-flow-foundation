@@ -656,7 +656,7 @@ export default function LastStep() {
           {promosExpanded && (
             <div className="flex flex-col gap-3 border-t border-[#efeff4] px-4 pt-1 pb-4">
               {hasAvailablePromos && (
-                <div className="-mx-4 flex items-center gap-4 overflow-x-auto px-4 pt-3">
+                <div className="no-scrollbar -mx-4 flex items-center gap-4 overflow-x-auto px-4 pt-3">
                   {AVAILABLE_PROMOS.map((promo) => (
                     <PromoCard
                       key={promo.code}

@@ -97,7 +97,7 @@ export function DateSlotPicker({
 
       <div className="flex flex-1 min-h-0 gap-[9px] overflow-hidden">
         {/* Day rail */}
-        <div className="flex flex-1 flex-col gap-[9px] overflow-y-auto pr-1">
+        <div className="no-scrollbar flex flex-1 flex-col gap-[9px] overflow-y-auto">
           {days.map((d) => {
             const isSel = d.date === selectedDate;
             const hasBadge = d.badge === "next-day-delivery";
@@ -181,7 +181,7 @@ export function DateSlotPicker({
         </div>
 
         {/* Slot list */}
-        <div className="flex flex-1 flex-col gap-[9px] overflow-y-auto pr-1">
+        <div className="no-scrollbar flex flex-1 flex-col gap-[9px] overflow-y-auto">
           {activeDay.slots.map((slot) => {
             const isSel = slot.time === selectedSlotTime;
 
