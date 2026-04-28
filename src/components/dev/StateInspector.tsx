@@ -133,7 +133,7 @@ function applyFlowType(store: OrderState, flow: FlowType) {
   store.setDropoff({
     mode: "door",
     date: todayPlus(2),
-    slot: "Anytime during the day",
+    slot: "Anytime",
     surcharge: 0,
   });
   store.setDriverInstructions({
