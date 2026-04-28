@@ -420,19 +420,19 @@ function PaymentSummaryItemized({
                       >
                         <div className="min-w-0 flex-1">
                           <p className="text-sm text-foreground">{item.itemLabel}</p>
-                          <p className="text-xs">
+                          <p className="text-[13px] leading-[18px] tracking-[0.4px]">
                             {item.discountedPrice !== undefined ? (
                               <>
-                                <span className="text-muted-foreground line-through">
-                                  AED {item.unitPrice.toFixed(2)}
-                                </span>{" "}
-                                <span className="font-medium text-emerald-700">
+                                <span className="text-[#F13578]">
                                   AED {item.discountedPrice.toFixed(2)}
+                                </span>{" "}
+                                <span className="text-washmen-secondary-300 line-through">
+                                  AED {item.unitPrice.toFixed(2)}
                                 </span>
                               </>
                             ) : (
-                              <span className="text-muted-foreground">
-                                AED {item.unitPrice.toFixed(2)} each
+                              <span className="text-washmen-secondary-700">
+                                AED {item.unitPrice.toFixed(2)}
                               </span>
                             )}
                           </p>
