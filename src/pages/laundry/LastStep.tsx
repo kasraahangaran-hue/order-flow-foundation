@@ -19,6 +19,19 @@ import { haptics } from "@/lib/haptics";
 import { useOrderStore, type ServicesState } from "@/stores/orderStore";
 import { nativeBridge } from "@/lib/nativeBridge";
 
+/**
+ * PROMO CODE LOGIC — checkout-stage only ("Available/Selected" state per spec).
+ *
+ * Backend integration TODO:
+ * - Fetch user's eligible promos (replace AVAILABLE_PROMOS const)
+ * - Check ALREADY_APPLIED_CODES against in-progress orders (single-use de-dupe)
+ * - Validate typed codes server-side for eligibility
+ * - On Place Order: commit selected promo (state moves to "Applied")
+ * - Handle rollback when card fails / order cancelled / pickup failed
+ *
+ * Spec: https://www.notion.so/washmen/Promo-Code-Journey-Status-231e9f936ef18071a202ca9a837a7e26
+ */
+
 interface LineItem {
   label: string;
   amount: number;
@@ -61,9 +74,13 @@ interface PromoData {
 // Mock list of available promos. Replace with backend fetch when available.
 const AVAILABLE_PROMOS: PromoData[] = [
   { code: "MYLAUNDRY25", subtitle: "AED 50 off on 3 laundry orders!", used: 1, total: 11, discountAed: 50 },
-  { code: "FIRSTORDER", subtitle: "10% off your first order", used: 0, total: 1, discountPct: 10 },
+  { code: "FIRSTORDER10", subtitle: "10% off your first order", used: 0, total: 1, discountPct: 10 },
   { code: "WEEKEND15", subtitle: "AED 15 off weekend orders", used: 1, total: 3, discountAed: 15 },
 ];
+
+// Codes already applied to in-progress orders (single-use de-dupe).
+// TODO: populate from backend when wired up.
+const ALREADY_APPLIED_CODES = new Set<string>();
 
 function calculatePromoDiscount(code: string | null, itemsTotal: number): number {
   if (!code) return 0;
