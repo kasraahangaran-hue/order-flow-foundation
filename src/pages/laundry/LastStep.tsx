@@ -516,10 +516,10 @@ export default function LastStep() {
 
         {/* TIP SELECTOR */}
         <div className="flex items-center gap-3 px-1 py-2">
-          <span className="w-12 flex-shrink-0 text-center text-sm font-semibold text-foreground">
+          <span className="w-12 shrink-0 text-center text-sm font-semibold text-foreground">
             Tip?
           </span>
-          <div className="flex flex-1 gap-2">
+          <div className="flex flex-1 gap-[10px]">
             {TIP_OPTIONS.map((tip) => (
               <button
                 key={tip.value}
@@ -529,10 +529,12 @@ export default function LastStep() {
                   haptics.light();
                 }}
                 className={cn(
-                  "press-effect flex-1 rounded-md border px-3 py-2 text-xs font-medium transition-colors",
+                  "press-effect flex h-8 w-[60px] items-center justify-center rounded-[5px] border text-[14px] font-normal text-washmen-primary transition-colors",
                   selectedTip === tip.value
-                    ? "border-primary bg-primary/5 text-primary"
-                    : "border-border bg-background text-muted-foreground"
+                    ? tip.value === 0
+                      ? "border-washmen-red bg-washmen-secondary-red"
+                      : "border-washmen-primary bg-washmen-light-green"
+                    : "border-washmen-secondary-300 bg-white"
                 )}
               >
                 {tip.label}
