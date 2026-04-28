@@ -312,23 +312,19 @@ export default function LastStep() {
               <Tag className="h-4 w-4 text-washmen-primary" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm leading-tight text-washmen-primary">
+              <p className="text-sm font-semibold leading-tight text-washmen-primary">
                 Promos
-                {selectedPromoCode ? (
-                  <span className="text-xs font-light">
-                    {" "}(Applied: {selectedPromoCode})
-                  </span>
-                ) : hasAvailablePromos ? (
+                {hasAvailablePromos && (
                   <span className="text-xs font-light">
                     {" "}({availableCount} codes available)
                   </span>
-                ) : null}
+                )}
               </p>
             </div>
             {promosExpanded ? (
-              <ChevronUp className="h-3 w-3 shrink-0 text-washmen-primary" />
+              <ChevronUp className="h-4 w-4 shrink-0 text-muted-foreground" />
             ) : (
-              <ChevronDown className="h-3 w-3 shrink-0 text-washmen-primary" />
+              <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
             )}
           </button>
           {promosExpanded && (
@@ -361,10 +357,10 @@ export default function LastStep() {
                       if (promoInput.trim()) tryApplyTypedCode();
                     }}
                     placeholder="Type your promocode here"
-                    className="w-full bg-transparent text-center text-[14px] text-washmen-primary placeholder:text-[#C3C8DB] focus:outline-none"
+                    className="w-full bg-transparent text-left text-[14px] text-washmen-primary placeholder:text-[#C3C8DB] focus:outline-none"
                   />
                 </div>
-                <div className="mt-1 h-4 text-center text-[11px]">
+                <div className="mt-1 h-4 text-left text-[11px]">
                   {inputMessage && (
                     <p
                       className={cn(
