@@ -112,10 +112,10 @@ export function PickupSchedulingSheet({ open, onOpenChange }: PickupSchedulingSh
       const seedDate = storedPickup?.date ?? days[0].date;
       setSelectedDate(seedDate);
       const day = days.find((d) => d.date === seedDate) ?? days[0];
-      const found = storedPickup?.slot
-        ? day.slots.find((s) => s.time === storedPickup.slot) ?? null
+      const stored = storedPickup?.slot
+        ? day.slots.find((s) => s.time === storedPickup.slot)
         : null;
-      setSelectedSlot(found);
+      setSelectedSlot(stored ?? day.slots[0] ?? null);
     }
   }, [open, storedPickup, days]);
 
