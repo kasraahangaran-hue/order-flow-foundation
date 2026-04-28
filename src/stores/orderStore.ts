@@ -157,11 +157,16 @@ export const useOrderStore = create<OrderState>()(
       setTip: (tip) => set({ tip }),
       setCart: (cart) => set({ cart }),
       updateCartItemQuantity: (index, quantity) =>
-        set((s) => ({
-          cart: s.cart.map((item, i) =>
-            i === index ? { ...item, quantity: Math.max(0, quantity) } : item
-          ),
-        })),
+        set((s) => {
+          if (quantity <= 0) {
+            return { cart: s.cart.filter((_, i) => i !== index) };
+          }
+          return {
+            cart: s.cart.map((item, i) =>
+              i === index ? { ...item, quantity } : item
+            ),
+          };
+        }),
       reset: () =>
         set({
           flowType: "existingUser",

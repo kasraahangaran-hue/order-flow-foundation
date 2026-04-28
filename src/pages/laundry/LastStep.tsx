@@ -401,6 +401,12 @@ function PaymentSummaryItemized({
           <div className="space-y-4 border-t border-border px-4 pt-3 pb-4">
             {groups.map(([service, entries]) => {
               const meta = SERVICE_META[service];
+              const hasPressing =
+                service === "washAndFold" &&
+                services.addPressing &&
+                !!services.pressingPrefs?.items?.length;
+              // No dedicated Folding sub-row exists yet in the cart model.
+              const hasFolding = false;
               return (
                 <div key={service} className="space-y-2">
                   <div className="flex items-center gap-2">
@@ -440,6 +446,7 @@ function PaymentSummaryItemized({
                         <QuantityStepper
                           value={item.quantity}
                           onChange={(next) => onUpdateQuantity(index, next)}
+                          min={0}
                         />
                       </div>
                     ))}
@@ -451,14 +458,20 @@ function PaymentSummaryItemized({
                     ) : null}
                     {service === "washAndFold" && services.pressingPrefs ? null : null}
                   </div>
+                  {service === "washAndFold" && (hasPressing || hasFolding) && (
+                    // TODO: Make copy dynamic based on which sub-services are actually selected (only Press & Hang vs only Folding vs both)
+                    <div className="mt-2 rounded-[8px] bg-[#E5FFFE] p-2">
+                      <p className="text-[12px] font-light leading-[18px] tracking-[0.1px] text-washmen-primary">
+                        <span className="font-medium">Press & Hang </span>
+                        <span>and </span>
+                        <span className="font-medium">Folding </span>
+                        <span>will be priced per item after we receive your order</span>
+                      </p>
+                    </div>
+                  )}
                 </div>
               );
             })}
-
-            <div className="rounded-md bg-cyan-50 px-3 py-2 text-[11px] text-cyan-900">
-              Items above are priced per item. Final total will be confirmed after sorting at our
-              facility.
-            </div>
 
             {selectedPromoCode && promoDiscount > 0 && (
               <div className="flex justify-between text-sm">
