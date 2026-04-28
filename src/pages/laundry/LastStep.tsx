@@ -703,98 +703,29 @@ export default function LastStep() {
         </div>
 
         {/* PAYMENT SUMMARY */}
-        <div className="overflow-hidden rounded-card bg-card shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
-          <button
-            type="button"
-            onClick={() => toggle(setPaymentExpanded, paymentExpanded)}
-            className="press-effect flex w-full items-center gap-3 p-4 text-left"
-          >
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
-              <CreditCard className="h-4 w-4 text-washmen-primary" />
-            </div>
-            <p className="flex-1 text-sm font-semibold leading-tight text-washmen-primary">
-              Payment Summary
-            </p>
-            {paymentExpanded ? (
-              <ChevronUp className="h-4 w-4 shrink-0 text-muted-foreground" />
-            ) : (
-              <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
-            )}
-          </button>
-          {paymentExpanded && (
-            <>
-              <div className="space-y-2 border-t border-border px-4 pt-3 pb-4">
-                {hasItems &&
-                  lineItems.map((item) => (
-                    <div
-                      key={item.label}
-                      className="flex justify-between text-sm"
-                    >
-                      <span className="text-muted-foreground">{item.label}</span>
-                      <span className="text-foreground">
-                        AED {item.amount.toFixed(2)}
-                      </span>
-                    </div>
-                  ))}
-                {/* TODO: Per spec, when no basket is applied, hide subtotal/total
-                    and show promo as a standalone value. Implement when
-                    minimum-order state is added. */}
-                {selectedPromoCode && promoDiscount > 0 && (
-                  <div className="flex justify-between text-sm">
-                    <span className="text-emerald-700">
-                      Promo Discount ({selectedPromoCode})
-                    </span>
-                    <span className="text-emerald-700">
-                      - AED {promoDiscount.toFixed(2)}
-                    </span>
-                  </div>
-                )}
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Delivery Fee</span>
-                  <span className="text-foreground">
-                    AED {DELIVERY_FEE.toFixed(2)}*
-                  </span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Driver Tip</span>
-                  <span className="text-foreground">
-                    AED {selectedTip.toFixed(2)}
-                  </span>
-                </div>
-                {/* TODO: Add minimum-order-not-met state when threshold is confirmed. */}
-                {/* TODO: Add itemized cart breakdown when entering via pricing page flow. */}
-                <div className="mt-2 flex items-center justify-between border-t border-dashed border-border pt-3">
-                  <span className="text-sm font-bold text-washmen-primary">
-                    Estimated Total
-                  </span>
-                  <span className="text-sm font-bold text-washmen-primary">
-                    AED {estimatedTotal.toFixed(2)}**
-                  </span>
-                </div>
-              </div>
-              {/* Amber notes footer attached to Payment Summary */}
-              {/* TEMP: hardcoded copy. Replace with Strapi fetch when keys are confirmed. */}
-              <div className="space-y-3 bg-amber-50 px-4 py-4 text-amber-900">
-                <p className="text-xs font-semibold leading-relaxed">
-                  *Delivery Fee Increase
-                </p>
-                <p className="text-[10px] leading-relaxed">
-                  Due to the increase of diesel & natural gas prices and its
-                  impact on our supply chain, delivery fee has increased to
-                  AED 15. Once the situation normalizes, we will reduce it
-                  significantly. Thank you for your support during these times
-                  🙏
-                </p>
-                <p className="text-[10px] leading-relaxed">
-                  **The final amount, with discounts, will be determined after
-                  sorting and processing at our facility. If your total bill
-                  is less than AED 75, the difference will be charged to meet
-                  the minimum order value.
-                </p>
-              </div>
-            </>
-          )}
-        </div>
+        {isPricingFlow ? (
+          <PaymentSummaryItemized
+            cart={cart}
+            services={services}
+            selectedPromoCode={selectedPromoCode}
+            promoDiscount={promoDiscount}
+            selectedTip={selectedTip}
+            estimatedTotal={estimatedTotal}
+            expanded={paymentExpanded}
+            onToggleExpanded={() => toggle(setPaymentExpanded, paymentExpanded)}
+            onUpdateQuantity={updateCartItemQuantity}
+          />
+        ) : (
+          <PaymentSummaryFlat
+            lineItems={lineItems}
+            selectedPromoCode={selectedPromoCode}
+            promoDiscount={promoDiscount}
+            selectedTip={selectedTip}
+            estimatedTotal={estimatedTotal}
+            expanded={paymentExpanded}
+            onToggleExpanded={() => toggle(setPaymentExpanded, paymentExpanded)}
+          />
+        )}
 
         {/* PAYMENT METHOD */}
         <button
