@@ -193,6 +193,301 @@ function PromoCard({ promo, selected, onToggle }: PromoCardProps) {
   );
 }
 
+/* ------------------------------------------------------------------ */
+/* Itemized (pricing-page) Payment Summary helpers                     */
+/* ------------------------------------------------------------------ */
+
+interface QuantityStepperProps {
+  value: number;
+  onChange: (next: number) => void;
+  min?: number;
+  max?: number;
+}
+
+function QuantityStepper({ value, onChange, min = 0, max = 10 }: QuantityStepperProps) {
+  const minDisabled = value <= min;
+  const maxDisabled = value >= max;
+  return (
+    <div className="flex h-8 w-20 items-center justify-between rounded-[6px] border border-washmen-primary bg-washmen-light-green px-[10px] py-[3px]">
+      <button
+        type="button"
+        aria-label="Decrease quantity"
+        disabled={minDisabled}
+        onClick={() => {
+          haptics.light();
+          onChange(value - 1);
+        }}
+        className={cn("press-effect", minDisabled && "opacity-50")}
+      >
+        <Minus className="h-4 w-4 text-washmen-primary" strokeWidth={2} />
+      </button>
+      <span className="text-[14px] tracking-[0.1px] text-washmen-primary">{value}</span>
+      <button
+        type="button"
+        aria-label="Increase quantity"
+        disabled={maxDisabled}
+        onClick={() => {
+          haptics.light();
+          onChange(value + 1);
+        }}
+        className={cn("press-effect", maxDisabled && "opacity-50")}
+      >
+        <Plus className="h-4 w-4 text-washmen-primary" strokeWidth={2} />
+      </button>
+    </div>
+  );
+}
+
+const SERVICE_META: Record<
+  CartItem["service"],
+  { label: string; bagColor: string }
+> = {
+  washAndFold: { label: "Wash & Fold", bagColor: "text-blue-500" },
+  cleanAndPress: { label: "Clean & Press", bagColor: "text-purple-500" },
+  bedAndBath: { label: "Bed & Bath", bagColor: "text-emerald-500" },
+  pressOnly: { label: "Press Only", bagColor: "text-amber-500" },
+};
+
+interface PaymentSummaryFlatProps {
+  lineItems: { label: string; amount: number }[];
+  selectedPromoCode: string | null;
+  promoDiscount: number;
+  selectedTip: number;
+  estimatedTotal: number;
+  expanded: boolean;
+  onToggleExpanded: () => void;
+}
+
+function PaymentSummaryFlat({
+  lineItems,
+  selectedPromoCode,
+  promoDiscount,
+  selectedTip,
+  estimatedTotal,
+  expanded,
+  onToggleExpanded,
+}: PaymentSummaryFlatProps) {
+  const hasItems = lineItems.length > 0;
+  return (
+    <div className="overflow-hidden rounded-card bg-card shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
+      <button
+        type="button"
+        onClick={onToggleExpanded}
+        className="press-effect flex w-full items-center gap-3 p-4 text-left"
+      >
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
+          <CreditCard className="h-4 w-4 text-washmen-primary" />
+        </div>
+        <p className="flex-1 text-sm font-semibold leading-tight text-washmen-primary">
+          Payment Summary
+        </p>
+        {expanded ? (
+          <ChevronUp className="h-4 w-4 shrink-0 text-muted-foreground" />
+        ) : (
+          <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
+        )}
+      </button>
+      {expanded && (
+        <>
+          <div className="space-y-2 border-t border-border px-4 pt-3 pb-4">
+            {hasItems &&
+              lineItems.map((item) => (
+                <div key={item.label} className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">{item.label}</span>
+                  <span className="text-foreground">AED {item.amount.toFixed(2)}</span>
+                </div>
+              ))}
+            {selectedPromoCode && promoDiscount > 0 && (
+              <div className="flex justify-between text-sm">
+                <span className="text-emerald-700">Promo Discount ({selectedPromoCode})</span>
+                <span className="text-emerald-700">- AED {promoDiscount.toFixed(2)}</span>
+              </div>
+            )}
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Delivery Fee</span>
+              <span className="text-foreground">AED {DELIVERY_FEE.toFixed(2)}*</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Driver Tip</span>
+              <span className="text-foreground">AED {selectedTip.toFixed(2)}</span>
+            </div>
+            <div className="mt-2 flex items-center justify-between border-t border-dashed border-border pt-3">
+              <span className="text-sm font-bold text-washmen-primary">Estimated Total</span>
+              <span className="text-sm font-bold text-washmen-primary">
+                AED {estimatedTotal.toFixed(2)}**
+              </span>
+            </div>
+          </div>
+          <PaymentSummaryFootnotes />
+        </>
+      )}
+    </div>
+  );
+}
+
+function PaymentSummaryFootnotes() {
+  return (
+    <div className="space-y-3 bg-amber-50 px-4 py-4 text-amber-900">
+      <p className="text-xs font-semibold leading-relaxed">*Delivery Fee Increase</p>
+      <p className="text-[10px] leading-relaxed">
+        Due to the increase of diesel & natural gas prices and its impact on our supply chain,
+        delivery fee has increased to AED 15. Once the situation normalizes, we will reduce it
+        significantly. Thank you for your support during these times 🙏
+      </p>
+      <p className="text-[10px] leading-relaxed">
+        **The final amount, with discounts, will be determined after sorting and processing at our
+        facility. If your total bill is less than AED 75, the difference will be charged to meet
+        the minimum order value.
+      </p>
+    </div>
+  );
+}
+
+interface PaymentSummaryItemizedProps {
+  cart: CartItem[];
+  services: ServicesState;
+  selectedPromoCode: string | null;
+  promoDiscount: number;
+  selectedTip: number;
+  estimatedTotal: number;
+  expanded: boolean;
+  onToggleExpanded: () => void;
+  onUpdateQuantity: (index: number, quantity: number) => void;
+}
+
+function PaymentSummaryItemized({
+  cart,
+  services,
+  selectedPromoCode,
+  promoDiscount,
+  selectedTip,
+  estimatedTotal,
+  expanded,
+  onToggleExpanded,
+  onUpdateQuantity,
+}: PaymentSummaryItemizedProps) {
+  // Group items by service, preserving original cart index for stepper updates
+  const groups = useMemo(() => {
+    const map = new Map<CartItem["service"], { item: CartItem; index: number }[]>();
+    cart.forEach((item, index) => {
+      const arr = map.get(item.service) ?? [];
+      arr.push({ item, index });
+      map.set(item.service, arr);
+    });
+    return Array.from(map.entries());
+  }, [cart]);
+
+  return (
+    <div className="overflow-hidden rounded-card bg-card shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
+      <button
+        type="button"
+        onClick={onToggleExpanded}
+        className="press-effect flex w-full items-center gap-3 p-4 text-left"
+      >
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
+          <CreditCard className="h-4 w-4 text-washmen-primary" />
+        </div>
+        <p className="flex-1 text-sm font-semibold leading-tight text-washmen-primary">
+          Payment Summary
+        </p>
+        {expanded ? (
+          <ChevronUp className="h-4 w-4 shrink-0 text-muted-foreground" />
+        ) : (
+          <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
+        )}
+      </button>
+      {expanded && (
+        <>
+          <div className="space-y-4 border-t border-border px-4 pt-3 pb-4">
+            {groups.map(([service, entries]) => {
+              const meta = SERVICE_META[service];
+              return (
+                <div key={service} className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <ShoppingBag
+                      className={cn("h-4 w-4", meta.bagColor)}
+                      strokeWidth={2}
+                    />
+                    <span className="text-sm font-semibold text-washmen-primary">
+                      {meta.label}
+                    </span>
+                  </div>
+                  <div className="space-y-2 pl-6">
+                    {entries.map(({ item, index }) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between gap-3"
+                      >
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm text-foreground">{item.itemLabel}</p>
+                          <p className="text-xs">
+                            {item.discountedPrice !== undefined ? (
+                              <>
+                                <span className="text-muted-foreground line-through">
+                                  AED {item.unitPrice.toFixed(2)}
+                                </span>{" "}
+                                <span className="font-medium text-emerald-700">
+                                  AED {item.discountedPrice.toFixed(2)}
+                                </span>
+                              </>
+                            ) : (
+                              <span className="text-muted-foreground">
+                                AED {item.unitPrice.toFixed(2)} each
+                              </span>
+                            )}
+                          </p>
+                        </div>
+                        <QuantityStepper
+                          value={item.quantity}
+                          onChange={(next) => onUpdateQuantity(index, next)}
+                        />
+                      </div>
+                    ))}
+                    {service === "washAndFold" && services.addPressing &&
+                      services.pressingPrefs?.items?.length ? (
+                      <p className="text-xs text-muted-foreground">
+                        + Press & Hang ({services.pressingPrefs.items.length} items)
+                      </p>
+                    ) : null}
+                    {service === "washAndFold" && services.pressingPrefs ? null : null}
+                  </div>
+                </div>
+              );
+            })}
+
+            <div className="rounded-md bg-cyan-50 px-3 py-2 text-[11px] text-cyan-900">
+              Items above are priced per item. Final total will be confirmed after sorting at our
+              facility.
+            </div>
+
+            {selectedPromoCode && promoDiscount > 0 && (
+              <div className="flex justify-between text-sm">
+                <span className="text-emerald-700">Promo Discount ({selectedPromoCode})</span>
+                <span className="text-emerald-700">- AED {promoDiscount.toFixed(2)}</span>
+              </div>
+            )}
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Delivery Fee</span>
+              <span className="text-foreground">AED {DELIVERY_FEE.toFixed(2)}*</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Driver Tip</span>
+              <span className="text-foreground">AED {selectedTip.toFixed(2)}</span>
+            </div>
+            <div className="mt-2 flex items-center justify-between border-t border-dashed border-border pt-3">
+              <span className="text-sm font-bold text-washmen-primary">Estimated Total</span>
+              <span className="text-sm font-bold text-washmen-primary">
+                AED {estimatedTotal.toFixed(2)}**
+              </span>
+            </div>
+          </div>
+          <PaymentSummaryFootnotes />
+        </>
+      )}
+    </div>
+  );
+}
+
 export default function LastStep() {
   const navigate = useNavigate();
   const services = useOrderStore((s) => s.services);
