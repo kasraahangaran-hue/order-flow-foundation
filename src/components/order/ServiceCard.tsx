@@ -80,7 +80,7 @@ export function ServiceCard({
               haptics.light();
               pricingLink.onPress();
             }}
-            className="press-effect mt-0.5 inline-flex text-sm font-medium leading-tight text-washmen-primary underline decoration-2 underline-offset-2"
+            className="press-effect mt-0.5 inline-flex text-xs font-normal leading-tight text-washmen-primary underline underline-offset-2"
           >
             {pricingLink.label}
           </button>
