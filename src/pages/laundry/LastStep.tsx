@@ -111,9 +111,10 @@ interface PromoCardProps {
   promo: PromoData;
   selected: boolean;
   onToggle: () => void;
+  onViewDetails: () => void;
 }
 
-function PromoCard({ promo, selected, onToggle }: PromoCardProps) {
+function PromoCard({ promo, selected, onToggle, onViewDetails }: PromoCardProps) {
   return (
     <button
       type="button"
@@ -156,8 +157,8 @@ function PromoCard({ promo, selected, onToggle }: PromoCardProps) {
           className="flex items-center gap-1"
           onClick={(e) => {
             e.stopPropagation();
-            // eslint-disable-next-line no-console
-            console.log("View promo details", promo.code);
+            haptics.light();
+            onViewDetails();
           }}
         >
           <Info className="h-4 w-4 text-washmen-primary" strokeWidth={2} />
