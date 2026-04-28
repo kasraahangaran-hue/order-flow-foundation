@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { useOrderStore } from "@/stores/orderStore";
 import { haptics } from "@/lib/haptics";
 import { cn } from "@/lib/utils";
-import { DateSlotPicker, type DayOption, type SlotOption } from "./DateSlotPicker";
+import { DateSlotPicker, type SlotOption } from "./DateSlotPicker";
+import { buildPickupMockDays } from "@/data/slots";
 import doorImg from "@/assets/pickup-at-door.jpg";
 import driverImg from "@/assets/pickup-meet-driver.jpg";
 
@@ -15,39 +16,6 @@ interface PickupSchedulingSheetProps {
 }
 
 type PickupMode = "door" | "in_person";
-
-// TODO: Replace with API call returning available pickup slots per day per zone.
-const PICKUP_SLOTS: SlotOption[] = [
-  { time: "03:00 pm - 05:00 pm", variant: "between" },
-  { time: "04:00 pm - 06:00 pm", variant: "between" },
-  { time: "05:00 pm - 07:00 pm", variant: "between" },
-  { time: "06:00 pm - 08:00 pm", variant: "between" },
-  { time: "07:00 pm - 09:00 pm", variant: "between" },
-  { time: "08:00 pm - 10:00 pm", variant: "between" },
-  { time: "09:00 pm - 11:00 pm", variant: "between" },
-  { time: "10:00 pm - 12:00 am", variant: "between" },
-];
-
-function buildPickupMockDays(): DayOption[] {
-  const days: DayOption[] = [];
-  for (let i = 0; i < 7; i++) {
-    const d = new Date();
-    d.setHours(0, 0, 0, 0);
-    d.setDate(d.getDate() + i);
-    const iso = d.toISOString().slice(0, 10);
-    let label: string;
-    if (i === 0) label = "Today";
-    else if (i === 1) label = "Tomorrow";
-    else label = `+${i} days`;
-    const subLabel = d.toLocaleDateString("en-US", {
-      weekday: "short",
-      month: "short",
-      day: "numeric",
-    });
-    days.push({ date: iso, label, subLabel, slots: PICKUP_SLOTS });
-  }
-  return days;
-}
 
 interface TypeTileProps {
   selected: boolean;
@@ -115,7 +83,8 @@ export function PickupSchedulingSheet({ open, onOpenChange }: PickupSchedulingSh
       const stored = storedPickup?.slot
         ? day.slots.find((s) => s.time === storedPickup.slot)
         : null;
-      setSelectedSlot(stored ?? day.slots[0] ?? null);
+      const earliestFree = day.slots.find((s) => s.freeDelivery) ?? day.slots[0];
+      setSelectedSlot(stored ?? earliestFree ?? null);
     }
   }, [open, storedPickup, days]);
 

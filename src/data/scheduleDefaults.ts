@@ -1,28 +1,29 @@
 import type { PickupState, DropoffState } from "@/stores/orderStore";
-
-function todayPlus(days: number): string {
-  const d = new Date();
-  d.setHours(0, 0, 0, 0);
-  d.setDate(d.getDate() + days);
-  return d.toISOString().slice(0, 10);
-}
+import { todayIso, buildPickupSlotsForDay, buildDropoffSlotsForDay } from "@/data/slots";
 
 export function getDefaultPickup(): PickupState {
-  // Earliest free pickup. All pickup slots are free in current mock data.
+  const todaySlots = buildPickupSlotsForDay(0);
+  const firstToday = todaySlots[0];
+  if (firstToday) {
+    return { mode: "door", date: todayIso(0), slot: firstToday.time };
+  }
+  // Today has no remaining slots — fall back to Tomorrow's first slot.
+  const tomorrowSlots = buildPickupSlotsForDay(1);
   return {
     mode: "door",
-    date: todayPlus(0),
-    slot: "03:00 pm - 05:00 pm",
+    date: todayIso(1),
+    slot: tomorrowSlots[0]?.time ?? "12:00 pm - 02:00 pm",
   };
 }
 
 export function getDefaultDropoff(): DropoffState {
-  // Earliest FREE drop-off (skips slots with surcharge).
-  // First day is +1 (Tomorrow), first free slot is "Anytime during the day".
+  // Default to +2 days — the earliest FREE day. (+1 Tomorrow has +50% surcharge.)
+  const slots = buildDropoffSlotsForDay(2);
+  const firstFree = slots.find((s) => s.freeDelivery) ?? slots[0];
   return {
     mode: "door",
-    date: todayPlus(1),
-    slot: "Anytime during the day",
+    date: todayIso(2),
+    slot: firstFree?.time ?? "Anytime during the day",
     surcharge: 0,
   };
 }
