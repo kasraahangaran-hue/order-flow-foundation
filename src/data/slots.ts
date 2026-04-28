@@ -91,7 +91,7 @@ export const ALL_DROPOFF_SLOT_RANGES: Array<{ startHour: number; endHour: number
 
 export function buildDropoffSlotsForDay(_offset: number): SlotOption[] {
   return [
-    { time: "Anytime during the day", variant: "wide", freeDelivery: true },
+    { time: "Anytime", variant: "wide", freeDelivery: true },
     { time: "Anytime before 08:00 pm", variant: "wide", surcharge: 5 },
     { time: "Anytime after 08:00 pm", variant: "wide", surcharge: 5 },
     ...ALL_DROPOFF_SLOT_RANGES.map((r) => ({

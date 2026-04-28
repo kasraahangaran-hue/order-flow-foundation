@@ -55,6 +55,9 @@ function DaySurchargeTag({ pct }: { pct: number }) {
 }
 
 function parseAnytimeSlot(time: string): { prefix: string; suffix: string } {
+  if (time === "Anytime") {
+    return { prefix: "", suffix: "Anytime" };
+  }
   if (time.startsWith("Anytime ")) {
     return { prefix: "Anytime", suffix: time.slice("Anytime ".length) };
   }

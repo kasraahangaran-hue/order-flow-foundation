@@ -122,7 +122,7 @@ export default function OrderDetails() {
     };
     if (!address) setAddress({ line1: "108, Azurite tower" });
     if (!pickup) setPickup({ mode: "door", date: dayPlus(0), slot: "02:00 pm - 04:00 pm" });
-    if (!dropoff) setDropoff({ mode: "door", date: dayPlus(2), slot: "Anytime during the day", surcharge: 0 });
+    if (!dropoff) setDropoff({ mode: "door", date: dayPlus(2), slot: "Anytime", surcharge: 0 });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
