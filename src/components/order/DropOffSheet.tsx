@@ -106,16 +106,16 @@ export function DropOffSheet({ open, onOpenChange }: DropOffSheetProps) {
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="max-h-[90vh] rounded-t-[24px] border-0 bg-background pb-[env(safe-area-inset-bottom)]">
+      <DrawerContent className="flex h-[92vh] max-h-[92vh] flex-col rounded-t-[24px] border-0 bg-background pb-[env(safe-area-inset-bottom)]">
         <DrawerHeader className="mb-2 flex-shrink-0 px-4 pb-2 pt-2 text-left">
           <DrawerTitle className="text-left text-[20px] font-bold leading-[24px] tracking-[0.4px] text-washmen-primary">
             {title}
           </DrawerTitle>
         </DrawerHeader>
 
-        <div className="flex max-h-[70vh] flex-col overflow-y-auto px-4 pb-2">
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden px-4 pb-2">
           {step === 1 ? (
-            <div key="step-1" className="animate-in fade-in-0 duration-200">
+            <div key="step-1" className="animate-in fade-in-0 overflow-y-auto duration-200">
               <div className="grid grid-cols-2 gap-3">
                 <TypeTile
                   selected={dropoffMode === "door"}
@@ -137,7 +137,7 @@ export function DropOffSheet({ open, onOpenChange }: DropOffSheetProps) {
               </p>
             </div>
           ) : (
-            <div key="step-2" className="animate-in fade-in-0 duration-200">
+            <div key="step-2" className="animate-in fade-in-0 flex min-h-0 flex-1 flex-col duration-200">
               <DateSlotPicker
                 days={days}
                 selectedDate={selectedDate}
@@ -150,7 +150,7 @@ export function DropOffSheet({ open, onOpenChange }: DropOffSheetProps) {
           )}
         </div>
 
-        <div className="flex items-center gap-3 px-4 pb-4 pt-3">
+        <div className="flex flex-shrink-0 items-center gap-3 px-4 pb-4 pt-3">
           <button
             type="button"
             onClick={() => {
