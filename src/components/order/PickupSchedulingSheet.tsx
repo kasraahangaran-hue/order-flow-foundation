@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { ArrowLeft } from "lucide-react";
-import { Drawer, DrawerContent } from "@/components/ui/drawer";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { useOrderStore } from "@/stores/orderStore";
 import { haptics } from "@/lib/haptics";
 import { cn } from "@/lib/utils";
+import { DateSlotPicker, type DayOption, type SlotOption } from "./DateSlotPicker";
 import doorImg from "@/assets/pickup-at-door.jpg";
-import meetImg from "@/assets/pickup-meet-driver.jpg";
+import driverImg from "@/assets/pickup-meet-driver.jpg";
 
 interface PickupSchedulingSheetProps {
   open: boolean;
@@ -15,44 +16,35 @@ interface PickupSchedulingSheetProps {
 
 type PickupMode = "door" | "in_person";
 
-interface DaySlots {
-  date: string;
-  label: string;
-  subLabel: string;
-  slots: string[];
-}
-
-function toIso(d: Date) {
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  const dd = String(d.getDate()).padStart(2, "0");
-  return `${yyyy}-${mm}-${dd}`;
-}
-
-// TODO: Replace with API call returning available slots per day per zone.
-const baseSlots = [
-  "03:00 pm - 05:00 pm",
-  "04:00 pm - 06:00 pm",
-  "05:00 pm - 07:00 pm",
-  "06:00 pm - 08:00 pm",
-  "07:00 pm - 09:00 pm",
-  "08:00 pm - 10:00 pm",
-  "09:00 pm - 11:00 pm",
-  "10:00 pm - 12:00 am",
+// TODO: Replace with API call returning available pickup slots per day per zone.
+const PICKUP_SLOTS: SlotOption[] = [
+  { time: "03:00 pm - 05:00 pm", variant: "between" },
+  { time: "04:00 pm - 06:00 pm", variant: "between" },
+  { time: "05:00 pm - 07:00 pm", variant: "between" },
+  { time: "06:00 pm - 08:00 pm", variant: "between" },
+  { time: "07:00 pm - 09:00 pm", variant: "between" },
+  { time: "08:00 pm - 10:00 pm", variant: "between" },
+  { time: "09:00 pm - 11:00 pm", variant: "between" },
+  { time: "10:00 pm - 12:00 am", variant: "between" },
 ];
 
-function buildMockDays(): DaySlots[] {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const days: DaySlots[] = [];
+function buildPickupMockDays(): DayOption[] {
+  const days: DayOption[] = [];
   for (let i = 0; i < 7; i++) {
-    const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    d.setDate(d.getDate() + i);
+    const iso = d.toISOString().slice(0, 10);
     let label: string;
     if (i === 0) label = "Today";
     else if (i === 1) label = "Tomorrow";
-    else label = d.toLocaleDateString("en-US", { weekday: "long" });
-    const subLabel = d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-    days.push({ date: toIso(d), label, subLabel, slots: baseSlots });
+    else label = `+${i} days`;
+    const subLabel = d.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+    });
+    days.push({ date: iso, label, subLabel, slots: PICKUP_SLOTS });
   }
   return days;
 }
@@ -92,13 +84,11 @@ function TypeTile({ selected, image, label, onSelect }: TypeTileProps) {
       </div>
       <div
         className={cn(
-          "px-3 py-3 text-center text-sm font-medium leading-tight transition-colors",
+          "whitespace-pre-line px-3 py-3 text-center text-sm font-medium leading-tight transition-colors",
           selected ? "bg-washmen-light-green text-washmen-primary" : "bg-secondary/40 text-foreground"
         )}
       >
-        {label.split("\n").map((line, i) => (
-          <div key={i}>{line}</div>
-        ))}
+        {label}
       </div>
     </button>
   );
@@ -108,49 +98,50 @@ export function PickupSchedulingSheet({ open, onOpenChange }: PickupSchedulingSh
   const storedPickup = useOrderStore((s) => s.pickup);
   const setPickup = useOrderStore((s) => s.setPickup);
 
-  const days = useMemo(() => buildMockDays(), []);
+  const days = useMemo(() => buildPickupMockDays(), []);
 
   const [step, setStep] = useState<1 | 2>(1);
   const [pickupMode, setPickupMode] = useState<PickupMode>("door");
   const [selectedDate, setSelectedDate] = useState<string>(days[0].date);
-  const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
+  const [selectedSlot, setSelectedSlot] = useState<SlotOption | null>(null);
 
-  // Reset internal state from store each time sheet opens
   useEffect(() => {
     if (open) {
       setStep(1);
       setPickupMode(storedPickup?.mode ?? "door");
-      setSelectedDate(storedPickup?.date ?? days[0].date);
-      setSelectedSlot(storedPickup?.slot ?? null);
+      const seedDate = storedPickup?.date ?? days[0].date;
+      setSelectedDate(seedDate);
+      const day = days.find((d) => d.date === seedDate) ?? days[0];
+      const found = storedPickup?.slot
+        ? day.slots.find((s) => s.time === storedPickup.slot) ?? null
+        : null;
+      setSelectedSlot(found);
     }
   }, [open, storedPickup, days]);
 
-  const activeDay = days.find((d) => d.date === selectedDate) ?? days[0];
-
-  const onConfirmStep1 = () => {
-    haptics.light();
-    setStep(2);
-  };
-
   const onDone = () => {
     if (!selectedSlot) return;
-    setPickup({ mode: pickupMode, date: selectedDate, slot: selectedSlot });
+    setPickup({ mode: pickupMode, date: selectedDate, slot: selectedSlot.time });
     haptics.medium();
     onOpenChange(false);
   };
 
   const step2Title = pickupMode === "in_person" ? "Pick Up in Person" : "Pick Up at Door";
+  const title = step === 1 ? "Schedule Your Pick Up" : step2Title;
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent className="max-h-[90vh] rounded-t-[24px] border-0 bg-background pb-[env(safe-area-inset-bottom)]">
-        <div className="flex h-full max-h-[calc(90vh-1rem)] flex-col px-4 pt-2">
+        <DrawerHeader className="px-4 pb-2 pt-2 text-center">
+          <DrawerTitle className="text-[20px] font-bold leading-[24px] tracking-[0.4px] text-washmen-primary">
+            {title}
+          </DrawerTitle>
+        </DrawerHeader>
+
+        <div className="flex max-h-[70vh] flex-col overflow-y-auto px-4 pb-2">
           {step === 1 ? (
-            <div key="step-1" className="flex flex-1 flex-col animate-in fade-in-0 duration-200">
-              <h2 className="mt-2 text-center text-lg font-semibold text-washmen-primary">
-                Schedule Your Pick Up
-              </h2>
-              <div className="mt-5 grid grid-cols-2 gap-3">
+            <div key="step-1" className="animate-in fade-in-0 duration-200">
+              <div className="grid grid-cols-2 gap-3">
                 <TypeTile
                   selected={pickupMode === "door"}
                   image={doorImg}
@@ -159,104 +150,61 @@ export function PickupSchedulingSheet({ open, onOpenChange }: PickupSchedulingSh
                 />
                 <TypeTile
                   selected={pickupMode === "in_person"}
-                  image={meetImg}
+                  image={driverImg}
                   label={"Meet driver\nin person"}
                   onSelect={() => setPickupMode("in_person")}
                 />
               </div>
-              <p className="mt-5 text-center text-sm text-foreground/80">
+              <p className="mt-5 px-2 text-center text-sm leading-relaxed text-foreground/80">
                 {pickupMode === "door"
                   ? "Leave your bags outside your door for a Washmen driver to collect"
                   : "Meet the Washmen driver in person and hand over your bags"}
               </p>
-              <div className="mt-auto flex items-center gap-3 pb-4 pt-6">
-                <button
-                  type="button"
-                  onClick={() => onOpenChange(false)}
-                  className="press-effect flex h-12 w-12 items-center justify-center rounded-md border border-border bg-background"
-                  aria-label="Close"
-                >
-                  <ArrowLeft className="h-5 w-5 text-washmen-primary" />
-                </button>
-                <Button onClick={onConfirmStep1} className="h-12 flex-1 text-sm font-semibold">
-                  Confirm
-                </Button>
-              </div>
             </div>
           ) : (
-            <div key="step-2" className="flex flex-1 flex-col animate-in fade-in-0 duration-200">
-              <h2 className="mt-2 text-center text-lg font-semibold text-washmen-primary">
-                {step2Title}
-              </h2>
-              <div className="mt-4 grid min-h-[360px] flex-1 grid-cols-[120px_1fr] gap-3 overflow-hidden">
-                <div className="flex flex-col gap-2 overflow-y-auto pr-1">
-                  {days.map((d) => {
-                    const isSel = d.date === selectedDate;
-                    return (
-                      <button
-                        key={d.date}
-                        type="button"
-                        onClick={() => {
-                          haptics.light();
-                          setSelectedDate(d.date);
-                          setSelectedSlot(null);
-                        }}
-                        className={cn(
-                          "press-effect rounded-xl border px-3 py-2.5 text-left",
-                          isSel
-                            ? "border-washmen-primary bg-washmen-light-green"
-                            : "border-border/60 bg-background"
-                        )}
-                      >
-                        <p className="text-sm font-medium leading-tight text-foreground">{d.label}</p>
-                        <p className="mt-0.5 text-xs font-light text-muted-foreground">{d.subLabel}</p>
-                      </button>
-                    );
-                  })}
-                </div>
-                <div className="flex flex-col gap-2 overflow-y-auto pr-1">
-                  {activeDay.slots.map((slot) => {
-                    const isSel = slot === selectedSlot;
-                    return (
-                      <button
-                        key={slot}
-                        type="button"
-                        onClick={() => {
-                          haptics.light();
-                          setSelectedSlot(slot);
-                        }}
-                        className={cn(
-                          "press-effect whitespace-pre-line rounded-xl border px-3 py-2.5 text-left",
-                          isSel
-                            ? "border-washmen-primary bg-washmen-light-green"
-                            : "border-border/60 bg-background"
-                        )}
-                      >
-                        <p className="text-xs font-light text-muted-foreground">between</p>
-                        <p className="text-sm font-medium text-foreground">{slot}</p>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-              <div className="mt-4 flex items-center gap-3 pb-4 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setStep(1)}
-                  className="press-effect flex h-12 w-12 items-center justify-center rounded-md border border-border bg-background"
-                  aria-label="Back"
-                >
-                  <ArrowLeft className="h-5 w-5 text-washmen-primary" />
-                </button>
-                <Button
-                  onClick={onDone}
-                  disabled={!selectedSlot}
-                  className="h-12 flex-1 text-sm font-semibold"
-                >
-                  Done
-                </Button>
-              </div>
+            <div key="step-2" className="animate-in fade-in-0 duration-200">
+              <DateSlotPicker
+                days={days}
+                selectedDate={selectedDate}
+                selectedSlotTime={selectedSlot?.time ?? null}
+                onSelectDate={setSelectedDate}
+                onSelectSlot={setSelectedSlot}
+                showOnTimeTip={false}
+              />
             </div>
+          )}
+        </div>
+
+        <div className="flex items-center gap-3 px-4 pb-4 pt-3">
+          <button
+            type="button"
+            onClick={() => {
+              if (step === 2) setStep(1);
+              else onOpenChange(false);
+            }}
+            className="press-effect flex h-[42px] w-12 items-center justify-center rounded-md border border-border bg-background"
+            aria-label="Back"
+          >
+            <ArrowLeft className="h-5 w-5 text-washmen-primary" />
+          </button>
+          {step === 1 ? (
+            <Button
+              onClick={() => {
+                haptics.light();
+                setStep(2);
+              }}
+              className="h-[42px] flex-1 text-sm font-semibold"
+            >
+              Confirm
+            </Button>
+          ) : (
+            <Button
+              onClick={onDone}
+              disabled={!selectedSlot}
+              className="h-[42px] flex-1 text-sm font-semibold"
+            >
+              Done
+            </Button>
           )}
         </div>
       </DrawerContent>

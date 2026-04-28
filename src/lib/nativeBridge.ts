@@ -8,8 +8,9 @@
 
 export type NativeSheetName =
   | "address"        // -> { address, apartment }
-  // "pickup_schedule" and "dropoff_schedule" are now handled on web via PickupSchedulingSheet
-  // and DropOffSheet components. Bridge stub kept in case we want to fall back to native sheets later.
+  // "pickup_schedule" and "dropoff_schedule" are now handled on web via
+  // PickupSchedulingSheet and DropOffSheet. Per Fawad (2026-04-28), these moved
+  // from native to web. Bridge stub kept for sheets still on native side.
   | "pickup_schedule" // -> { mode: 'door' | 'in_person', date, slot }
   | "dropoff_schedule" // -> { date, slot, surcharge }
   | "payment_method" // -> { method, last4 }
