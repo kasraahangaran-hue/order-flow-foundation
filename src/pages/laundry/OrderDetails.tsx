@@ -122,7 +122,7 @@ export default function OrderDetails() {
     };
     if (!address) setAddress({ line1: "108, Azurite tower" });
     if (!pickup) setPickup({ mode: "door", date: dayPlus(0), slot: "02:00 pm - 04:00 pm" });
-    if (!dropoff) setDropoff({ date: dayPlus(2), slot: "Anytime during the day", surcharge: 0 });
+    if (!dropoff) setDropoff({ mode: "door", date: dayPlus(2), slot: "Anytime during the day", surcharge: 0 });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -214,7 +214,10 @@ export default function OrderDetails() {
         >
           {dropoff ? (
             <div className="flex flex-col gap-2">
-              <ValueRow icon={PackageOpen} text="Drop off at the Door" />
+              <ValueRow
+                icon={PackageOpen}
+                text={dropoff.mode === "in_person" ? "Receive from driver in person" : "Drop off at the Door"}
+              />
               {(() => {
                 const { day, time } = formatScheduleLines(dropoff.date, dropoff.slot);
                 return <TimeRow day={day} time={time} />;
