@@ -47,6 +47,8 @@ export default {
           "light-pink": "hsl(var(--washmen-light-pink))",
           "pink": "hsl(var(--washmen-pink))",
           "light-grey": "hsl(var(--washmen-light-grey))",
+          "secondary-red": "hsl(var(--washmen-secondary-red))",
+          "red": "hsl(var(--washmen-red))",
         },
         primary: {
           DEFAULT: "hsl(var(--primary))",
