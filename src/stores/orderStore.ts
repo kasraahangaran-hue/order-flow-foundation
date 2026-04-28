@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import { getDefaultPickup, getDefaultDropoff } from "@/data/scheduleDefaults";
 
 export interface PressingPrefs {
   items: string[];
@@ -29,6 +30,7 @@ export interface PickupState {
 }
 
 export interface DropoffState {
+  mode: "door" | "in_person";
   date: string;
   slot: string;
   surcharge?: number;
@@ -119,8 +121,8 @@ export const useOrderStore = create<OrderState>()(
       flowType: "existingUser",
       services: initialServices,
       address: null,
-      pickup: null,
-      dropoff: null,
+      pickup: getDefaultPickup(),
+      dropoff: getDefaultDropoff(),
       driverInstructions: null,
       orderInstructions: null,
       payment: null,
@@ -172,8 +174,8 @@ export const useOrderStore = create<OrderState>()(
           flowType: "existingUser",
           services: initialServices,
           address: null,
-          pickup: null,
-          dropoff: null,
+          pickup: getDefaultPickup(),
+          dropoff: getDefaultDropoff(),
           driverInstructions: null,
           orderInstructions: null,
           payment: null,
