@@ -8,6 +8,8 @@
 
 export type NativeSheetName =
   | "address"        // -> { address, apartment }
+  // "pickup_schedule" and "dropoff_schedule" are now handled on web via PickupSchedulingSheet
+  // and DropOffSheet components. Bridge stub kept in case we want to fall back to native sheets later.
   | "pickup_schedule" // -> { mode: 'door' | 'in_person', date, slot }
   | "dropoff_schedule" // -> { date, slot, surcharge }
   | "payment_method" // -> { method, last4 }
