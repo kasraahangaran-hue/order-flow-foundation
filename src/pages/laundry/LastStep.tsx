@@ -273,7 +273,7 @@ function PaymentSummaryFlat({
       <button
         type="button"
         onClick={onToggleExpanded}
-        className="press-effect flex w-full items-center gap-3 p-4 text-left"
+        className="press-effect flex h-[52px] w-full items-center gap-3 px-3 py-0 text-left"
       >
         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
           <CreditCard className="h-4 w-4 text-washmen-primary" />
@@ -382,7 +382,7 @@ function PaymentSummaryItemized({
       <button
         type="button"
         onClick={onToggleExpanded}
-        className="press-effect flex w-full items-center gap-3 p-4 text-left"
+        className="press-effect flex h-[52px] w-full items-center gap-3 px-3 py-0 text-left"
       >
         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
           <CreditCard className="h-4 w-4 text-washmen-primary" />
@@ -734,7 +734,7 @@ export default function LastStep() {
             haptics.light();
             nativeBridge.openSheet("payment_method", payment ?? undefined);
           }}
-          className="press-effect w-full rounded-card bg-card p-4 text-left shadow-[0_1px_2px_rgba(16,24,40,0.04)]"
+          className="press-effect w-full rounded-card bg-card px-3 py-4 text-left shadow-[0_1px_2px_rgba(16,24,40,0.04)]"
         >
           <div className="flex items-start gap-3">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
