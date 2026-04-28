@@ -210,7 +210,7 @@ export function ServiceSelector({
                 type="button"
                 onClick={(e) => e.stopPropagation()}
                 className={cn(
-                  "press-effect mt-2 inline-flex text-sm font-medium underline underline-offset-2 transition-colors",
+                  "press-effect mt-2 inline-flex text-xs font-normal underline underline-offset-2 transition-colors",
                   pressActive ? "text-washmen-primary" : "text-washmen-secondary-400"
                 )}
               >
