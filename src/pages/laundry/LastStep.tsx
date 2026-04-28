@@ -197,7 +197,9 @@ export default function LastStep() {
   const [paymentExpanded, setPaymentExpanded] = useState(true);
   const [promosExpanded, setPromosExpanded] = useState(false);
   const [promoInput, setPromoInput] = useState("");
-  const [promoError, setPromoError] = useState<string | null>(null);
+  const [inputMessage, setInputMessage] = useState<
+    { type: "error" | "success"; text: string } | null
+  >(null);
   const [selectedPromoCode, setSelectedPromoCode] = useState<string | null>(null);
 
   const lineItems = useMemo(() => buildLineItems(services), [services]);
@@ -229,21 +231,35 @@ export default function LastStep() {
     haptics.light();
     setSelectedPromoCode((curr) => (curr === code ? null : code));
     setPromoInput("");
-    setPromoError(null);
+    setInputMessage(null);
+  };
+
+  const flashMessage = (msg: { type: "error" | "success"; text: string }, ms = 2500) => {
+    setInputMessage(msg);
+    window.setTimeout(() => setInputMessage(null), ms);
   };
 
   const tryApplyTypedCode = () => {
     const code = promoInput.trim().toUpperCase();
     if (!code) return;
+    if (ALREADY_APPLIED_CODES.has(code)) {
+      flashMessage({
+        type: "error",
+        text: "This promo code has already been applied. Please try another one.",
+      }, 3000);
+      return;
+    }
     const match = AVAILABLE_PROMOS.find((p) => p.code === code);
     if (match) {
       setSelectedPromoCode(match.code);
       setPromoInput("");
-      setPromoError(null);
       haptics.success();
+      flashMessage({ type: "success", text: "✔ Code Applied" }, 2000);
     } else {
-      setPromoError("Code not valid");
-      window.setTimeout(() => setPromoError(null), 3000);
+      flashMessage({
+        type: "error",
+        text: "Invalid promo code. Please try a different one.",
+      }, 3000);
     }
   };
 
