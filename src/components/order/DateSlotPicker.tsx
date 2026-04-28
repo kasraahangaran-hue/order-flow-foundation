@@ -54,6 +54,23 @@ function DaySurchargeTag({ pct }: { pct: number }) {
   );
 }
 
+function parseAnytimeSlot(time: string): { prefix: string; suffix: string } {
+  if (time.startsWith("Anytime ")) {
+    return { prefix: "Anytime", suffix: time.slice("Anytime ".length) };
+  }
+  return { prefix: "", suffix: time };
+}
+
+function ServiceSurchargeTag({ amount }: { amount: number }) {
+  return (
+    <div className="mt-1 inline-flex items-start rounded-[2px] bg-washmen-secondary-red px-[3px] py-px">
+      <span className="text-[10px] leading-[14px] tracking-[0.3px] text-washmen-red">
+        AED {amount} service
+      </span>
+    </div>
+  );
+}
+
 export function DateSlotPicker({
   days,
   selectedDate,
@@ -167,6 +184,7 @@ export function DateSlotPicker({
             };
 
             if (slot.variant === "wide") {
+              const { prefix, suffix } = parseAnytimeSlot(slot.time);
               return (
                 <button
                   key={slot.time}
@@ -179,10 +197,16 @@ export function DateSlotPicker({
                       : "border-[#F2F3F8] bg-white"
                   )}
                 >
+                  {prefix ? (
+                    <p className="text-[12px] font-light leading-[18px] tracking-[0.1px] text-washmen-primary">
+                      {prefix}
+                    </p>
+                  ) : null}
                   <p className="text-[14px] font-normal leading-[20px] tracking-[0.1px] text-washmen-primary">
-                    {slot.time}
+                    {suffix}
                   </p>
                   {slot.freeDelivery ? <FreeDeliveryTag isSelected={isSel} /> : null}
+                  {slot.surcharge ? <ServiceSurchargeTag amount={slot.surcharge} /> : null}
                 </button>
               );
             }
@@ -206,11 +230,7 @@ export function DateSlotPicker({
                   {slot.time}
                 </p>
                 {slot.surcharge ? (
-                  <div className="mt-1 inline-flex items-start rounded-[2px] bg-washmen-secondary-red px-[3px] py-px">
-                    <span className="text-[10px] leading-[14px] tracking-[0.3px] text-washmen-red">
-                      AED {slot.surcharge} service
-                    </span>
-                  </div>
+                  <ServiceSurchargeTag amount={slot.surcharge} />
                 ) : null}
               </button>
             );
