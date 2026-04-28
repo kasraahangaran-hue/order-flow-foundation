@@ -493,6 +493,10 @@ export default function LastStep() {
   const services = useOrderStore((s) => s.services);
   const payment = useOrderStore((s) => s.payment);
   const setPayment = useOrderStore((s) => s.setPayment);
+  const flowType = useOrderStore((s) => s.flowType);
+  const cart = useOrderStore((s) => s.cart);
+  const updateCartItemQuantity = useOrderStore((s) => s.updateCartItemQuantity);
+  const isPricingFlow = flowType === "pricingPage";
 
   const [selectedTip, setSelectedTip] = useState(0);
   const [paymentExpanded, setPaymentExpanded] = useState(true);
@@ -504,13 +508,21 @@ export default function LastStep() {
   const [selectedPromoCode, setSelectedPromoCode] = useState<string | null>(null);
 
   const lineItems = useMemo(() => buildLineItems(services), [services]);
-  const itemsTotal = lineItems.reduce((s, i) => s + i.amount, 0);
+  const flatItemsTotal = lineItems.reduce((s, i) => s + i.amount, 0);
+  const cartItemsTotal = useMemo(
+    () =>
+      cart.reduce(
+        (sum, i) => sum + (i.discountedPrice ?? i.unitPrice) * i.quantity,
+        0
+      ),
+    [cart]
+  );
+  const itemsTotal = isPricingFlow ? cartItemsTotal : flatItemsTotal;
   const promoDiscount = calculatePromoDiscount(selectedPromoCode, itemsTotal);
   const estimatedTotal = Math.max(
     0,
     itemsTotal + DELIVERY_FEE + selectedTip - promoDiscount
   );
-  const hasItems = lineItems.length > 0;
 
   // Seed payment method to Apple Pay if not set
   useEffect(() => {
