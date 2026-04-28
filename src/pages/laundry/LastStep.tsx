@@ -24,6 +24,13 @@ import {
   type CartItem,
 } from "@/stores/orderStore";
 import { nativeBridge } from "@/lib/nativeBridge";
+import {
+  AVAILABLE_PROMOS,
+  ALREADY_APPLIED_CODES,
+  calculatePromoDiscount,
+  type PromoData,
+} from "@/data/promos";
+import { PromoDetailsSheet } from "@/components/order/PromoDetailsSheet";
 
 /**
  * PROMO CODE LOGIC — checkout-stage only ("Available/Selected" state per spec).
@@ -68,36 +75,6 @@ const TIP_OPTIONS: { label: string; value: number }[] = [
   { label: "AED 10", value: 10 },
 ];
 
-interface PromoData {
-  code: string;
-  subtitle: string;
-  used: number;
-  total: number;
-  discountAed?: number;
-  discountPct?: number;
-}
-
-// Mock list of available promos. Replace with backend fetch when available.
-const AVAILABLE_PROMOS: PromoData[] = [
-  { code: "MYLAUNDRY25", subtitle: "AED 50 off on 3 laundry orders!", used: 1, total: 11, discountAed: 50 },
-  { code: "FIRSTORDER10", subtitle: "10% off your first order", used: 0, total: 1, discountPct: 10 },
-  { code: "WEEKEND15", subtitle: "AED 15 off weekend orders", used: 1, total: 3, discountAed: 15 },
-];
-
-// Codes already applied to in-progress orders (single-use de-dupe).
-// TODO: populate from backend when wired up.
-const ALREADY_APPLIED_CODES = new Set<string>();
-
-function calculatePromoDiscount(code: string | null, itemsTotal: number): number {
-  if (!code) return 0;
-  const promo = AVAILABLE_PROMOS.find((p) => p.code === code);
-  if (!promo) return 0;
-  let amount = 0;
-  if (promo.discountAed) amount = promo.discountAed;
-  else if (promo.discountPct) amount = (itemsTotal * promo.discountPct) / 100;
-  return Math.min(amount, itemsTotal);
-}
-
 interface PromoProgressDotsProps {
   used: number;
   total: number;
@@ -134,9 +111,10 @@ interface PromoCardProps {
   promo: PromoData;
   selected: boolean;
   onToggle: () => void;
+  onViewDetails: () => void;
 }
 
-function PromoCard({ promo, selected, onToggle }: PromoCardProps) {
+function PromoCard({ promo, selected, onToggle, onViewDetails }: PromoCardProps) {
   return (
     <button
       type="button"
@@ -179,8 +157,8 @@ function PromoCard({ promo, selected, onToggle }: PromoCardProps) {
           className="flex items-center gap-1"
           onClick={(e) => {
             e.stopPropagation();
-            // eslint-disable-next-line no-console
-            console.log("View promo details", promo.code);
+            haptics.light();
+            onViewDetails();
           }}
         >
           <Info className="h-4 w-4 text-washmen-primary" strokeWidth={2} />
@@ -353,6 +331,7 @@ interface PaymentSummaryItemizedProps {
   expanded: boolean;
   onToggleExpanded: () => void;
   onUpdateQuantity: (index: number, quantity: number) => void;
+  onViewPromoDetails: (promo: PromoData) => void;
 }
 
 function PaymentSummaryItemized({
@@ -365,6 +344,7 @@ function PaymentSummaryItemized({
   expanded,
   onToggleExpanded,
   onUpdateQuantity,
+  onViewPromoDetails,
 }: PaymentSummaryItemizedProps) {
   // Group items by service, preserving original cart index for stepper updates
   const groups = useMemo(() => {
@@ -474,9 +454,28 @@ function PaymentSummaryItemized({
             })}
 
             {selectedPromoCode && promoDiscount > 0 && (
-              <div className="flex justify-between text-sm">
-                <span className="text-emerald-700">Promo Discount ({selectedPromoCode})</span>
-                <span className="text-emerald-700">- AED {promoDiscount.toFixed(2)}</span>
+              <div className="flex items-center justify-between text-sm">
+                <span className="flex items-center gap-1.5 text-washmen-primary">
+                  <span>{selectedPromoCode}</span>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      haptics.light();
+                      const promo = AVAILABLE_PROMOS.find(
+                        (p) => p.code === selectedPromoCode
+                      );
+                      if (promo) onViewPromoDetails(promo);
+                    }}
+                    className="press-effect flex h-5 w-5 items-center justify-center rounded-full bg-secondary"
+                    aria-label="View promo details"
+                  >
+                    <Info className="h-3 w-3 text-washmen-primary" strokeWidth={2} />
+                  </button>
+                </span>
+                <span className="text-washmen-primary">
+                  -AED {promoDiscount.toFixed(2)}
+                </span>
               </div>
             )}
             <div className="flex justify-between text-sm">
@@ -519,6 +518,7 @@ export default function LastStep() {
     { type: "error" | "success"; text: string } | null
   >(null);
   const [selectedPromoCode, setSelectedPromoCode] = useState<string | null>(null);
+  const [detailsPromo, setDetailsPromo] = useState<PromoData | null>(null);
 
   const lineItems = useMemo(() => buildLineItems(services), [services]);
   const flatItemsTotal = lineItems.reduce((s, i) => s + i.amount, 0);
@@ -663,6 +663,7 @@ export default function LastStep() {
                       promo={promo}
                       selected={selectedPromoCode === promo.code}
                       onToggle={() => togglePromo(promo.code)}
+                      onViewDetails={() => setDetailsPromo(promo)}
                     />
                   ))}
                 </div>
@@ -727,6 +728,7 @@ export default function LastStep() {
             expanded={paymentExpanded}
             onToggleExpanded={() => toggle(setPaymentExpanded, paymentExpanded)}
             onUpdateQuantity={updateCartItemQuantity}
+            onViewPromoDetails={(p) => setDetailsPromo(p)}
           />
         ) : (
           <PaymentSummaryFlat
@@ -800,6 +802,11 @@ export default function LastStep() {
           </div>
         </div>
       </div>
+      <PromoDetailsSheet
+        open={!!detailsPromo}
+        onOpenChange={(open) => !open && setDetailsPromo(null)}
+        promo={detailsPromo}
+      />
     </OrderLayout>
   );
 }
