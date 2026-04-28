@@ -132,8 +132,8 @@ export function PickupSchedulingSheet({ open, onOpenChange }: PickupSchedulingSh
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent className="max-h-[90vh] rounded-t-[24px] border-0 bg-background pb-[env(safe-area-inset-bottom)]">
-        <DrawerHeader className="px-4 pb-2 pt-2 text-center">
-          <DrawerTitle className="text-[20px] font-bold leading-[24px] tracking-[0.4px] text-washmen-primary">
+        <DrawerHeader className="mb-2 flex-shrink-0 px-4 pb-2 pt-2 text-left">
+          <DrawerTitle className="text-left text-[20px] font-bold leading-[24px] tracking-[0.4px] text-washmen-primary">
             {title}
           </DrawerTitle>
         </DrawerHeader>
