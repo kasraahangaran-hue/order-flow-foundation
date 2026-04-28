@@ -85,9 +85,9 @@ export function DateSlotPicker({
   const activeDay = days.find((d) => d.date === selectedDate) ?? days[0];
 
   return (
-    <div className="flex w-full flex-col gap-4">
+    <div className="flex w-full flex-1 min-h-0 flex-col gap-4">
       {showOnTimeTip ? (
-        <div className="flex items-center gap-2 rounded-[8px] bg-washmen-light-green p-2">
+        <div className="flex flex-shrink-0 items-center gap-2 rounded-[8px] bg-washmen-light-green p-2">
           <Lightbulb className="h-4 w-4 shrink-0 text-washmen-primary" strokeWidth={2} />
           <p className="text-[14px] font-medium leading-[20px] text-washmen-primary">
             We're 98% on time with your deliveries!
@@ -95,9 +95,9 @@ export function DateSlotPicker({
         </div>
       ) : null}
 
-      <div className="flex gap-4">
-        {/* Day rail — 120px fixed */}
-        <div className="flex w-[120px] shrink-0 flex-col gap-[9px]">
+      <div className="flex flex-1 min-h-0 gap-[9px] overflow-hidden">
+        {/* Day rail */}
+        <div className="flex flex-1 flex-col gap-[9px] overflow-y-auto pr-1">
           {days.map((d) => {
             const isSel = d.date === selectedDate;
             const hasBadge = d.badge === "next-day-delivery";
@@ -119,12 +119,12 @@ export function DateSlotPicker({
                   type="button"
                   onClick={handleSelect}
                   className={cn(
-                    "press-effect flex w-full flex-col overflow-hidden rounded-[6px] border text-left",
+                    "press-effect flex w-full shrink-0 flex-col overflow-hidden rounded-[6px] border text-left",
                     isSel ? "border-washmen-primary" : "border-[#F2F3F8]"
                   )}
                 >
                   {/* Purple badge — no border, the outer wrapper carries it. Stays purple regardless of selection. */}
-                  <div className="flex h-[19px] items-center justify-center gap-[2px] bg-[#9176FF] px-1">
+                  <div className="flex h-[19px] flex-shrink-0 items-center justify-center gap-[2px] bg-[#9176FF] px-1">
                     <Clock className="h-[10px] w-[10px] text-white" strokeWidth={2.5} />
                     <span className="whitespace-nowrap text-[9px] font-bold italic leading-[7px] tracking-[0.4px] text-white">
                       NEXT-DAY DELIVERY
@@ -158,7 +158,7 @@ export function DateSlotPicker({
                 type="button"
                 onClick={handleSelect}
                 className={cn(
-                  "press-effect flex w-full flex-col gap-px rounded-[6px] border px-3 py-2 text-left text-washmen-primary",
+                  "press-effect flex w-full shrink-0 flex-col gap-px rounded-[6px] border px-3 py-2 text-left text-washmen-primary",
                   isSel
                     ? "border-washmen-primary bg-washmen-light-green"
                     : "border-[#F2F3F8] bg-white"
@@ -180,8 +180,8 @@ export function DateSlotPicker({
           })}
         </div>
 
-        {/* Slot list — 191px fixed */}
-        <div className="flex w-[191px] shrink-0 flex-col gap-[9px]">
+        {/* Slot list */}
+        <div className="flex flex-1 flex-col gap-[9px] overflow-y-auto pr-1">
           {activeDay.slots.map((slot) => {
             const isSel = slot.time === selectedSlotTime;
 
@@ -198,7 +198,7 @@ export function DateSlotPicker({
                   type="button"
                   onClick={handleSelect}
                   className={cn(
-                    "press-effect flex w-full flex-col items-start gap-0.5 rounded-[6px] border px-3 py-2 text-left",
+                    "press-effect flex w-full shrink-0 flex-col items-start gap-0.5 rounded-[6px] border px-3 py-2 text-left",
                     isSel
                       ? "border-washmen-primary bg-washmen-light-green"
                       : "border-[#F2F3F8] bg-white"
@@ -224,7 +224,7 @@ export function DateSlotPicker({
                 type="button"
                 onClick={handleSelect}
                 className={cn(
-                  "press-effect flex w-full flex-col items-start gap-0.5 rounded-[6px] border px-3 py-2 text-left",
+                  "press-effect flex w-full shrink-0 flex-col items-start gap-0.5 rounded-[6px] border px-3 py-2 text-left",
                   isSel
                     ? "border-washmen-primary bg-washmen-light-green"
                     : "border-[#F2F3F8] bg-white"

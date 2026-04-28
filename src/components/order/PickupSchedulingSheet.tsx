@@ -100,16 +100,15 @@ export function PickupSchedulingSheet({ open, onOpenChange }: PickupSchedulingSh
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="max-h-[90vh] rounded-t-[24px] border-0 bg-background pb-[env(safe-area-inset-bottom)]">
+      <DrawerContent className="flex max-h-[90vh] flex-col rounded-t-[24px] border-0 bg-background pb-[env(safe-area-inset-bottom)]">
         <DrawerHeader className="mb-2 flex-shrink-0 px-4 pb-2 pt-2 text-left">
           <DrawerTitle className="text-left text-[20px] font-bold leading-[24px] tracking-[0.4px] text-washmen-primary">
             {title}
           </DrawerTitle>
         </DrawerHeader>
 
-        <div className="flex max-h-[70vh] flex-col overflow-y-auto px-4 pb-2">
-          {step === 1 ? (
-            <div key="step-1" className="animate-in fade-in-0 duration-200">
+        {step === 1 ? (
+          <div key="step-1" className="flex-shrink-0 animate-in fade-in-0 duration-200 px-4 pb-2">
               <div className="grid grid-cols-2 gap-3">
                 <TypeTile
                   selected={pickupMode === "door"}
@@ -129,9 +128,9 @@ export function PickupSchedulingSheet({ open, onOpenChange }: PickupSchedulingSh
                   ? "Leave your bags outside your door for a Washmen driver to collect"
                   : "Meet the Washmen driver in person and hand over your bags"}
               </p>
-            </div>
-          ) : (
-            <div key="step-2" className="animate-in fade-in-0 duration-200">
+          </div>
+        ) : (
+          <div key="step-2" className="flex flex-1 min-h-0 flex-col animate-in fade-in-0 duration-200 px-4 pb-2">
               <DateSlotPicker
                 days={days}
                 selectedDate={selectedDate}
@@ -140,11 +139,10 @@ export function PickupSchedulingSheet({ open, onOpenChange }: PickupSchedulingSh
                 onSelectSlot={setSelectedSlot}
                 showOnTimeTip={false}
               />
-            </div>
-          )}
-        </div>
+          </div>
+        )}
 
-        <div className="flex items-center gap-3 px-4 pb-4 pt-3">
+        <div className="flex flex-shrink-0 items-center gap-3 px-4 pb-4 pt-3">
           <button
             type="button"
             onClick={() => {
