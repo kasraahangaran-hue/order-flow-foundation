@@ -6,6 +6,9 @@ import {
   CreditCard,
   Pencil,
   Tag,
+  Apple,
+  CheckCircle2,
+  Circle,
 } from "lucide-react";
 import { OrderLayout } from "@/components/order/OrderLayout";
 import { Button } from "@/components/ui/button";
@@ -43,6 +46,24 @@ const TIP_OPTIONS: { label: string; value: number }[] = [
   { label: "AED 10", value: 10 },
 ];
 
+// Mock list of available promos. Replace with backend fetch when available.
+const AVAILABLE_PROMOS: {
+  code: string;
+  title: string;
+  subtitle: string;
+}[] = [
+  { code: "FIRST10", title: "10% off your first order", subtitle: "Min. AED 50 spend" },
+  { code: "SUMMER25", title: "AED 25 off select services", subtitle: "Valid until June 30" },
+  { code: "VIP15", title: "VIP discount 15%", subtitle: "Members only" },
+];
+
+function calculatePromoDiscount(code: string | null, itemsTotal: number): number {
+  if (!code) return 0;
+  if (code === "FIRST10") return 10;
+  if (code === "SUMMER25") return 25;
+  return Math.round(itemsTotal * 0.15 * 100) / 100;
+}
+
 export default function LastStep() {
   const navigate = useNavigate();
   const services = useOrderStore((s) => s.services);
@@ -57,7 +78,11 @@ export default function LastStep() {
 
   const lineItems = useMemo(() => buildLineItems(services), [services]);
   const itemsTotal = lineItems.reduce((s, i) => s + i.amount, 0);
-  const estimatedTotal = itemsTotal + DELIVERY_FEE + selectedTip;
+  const promoDiscount = calculatePromoDiscount(appliedPromo, itemsTotal);
+  const estimatedTotal = Math.max(
+    0,
+    itemsTotal + DELIVERY_FEE + selectedTip - promoDiscount
+  );
   const hasItems = lineItems.length > 0;
 
   // Seed payment method to Apple Pay if not set
@@ -66,7 +91,15 @@ export default function LastStep() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const paymentMethodLabel = payment?.method ?? "Apple Pay";
+  const paymentMethodLabel =
+    payment?.method === "Card" && payment.last4
+      ? `Card **** ${payment.last4}`
+      : payment?.method ?? "Apple Pay";
+  const isApplePay = (payment?.method ?? "Apple Pay") === "Apple Pay";
+  const PaymentIcon = isApplePay ? Apple : CreditCard;
+
+  const availableCount = AVAILABLE_PROMOS.length;
+  const hasAvailablePromos = availableCount > 0;
 
   const onPay = () => {
     if (!hasItems) return;
@@ -111,12 +144,19 @@ export default function LastStep() {
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
               <Tag className="h-4 w-4 text-washmen-primary" />
             </div>
-            <p className="flex-1 text-sm font-semibold leading-tight text-washmen-primary">
-              Promos
-            </p>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold leading-tight text-washmen-primary">
+                Promos
+                {hasAvailablePromos && !appliedPromo && (
+                  <span className="ml-2 text-xs font-normal text-muted-foreground">
+                    ({availableCount} available)
+                  </span>
+                )}
+              </p>
+            </div>
             {appliedPromo && !promosExpanded ? (
-              <span className="rounded-md bg-washmen-secondary-aqua px-2 py-0.5 text-[11px] font-semibold text-washmen-primary">
-                Applied
+              <span className="rounded-md bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">
+                Applied: {appliedPromo}
               </span>
             ) : promosExpanded ? (
               <ChevronUp className="h-4 w-4 shrink-0 text-muted-foreground" />
@@ -126,6 +166,50 @@ export default function LastStep() {
           </button>
           {promosExpanded && (
             <div className="mt-3 border-t border-border pt-3">
+              {hasAvailablePromos && (
+                <div className="mb-3 space-y-2">
+                  {AVAILABLE_PROMOS.map((promo) => {
+                    const selected = appliedPromo === promo.code;
+                    return (
+                      <button
+                        key={promo.code}
+                        type="button"
+                        onClick={() => {
+                          haptics.light();
+                          if (selected) {
+                            setAppliedPromo(null);
+                            setPromoInput("");
+                          } else {
+                            setAppliedPromo(promo.code);
+                            setPromoInput("");
+                            haptics.success();
+                          }
+                        }}
+                        className={cn(
+                          "press-effect flex w-full items-center gap-3 rounded-lg border p-3 text-left transition-colors",
+                          selected
+                            ? "border-emerald-500 bg-emerald-50"
+                            : "border-border bg-background"
+                        )}
+                      >
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-semibold leading-tight text-foreground">
+                            {promo.title}
+                          </p>
+                          <p className="mt-0.5 text-xs leading-tight text-muted-foreground">
+                            {promo.subtitle}
+                          </p>
+                        </div>
+                        {selected ? (
+                          <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
+                        ) : (
+                          <Circle className="h-5 w-5 shrink-0 text-muted-foreground" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
               <div className="flex items-center gap-2">
                 <input
                   type="text"
@@ -152,7 +236,7 @@ export default function LastStep() {
               </div>
               {appliedPromo && (
                 <div className="mt-3 flex items-center justify-between">
-                  <p className="text-sm font-semibold text-washmen-primary">
+                  <p className="text-sm font-semibold text-emerald-700">
                     Applied: {appliedPromo}
                   </p>
                   <button
@@ -210,6 +294,16 @@ export default function LastStep() {
                     No services selected
                   </p>
                 )}
+                {appliedPromo && promoDiscount > 0 && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-emerald-700">
+                      Promo Discount ({appliedPromo})
+                    </span>
+                    <span className="text-emerald-700">
+                      - AED {promoDiscount.toFixed(2)}
+                    </span>
+                  </div>
+                )}
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Delivery Fee</span>
                   <span className="text-foreground">
@@ -222,6 +316,8 @@ export default function LastStep() {
                     AED {selectedTip.toFixed(2)}
                   </span>
                 </div>
+                {/* TODO: Add minimum-order-not-met state when threshold is confirmed. */}
+                {/* TODO: Add itemized cart breakdown when entering via pricing page flow. */}
                 <div className="mt-2 flex items-center justify-between border-t border-dashed border-border pt-3">
                   <span className="text-sm font-bold text-washmen-primary">
                     Estimated Total
@@ -264,20 +360,22 @@ export default function LastStep() {
           }}
           className="press-effect w-full rounded-card bg-card p-4 text-left shadow-[0_1px_2px_rgba(16,24,40,0.04)]"
         >
-          <div className="flex items-center gap-3">
+          <div className="flex items-start gap-3">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
-              <CreditCard className="h-4 w-4 text-washmen-primary" />
+              <PaymentIcon className="h-4 w-4 text-washmen-primary" />
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-sm font-semibold leading-tight text-washmen-primary">
                 {paymentMethodLabel}
               </p>
-              <p className="mt-0.5 text-xs leading-tight text-muted-foreground">
-                Tap to change
+              {/* TEMP: hardcoded copy. Confirm Strapi key for facility-charge note. */}
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                We will charge your card after receiving your items at our
+                facility. AED 15 delivery fee will be applied.
               </p>
             </div>
             <Pencil
-              className="h-4 w-4 shrink-0 text-muted-foreground"
+              className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground"
               strokeWidth={2}
               aria-hidden
             />
