@@ -38,25 +38,25 @@ export interface DropoffState {
 
 export interface DriverInstructionsState {
   pickup: DriverPickupChoice;
-  pickupCallOnArrival: boolean;
   dropoff: DriverDropoffChoice;
-  hanging: HangingInstructionChoice;
-  dropoffCallOnArrival: boolean;
 }
 
 export type DriverPickupChoice =
   | "no_preference"
+  | "at_concierge"
   | "ring_doorbell"
   | "knock_door"
-  | "do_not_disturb_outside";
+  | "do_not_disturb_bags_outside"
+  | "call_when_arrive";
 
 export type DriverDropoffChoice =
   | "no_preference"
+  | "at_concierge"
+  | "hang_door_handle"
   | "ring_doorbell"
   | "knock_door"
-  | "do_not_disturb_outside";
-
-export type HangingInstructionChoice = "none" | "door_handle" | "door_frame";
+  | "do_not_disturb_packages_outside"
+  | "call_when_arrive";
 
 export type StarchChoice = "none" | "light" | "medium" | "hard";
 export type CreaseChoice = "no_preference" | "full_crease" | "fold_top_only";
@@ -215,7 +215,7 @@ export const useOrderStore = create<OrderState>()(
     {
       // v2: bumped from v1 to invalidate old locale-formatted date strings.
       // Old persisted state had pickup.date like "Tue, Apr 28" which broke formatRelativeDay.
-      name: "washmen.laundry-order.v2",
+      name: "washmen.laundry-order.v3",
       storage: createJSONStorage(() => localStorage),
       partialize: (s) => ({
         flowType: s.flowType,
