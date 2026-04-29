@@ -11,6 +11,8 @@ import { formatScheduleLines } from "@/lib/dateFormat";
 import { PickupSchedulingSheet } from "@/components/order/PickupSchedulingSheet";
 import { DropOffSheet } from "@/components/order/DropOffSheet";
 import { DriverInstructionsSheet } from "@/components/order/DriverInstructionsSheet";
+import { SelectAddressSheet } from "@/components/order/SelectAddressSheet";
+import { summarizeAddress } from "@/lib/addressFormatting";
 import {
   summarizeDriverInstructions,
   DEFAULT_DRIVER_INSTRUCTIONS,
@@ -104,11 +106,13 @@ function TimeRow({ day, time }: { day: string; time: string }) {
 
 export default function OrderDetails() {
   const navigate = useNavigate();
-  const address = useOrderStore((s) => s.address);
+  const addresses = useOrderStore((s) => s.addresses);
+  const selectedAddressId = useOrderStore((s) => s.selectedAddressId);
+  const selectedAddress =
+    addresses.find((a) => a.id === selectedAddressId) ?? null;
   const pickup = useOrderStore((s) => s.pickup);
   const dropoff = useOrderStore((s) => s.dropoff);
   const driverInstructions = useOrderStore((s) => s.driverInstructions);
-  const setAddress = useOrderStore((s) => s.setAddress);
   const setPickup = useOrderStore((s) => s.setPickup);
   const setDropoff = useOrderStore((s) => s.setDropoff);
   const setDriverInstructions = useOrderStore((s) => s.setDriverInstructions);
@@ -116,6 +120,7 @@ export default function OrderDetails() {
   const [pickupSheetOpen, setPickupSheetOpen] = useState(false);
   const [dropoffSheetOpen, setDropoffSheetOpen] = useState(false);
   const [driverInstructionsSheetOpen, setDriverInstructionsSheetOpen] = useState(false);
+  const [addressSheetOpen, setAddressSheetOpen] = useState(false);
 
   // TEMP: seed defaults for UI dev. Remove when bottom sheets are wired up.
   useEffect(() => {
@@ -127,7 +132,6 @@ export default function OrderDetails() {
       const dd = String(d.getDate()).padStart(2, "0");
       return `${yyyy}-${mm}-${dd}`;
     };
-    if (!address) setAddress({ line1: "108, Azurite tower" });
     if (!pickup) setPickup({ mode: "door", date: dayPlus(0), slot: "02:00 pm - 04:00 pm" });
     if (!dropoff) setDropoff({ mode: "door", date: dayPlus(2), slot: "Anytime", surcharge: 0 });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -142,7 +146,7 @@ export default function OrderDetails() {
     setDriverInstructionsSheetOpen(true);
   };
 
-  const ctaEnabled = !!address && !!pickup && !!dropoff;
+  const ctaEnabled = !!selectedAddressId && !!pickup && !!dropoff;
 
   const pickupModeLabel =
     pickup?.mode === "in_person" ? "Meet driver in person" : "Pick Up at Door";
@@ -169,20 +173,16 @@ export default function OrderDetails() {
         {/* 1. Address */}
         <DetailCard
           title="Address"
-          hasValue={!!address}
-          onPress={() => openSheet("address")}
+          hasValue={!!selectedAddress}
+          onPress={() => setAddressSheetOpen(true)}
         >
-          {address ? (
+          {selectedAddress ? (
             <ValueRow
               icon={Home}
-              text={
-                address.apartment
-                  ? `${address.line1}, ${address.apartment}`
-                  : address.line1
-              }
+              text={summarizeAddress(selectedAddress)}
             />
           ) : (
-            <EmptyRow text="Add your address" />
+            <EmptyRow text="No address selected" />
           )}
         </DetailCard>
 
@@ -258,6 +258,7 @@ export default function OrderDetails() {
       </div>
       <PickupSchedulingSheet open={pickupSheetOpen} onOpenChange={setPickupSheetOpen} />
       <DropOffSheet open={dropoffSheetOpen} onOpenChange={setDropoffSheetOpen} />
+      <SelectAddressSheet open={addressSheetOpen} onOpenChange={setAddressSheetOpen} />
       <DriverInstructionsSheet
         open={driverInstructionsSheetOpen}
         onOpenChange={setDriverInstructionsSheetOpen}
