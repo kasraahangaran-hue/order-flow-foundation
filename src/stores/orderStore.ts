@@ -37,17 +37,46 @@ export interface DropoffState {
 }
 
 export interface DriverInstructionsState {
-  pickup: string;
-  dropoff: string;
+  pickup: DriverPickupChoice;
+  pickupCallOnArrival: boolean;
+  dropoff: DriverDropoffChoice;
+  hanging: HangingInstructionChoice;
+  dropoffCallOnArrival: boolean;
 }
+
+export type DriverPickupChoice =
+  | "no_preference"
+  | "ring_doorbell"
+  | "knock_door"
+  | "do_not_disturb_outside";
+
+export type DriverDropoffChoice =
+  | "no_preference"
+  | "ring_doorbell"
+  | "knock_door"
+  | "do_not_disturb_outside";
+
+export type HangingInstructionChoice = "none" | "door_handle" | "door_frame";
+
+export type StarchChoice = "none" | "light" | "medium" | "hard";
+export type CreaseChoice = "no_preference" | "full_crease" | "fold_top_only";
+
+export interface CreasesState {
+  shirtsSleeveCreases: boolean;
+  pantsFrontCreases: boolean;
+  kandura: CreaseChoice;
+  gathra: CreaseChoice;
+}
+
+// Folding selection: keys are item type ids; value is true when selected.
+export type FoldingSelection = Record<string, boolean>;
 
 export interface OrderInstructionsState {
   specialRequests: string;
   photos: string[];
-  folding: string | null;
-  creases: string | null;
-  starch: string | null;
-  autoApprovals: boolean;
+  folding: FoldingSelection | null;
+  creases: CreasesState | null;
+  starch: StarchChoice | null;
 }
 
 export interface PaymentState {
