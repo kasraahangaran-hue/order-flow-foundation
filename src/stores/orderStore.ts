@@ -141,7 +141,6 @@ const initialOrderInstructions: OrderInstructionsState = {
   folding: null,
   creases: null,
   starch: null,
-  autoApprovals: false,
 };
 
 export const useOrderStore = create<OrderState>()(
