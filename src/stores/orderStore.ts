@@ -244,7 +244,9 @@ export const useOrderStore = create<OrderState>()(
     (set) => ({
       flowType: "existingUser",
       services: initialServices,
-      address: null,
+      addresses: [],
+      selectedAddressId: null,
+      pendingAddressDraft: null,
       pickup: getDefaultPickup(),
       dropoff: getDefaultDropoff(),
       driverInstructions: null,
@@ -268,7 +270,26 @@ export const useOrderStore = create<OrderState>()(
             addPressing: !!(prefs && prefs.items.length > 0),
           },
         })),
-      setAddress: (address) => set({ address }),
+      addAddress: (a) =>
+        set((state) => ({
+          addresses: [...state.addresses, a],
+          selectedAddressId: a.id,
+          pendingAddressDraft: null,
+        })),
+      updateAddress: (a) =>
+        set((state) => ({
+          addresses: state.addresses.map((x) => (x.id === a.id ? a : x)),
+          pendingAddressDraft: null,
+        })),
+      deleteAddress: (id) =>
+        set((state) => {
+          if (state.selectedAddressId === id) return state;
+          return {
+            addresses: state.addresses.filter((x) => x.id !== id),
+          };
+        }),
+      selectAddress: (id) => set({ selectedAddressId: id }),
+      setPendingAddressDraft: (d) => set({ pendingAddressDraft: d }),
       setPickup: (pickup) => set({ pickup }),
       setDropoff: (dropoff) => set({ dropoff }),
       setDriverInstructions: (driverInstructions) => set({ driverInstructions }),
@@ -294,10 +315,12 @@ export const useOrderStore = create<OrderState>()(
           };
         }),
       reset: () =>
-        set({
+        set((state) => ({
           flowType: "existingUser",
           services: initialServices,
-          address: null,
+          addresses: state.addresses,
+          selectedAddressId: state.selectedAddressId,
+          pendingAddressDraft: null,
           pickup: getDefaultPickup(),
           dropoff: getDefaultDropoff(),
           driverInstructions: null,
@@ -306,17 +329,17 @@ export const useOrderStore = create<OrderState>()(
           promoCode: null,
           tip: 0,
           cart: [],
-        }),
+        })),
     }),
     {
-      // v2: bumped from v1 to invalidate old locale-formatted date strings.
-      // Old persisted state had pickup.date like "Tue, Apr 28" which broke formatRelativeDay.
-      name: "washmen.laundry-order.v6",
+      // v7: bumped from v6 to invalidate old single-address shape.
+      name: "washmen.laundry-order.v7",
       storage: createJSONStorage(() => localStorage),
       partialize: (s) => ({
         flowType: s.flowType,
         services: s.services,
-        address: s.address,
+        addresses: s.addresses,
+        selectedAddressId: s.selectedAddressId,
         pickup: s.pickup,
         dropoff: s.dropoff,
         driverInstructions: s.driverInstructions,
