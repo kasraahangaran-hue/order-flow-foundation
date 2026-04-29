@@ -96,7 +96,7 @@ export default {
         md: "calc(var(--radius) - 4px)",
         sm: "calc(var(--radius) - 8px)",
         sheet: "24px",
-        card: "16px",
+        card: "8px",
         btn: "12px",
       },
       keyframes: {
