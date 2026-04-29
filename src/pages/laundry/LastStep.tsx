@@ -453,44 +453,47 @@ function PaymentSummaryItemized({
               );
             })}
 
-            {selectedPromoCode && promoDiscount > 0 && (
-              <div className="flex items-center justify-between text-sm">
-                <span className="flex items-center gap-1.5 text-washmen-primary">
-                  <span>{selectedPromoCode}</span>
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      haptics.light();
-                      const promo = AVAILABLE_PROMOS.find(
-                        (p) => p.code === selectedPromoCode
-                      );
-                      if (promo) onViewPromoDetails(promo);
-                    }}
-                    className="press-effect flex h-5 w-5 items-center justify-center rounded-full bg-secondary"
-                    aria-label="View promo details"
-                  >
-                    <Info className="h-3 w-3 text-washmen-primary" strokeWidth={2} />
-                  </button>
-                </span>
-                <span className="text-washmen-primary">
-                  -AED {promoDiscount.toFixed(2)}
+            {/* Bottom summary rows — tighter spacing matching PaymentSummaryFlat */}
+            <div className="space-y-2">
+              {selectedPromoCode && promoDiscount > 0 && (
+                <div className="flex items-center justify-between text-sm">
+                  <span className="flex items-center gap-1.5 text-washmen-primary">
+                    <span>{selectedPromoCode}</span>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        haptics.light();
+                        const promo = AVAILABLE_PROMOS.find(
+                          (p) => p.code === selectedPromoCode
+                        );
+                        if (promo) onViewPromoDetails(promo);
+                      }}
+                      className="press-effect flex h-5 w-5 items-center justify-center rounded-full bg-secondary"
+                      aria-label="View promo details"
+                    >
+                      <Info className="h-3 w-3 text-washmen-primary" strokeWidth={2} />
+                    </button>
+                  </span>
+                  <span className="text-washmen-primary">
+                    -AED {promoDiscount.toFixed(2)}
+                  </span>
+                </div>
+              )}
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Delivery Fee</span>
+                <span className="text-foreground">AED {DELIVERY_FEE.toFixed(2)}*</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Driver Tip</span>
+                <span className="text-foreground">AED {selectedTip.toFixed(2)}</span>
+              </div>
+              <div className="flex items-center justify-between border-t border-dashed border-border pt-3">
+                <span className="text-sm font-bold text-washmen-primary">Estimated Total</span>
+                <span className="text-sm font-bold text-washmen-primary">
+                  AED {estimatedTotal.toFixed(2)}**
                 </span>
               </div>
-            )}
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Delivery Fee</span>
-              <span className="text-foreground">AED {DELIVERY_FEE.toFixed(2)}*</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Driver Tip</span>
-              <span className="text-foreground">AED {selectedTip.toFixed(2)}</span>
-            </div>
-            <div className="mt-2 flex items-center justify-between border-t border-dashed border-border pt-3">
-              <span className="text-sm font-bold text-washmen-primary">Estimated Total</span>
-              <span className="text-sm font-bold text-washmen-primary">
-                AED {estimatedTotal.toFixed(2)}**
-              </span>
             </div>
           </div>
           <PaymentSummaryFootnotes />
