@@ -5,6 +5,8 @@ import type {
   CreaseChoice,
   DriverPickupChoice,
   DriverDropoffChoice,
+  AutoApprovalsState,
+  WashAndFoldApprovalChoice,
 } from "@/stores/orderStore";
 
 const PICKUP_LABELS: Record<DriverPickupChoice, string> = {
@@ -83,3 +85,37 @@ export const DEFAULT_CREASES: CreasesState = {
 };
 
 export const DEFAULT_STARCH: StarchChoice = "none";
+
+const WASH_AND_FOLD_LABELS: Record<WashAndFoldApprovalChoice, string> = {
+  notify_me: "Always notify me of items in question",
+  transfer_clean_press: "Automatically transfer my items to the Clean & Press service and notify me",
+  always_wash: "Always wash my items regardless of risk",
+  do_not_wash: "Do not wash and return unprocessed",
+};
+
+export interface AutoApprovalsSummaryLine {
+  prefix: string;
+  suffix: string;
+}
+
+/**
+ * Returns an array of {prefix, suffix} lines for rendering the Auto-Approvals
+ * card subtitle as multi-line stacked content.
+ */
+export function summarizeAutoApprovals(a: AutoApprovalsState): AutoApprovalsSummaryLine[] {
+  return [
+    {
+      prefix: "Stain & Damage:",
+      suffix: a.stainDamageAutoApprove ? "Approved" : "Notify me",
+    },
+    {
+      prefix: "Wash & Fold:",
+      suffix: WASH_AND_FOLD_LABELS[a.washAndFold],
+    },
+  ];
+}
+
+export const DEFAULT_AUTO_APPROVALS: AutoApprovalsState = {
+  stainDamageAutoApprove: false,
+  washAndFold: "notify_me",
+};
