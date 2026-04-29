@@ -102,9 +102,7 @@ export default function AddressDetailsScreen() {
     (pendingDraft?.fields as { notes?: string } | undefined)?.notes ?? "",
   );
 
-  if (!pendingDraft || !pendingDraft.type) return null;
-
-  const isEditMode = pendingDraft.id !== undefined;
+  const isEditMode = pendingDraft?.id !== undefined;
 
   const onSwitchType = (newType: AddressType) => {
     if (newType === type) return;
@@ -157,6 +155,11 @@ export default function AddressDetailsScreen() {
     hotelRoom,
     hotelGuest,
   ]);
+
+  // Early return AFTER all hooks have run, to satisfy Rules of Hooks. The
+  // useEffect above redirects when pendingDraft is missing, so this only
+  // renders briefly during the redirect.
+  if (!pendingDraft || !pendingDraft.type) return null;
 
   const onBack = () => {
     haptics.light();

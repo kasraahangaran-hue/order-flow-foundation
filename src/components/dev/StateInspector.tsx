@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { SlidersHorizontal } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -8,482 +7,47 @@ import {
   SheetTitle,
   SheetDescription,
 } from "@/components/ui/sheet";
-import { Switch } from "@/components/ui/switch";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import {
-  useOrderStore,
-  type OrderState,
-  type FlowType,
-  type CartItem,
-  type Address,
-} from "@/stores/orderStore";
+import { SlidersHorizontal } from "lucide-react";
+import { useOrderStore, type OrderState, type FlowType } from "@/stores/orderStore";
 import { cn } from "@/lib/utils";
-import { getDefaultPickup, getDefaultDropoff } from "@/data/scheduleDefaults";
 
-type StoreApi = OrderState;
-
-type ToggleVariant = {
-  type: "toggle";
-  label: string;
-  read: (s: StoreApi) => boolean;
-  write: (s: StoreApi, val: boolean) => void;
-  disabled?: boolean;
-  comment?: string;
-};
-
-type SelectVariant = {
-  type: "select";
-  label: string;
-  options: string[];
-  read: (s: StoreApi) => string;
-  write: (s: StoreApi, val: string) => void;
-  disabled?: boolean;
-  comment?: string;
-};
-
-type MultiSelectVariant = {
-  type: "multi-select";
-  label: string;
-  options: string[];
-  read: (s: StoreApi) => string[];
-  write: (s: StoreApi, val: string[]) => void;
-  disabled?: boolean;
-  comment?: string;
-};
-
-type Variant = ToggleVariant | SelectVariant | MultiSelectVariant;
-
-const DUMMY_PHOTOS = [
-  "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=200",
-  "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=200",
-  "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200",
-  "https://images.unsplash.com/photo-1551232864-3f0890e580d9?w=200",
-];
-
-const PRICING_PAGE_SEED_CART: CartItem[] = [
-  { service: "washAndFold", itemLabel: "Bag", unitPrice: 75, quantity: 1 },
-  { service: "cleanAndPress", itemLabel: "Shirt", unitPrice: 18, quantity: 1 },
+const FLOW_TYPE_OPTIONS: { label: string; value: FlowType; description: string }[] = [
   {
-    service: "cleanAndPress",
-    itemLabel: "Blouse",
-    unitPrice: 18,
-    quantity: 1,
-    discountedPrice: 18,
+    label: "New User",
+    value: "newUser",
+    description:
+      "First-time user — gated to add an address before reaching services (gating logic TBD).",
   },
-  { service: "bedAndBath", itemLabel: "Bag", unitPrice: 85, quantity: 1 },
-  { service: "pressOnly", itemLabel: "Shirt", unitPrice: 11, quantity: 1 },
+  {
+    label: "Existing User",
+    value: "existingUser",
+    description: "Returning user with a saved address — default flow.",
+  },
+  {
+    label: "Pricing Page",
+    value: "pricingPage",
+    description:
+      "Skips Select Service / Order Details / Order Instructions and goes straight to Last Step with an itemized cart.",
+  },
 ];
-
-const FLOW_TYPE_OPTIONS: { label: string; value: FlowType }[] = [
-  { label: "New User", value: "newUser" },
-  { label: "Existing User", value: "existingUser" },
-  { label: "Pricing Page", value: "pricingPage" },
-];
-
-function todayPlus(days: number): string {
-  const d = new Date();
-  d.setHours(0, 0, 0, 0);
-  d.setDate(d.getDate() + days);
-  return d.toISOString().slice(0, 10); // ISO YYYY-MM-DD to match sheet day cards
-}
 
 function applyFlowType(store: OrderState, flow: FlowType) {
   store.setFlowType(flow);
-
-  if (flow === "newUser") {
-    useOrderStore.setState({ addresses: [], selectedAddressId: null });
-    store.setPickup(getDefaultPickup());
-    store.setDropoff(getDefaultDropoff());
-    store.setDriverInstructions(null);
-    store.setPayment(null);
-    store.setOrderInstructions({
-      specialRequests: "",
-      delicateItems: [],
-      folding: null,
-      creases: null,
-      starch: null,
-      autoApprovals: null,
-    });
-    store.setServices({
-      washAndFold: false,
-      addPressing: false,
-      pressingPrefs: null,
-      cleanAndPress: false,
-      bedAndBath: false,
-      pressOnly: false,
-    });
-    store.setCart([]);
-    return;
-  }
-
-  // existingUser + pricingPage share the seeded address/pickup/dropoff/payment
-  const seedAddress: Address = {
-    id: "seed_addr_1",
-    type: "apartment",
-    lat: 25.2048,
-    lng: 55.2708,
-    formattedAddress: "Azurite Tower, Dubai Marina, Dubai",
-    fields: { building: "Azurite tower", aptNumber: "108" },
-  };
-  useOrderStore.setState({
-    addresses: [seedAddress],
-    selectedAddressId: seedAddress.id,
-  });
-  store.setPickup({
-    mode: "door",
-    date: todayPlus(0),
-    slot: "02:00 pm - 04:00 pm",
-  });
-  store.setDropoff({
-    mode: "door",
-    date: todayPlus(2),
-    slot: "Anytime",
-    surcharge: 0,
-  });
-  store.setDriverInstructions({
-    pickup: "ring_doorbell",
-    dropoff: "knock_door",
-  });
-  store.setPayment({ method: "Apple Pay" });
-
-  if (flow === "pricingPage") {
-    store.setCart(PRICING_PAGE_SEED_CART);
-  } else {
-    store.setCart([]);
-  }
-}
-
-const ROUTE_VARIANTS: Record<string, Variant[]> = {
-  "/laundry/select-service": [
-    {
-      type: "toggle",
-      label: "Wash & Fold",
-      read: (s) => s.services.washAndFold,
-      write: (s, v) => s.setServices({ washAndFold: v }),
-    },
-    {
-      type: "toggle",
-      label: "Add Pressing",
-      read: (s) => s.services.addPressing,
-      write: (s, v) => s.setServices({ addPressing: v }),
-    },
-    {
-      type: "multi-select",
-      label: "Pressing items",
-      options: ["T-Shirts/Polos", "Tank/Crop", "Shirts/Blouses"],
-      read: (s) => s.services.pressingPrefs?.items ?? [],
-      write: (s, v) =>
-        s.setPressingPrefs(
-          v.length ? { items: v, pricePerItem: 9 } : null
-        ),
-    },
-    {
-      type: "toggle",
-      label: "Clean & Press",
-      read: (s) => s.services.cleanAndPress,
-      write: (s, v) => s.setServices({ cleanAndPress: v }),
-    },
-    {
-      type: "toggle",
-      label: "Bed & Bath",
-      read: (s) => s.services.bedAndBath,
-      write: (s, v) => s.setServices({ bedAndBath: v }),
-    },
-    {
-      type: "toggle",
-      label: "Press Only",
-      read: (s) => s.services.pressOnly,
-      write: (s, v) => s.setServices({ pressOnly: v }),
-    },
-  ],
-  "/laundry/order-details": [
-    {
-      type: "select",
-      label: "Addresses count",
-      options: ["0", "1", "2", "3"],
-      read: (s) => String(s.addresses.length),
-      write: (_s, v) => {
-        const count = Number(v);
-        const seeds: Address[] = [
-          {
-            id: "seed_addr_1",
-            type: "apartment",
-            lat: 25.2048,
-            lng: 55.2708,
-            formattedAddress: "Azurite Tower, Dubai Marina, Dubai",
-            fields: { building: "Azurite tower", aptNumber: "108" },
-          },
-          {
-            id: "seed_addr_2",
-            type: "office",
-            lat: 25.2105,
-            lng: 55.2796,
-            formattedAddress: "Al Ferdous 4, DIFC, Dubai",
-            fields: { building: "Al Ferdous 4", officeNumber: "118" },
-          },
-          {
-            id: "seed_addr_3",
-            type: "villa",
-            lat: 25.2294,
-            lng: 55.2620,
-            formattedAddress: "Jumeirah 1, Dubai",
-            fields: { community: "Jumeirah 1", street: "Beach Road", villaNumber: "12" },
-          },
-        ];
-        const addresses = seeds.slice(0, count);
-        const selectedAddressId = addresses[0]?.id ?? null;
-        useOrderStore.setState({ addresses, selectedAddressId });
-      },
-    },
-    {
-      type: "toggle",
-      label: "Pickup",
-      read: (s) => !!s.pickup,
-      write: (s, v) =>
-        v
-          ? s.setPickup({ mode: "door", date: "Tomorrow", slot: "9:00 - 11:00 AM" })
-          : s.setPickup(null),
-    },
-    {
-      type: "toggle",
-      label: "Dropoff",
-      read: (s) => !!s.dropoff,
-      write: (s, v) =>
-        v
-          ? s.setDropoff({ mode: "door", date: "In 2 days", slot: "6:00 - 8:00 PM" })
-          : s.setDropoff(null),
-    },
-    {
-      type: "toggle",
-      label: "Driver Instructions",
-      read: (s) => !!s.driverInstructions,
-      write: (s, v) =>
-        v
-          ? s.setDriverInstructions({
-              pickup: "ring_doorbell",
-              dropoff: "knock_door",
-            })
-          : s.setDriverInstructions(null),
-    },
-  ],
-  "/laundry/order-instructions": [
-    {
-      type: "toggle",
-      label: "Special Requests",
-      read: (s) => !!s.orderInstructions?.specialRequests,
-      write: (s, v) =>
-        s.setOrderInstructions(
-          v ? { specialRequests: "Please use gentle cycle and low heat." } : { specialRequests: "" }
-        ),
-    },
-    {
-      type: "select",
-      label: "Delicate items count",
-      options: ["0", "1", "3", "5"],
-      read: (s) => String(s.orderInstructions?.delicateItems?.length ?? 0),
-      write: (s, v) =>
-        s.setOrderInstructions({
-          delicateItems: Array.from({ length: Number(v) }, (_, i) => ({
-            id: `seed_${i}`,
-            photo: DUMMY_PHOTOS[i % DUMMY_PHOTOS.length],
-            brand: i === 0 ? "Bottle" : "",
-            stains: i === 0 ? ["coffee" as const] : [],
-            cleaningInstruction:
-              i === 1 ? ("dry_clean_only" as const) : ("no_preference" as const),
-            others: i === 0 ? ["delicate" as const] : [],
-          })),
-        }),
-    },
-    {
-      type: "toggle",
-      label: "Folding",
-      read: (s) => !!s.orderInstructions?.folding,
-      write: (s, v) =>
-        s.setOrderInstructions({
-          folding: v ? { blouse: true, skirt: true } : null,
-        }),
-    },
-    {
-      type: "toggle",
-      label: "Creases",
-      read: (s) => !!s.orderInstructions?.creases,
-      write: (s, v) =>
-        s.setOrderInstructions({
-          creases: v
-            ? {
-                shirtsSleeveCreases: true,
-                pantsFrontCreases: false,
-                kandura: "no_preference",
-                gathra: "no_preference",
-              }
-            : null,
-        }),
-    },
-    {
-      type: "toggle",
-      label: "Starch",
-      read: (s) => !!s.orderInstructions?.starch,
-      write: (s, v) => s.setOrderInstructions({ starch: v ? "light" : null }),
-    },
-    {
-      type: "toggle",
-      label: "Auto-Approvals",
-      read: (s) => !!s.orderInstructions?.autoApprovals,
-      write: (s, v) =>
-        s.setOrderInstructions({
-          autoApprovals: v
-            ? { stainDamageAutoApprove: true, washAndFold: "transfer_clean_press" }
-            : null,
-        }),
-    },
-  ],
-  "/laundry/last-step": [
-    {
-      type: "select",
-      label: "Payment Method",
-      options: ["None", "Apple Pay", "Credit Card"],
-      read: (s) => s.payment?.method ?? "None",
-      write: (s, v) =>
-        v === "None"
-          ? s.setPayment(null)
-          : s.setPayment({
-              method: v === "Credit Card" ? "Card" : v,
-              last4: v === "Credit Card" ? "1234" : undefined,
-            }),
-    },
-    {
-      type: "select",
-      label: "Tip Amount",
-      options: ["0", "3", "5", "10"],
-      read: (s) => String(s.tip ?? 0),
-      write: (s, v) => s.setTip(Number(v) as 0 | 3 | 5 | 10),
-    },
-    {
-      type: "select",
-      label: "Applied Promo",
-      options: ["None", "FIRST10", "SUMMER25", "VIP15"],
-      read: (s) => s.promoCode ?? "None",
-      write: (s, v) => s.setPromoCode(v === "None" ? null : v),
-    },
-    {
-      type: "toggle",
-      label: "Minimum Order Met",
-      read: () => false,
-      write: () => {},
-      disabled: true,
-      comment: "TODO: requires threshold",
-    },
-  ],
-};
-
-const QUICK_NAV: { label: string; path: string }[] = [
-  { label: "Select Service", path: "/laundry/select-service" },
-  { label: "Order Details", path: "/laundry/order-details" },
-  { label: "Order Instructions", path: "/laundry/order-instructions" },
-  { label: "Last Step", path: "/laundry/last-step" },
-];
-
-function VariantRow({ variant }: { variant: Variant }) {
-  // Subscribe to entire store for live updates; we only need re-renders.
-  const store = useOrderStore();
-
-  let control: React.ReactNode = null;
-
-  if (variant.type === "toggle") {
-    const checked = variant.read(store);
-    control = (
-      <Switch
-        checked={checked}
-        disabled={variant.disabled}
-        onCheckedChange={(v) => variant.write(store, v)}
-      />
-    );
-  } else if (variant.type === "select") {
-    const value = variant.read(store);
-    control = (
-      <Select
-        value={value}
-        disabled={variant.disabled}
-        onValueChange={(v) => variant.write(store, v)}
-      >
-        <SelectTrigger className="h-8 w-32 text-xs">
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          {variant.options.map((opt) => (
-            <SelectItem key={opt} value={opt} className="text-xs">
-              {opt}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    );
-  } else {
-    const selected = variant.read(store);
-    control = (
-      <div className="flex flex-col gap-1.5">
-        {variant.options.map((opt) => {
-          const checked = selected.includes(opt);
-          return (
-            <label
-              key={opt}
-              className="flex items-center gap-2 text-xs text-foreground"
-            >
-              <Checkbox
-                checked={checked}
-                disabled={variant.disabled}
-                onCheckedChange={(v) => {
-                  const next = v
-                    ? [...selected, opt]
-                    : selected.filter((o) => o !== opt);
-                  variant.write(store, next);
-                }}
-              />
-              {opt}
-            </label>
-          );
-        })}
-      </div>
-    );
-  }
-
-  return (
-    <div
-      className={cn(
-        "flex items-start justify-between gap-3 border-b border-border py-3 last:border-0",
-        variant.disabled && "opacity-50"
-      )}
-    >
-      <div className="min-w-0 flex-1">
-        <p className="text-sm font-medium text-foreground">{variant.label}</p>
-        {variant.comment && (
-          <p className="mt-0.5 text-xs text-muted-foreground">
-            {variant.comment}
-          </p>
-        )}
-      </div>
-      <div className="shrink-0">{control}</div>
-    </div>
-  );
 }
 
 function StateInspectorInner() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const reset = useOrderStore((s) => s.reset);
   const store = useOrderStore();
   const flowType = store.flowType;
 
-  const variants = ROUTE_VARIANTS[location.pathname];
+  const onPickFlow = (next: FlowType) => {
+    applyFlowType(store, next);
+    if (next === "pricingPage") {
+      navigate("/laundry/last-step");
+    }
+  };
 
   return (
     <>
@@ -509,101 +73,54 @@ function StateInspectorInner() {
               </SheetDescription>
             </SheetHeader>
 
-            <div className="border-b border-border px-4 py-3">
+            <div className="px-4 py-4">
               <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                 Flow Type
               </p>
-              <p className="mb-2 text-[11px] text-muted-foreground">
-                Switches the customer journey variant — affects all screens
+              <p className="mb-3 text-[11px] text-muted-foreground">
+                Switches the customer journey variant — affects all screens.
               </p>
-              <Select
-                value={flowType}
-                onValueChange={(v) => {
-                  const next = v as FlowType;
-                  applyFlowType(store, next);
-                  if (next === "pricingPage") {
-                    navigate("/laundry/last-step");
-                  }
-                }}
-              >
-                <SelectTrigger className="h-8 w-full text-xs">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {FLOW_TYPE_OPTIONS.map((opt) => (
-                    <SelectItem
-                      key={opt.value}
-                      value={opt.value}
-                      className="text-xs"
-                    >
-                      {opt.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {flowType === "pricingPage" && (
-                <p className="mt-2 rounded-md bg-muted px-2 py-1.5 text-[11px] leading-snug text-muted-foreground">
-                  Pricing-page flow skips the Select Service / Order Details /
-                  Order Instructions steps and goes straight to Last Step with
-                  an itemized cart. Selecting this auto-navigates to
-                  /laundry/last-step.
-                </p>
-              )}
-            </div>
 
-            <div className="border-b border-border px-4 py-3">
-              <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                Quick nav
-              </p>
-              <div className="no-scrollbar flex gap-2 overflow-x-auto pb-1">
-                {QUICK_NAV.map((item) => {
-                  const active = location.pathname === item.path;
+              <div className="flex flex-col gap-2">
+                {FLOW_TYPE_OPTIONS.map((opt) => {
+                  const selected = flowType === opt.value;
                   return (
                     <button
-                      key={item.path}
+                      key={opt.value}
                       type="button"
-                      onClick={() => navigate(item.path)}
+                      role="radio"
+                      aria-checked={selected}
+                      onClick={() => onPickFlow(opt.value)}
                       className={cn(
-                        "shrink-0 rounded-full border px-3 py-1 text-xs transition-colors",
-                        active
-                          ? "border-primary bg-primary text-primary-foreground"
-                          : "border-border bg-background text-foreground"
+                        "flex w-full items-start gap-3 rounded-md border px-3 py-3 text-left transition-colors",
+                        selected
+                          ? "border-primary bg-primary/5"
+                          : "border-border bg-background hover:border-primary/40",
                       )}
                     >
-                      {item.label}
+                      <span
+                        className={cn(
+                          "mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2",
+                          selected ? "border-primary" : "border-muted-foreground/40",
+                        )}
+                        aria-hidden
+                      >
+                        {selected ? (
+                          <span className="h-2 w-2 rounded-full bg-primary" />
+                        ) : null}
+                      </span>
+                      <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+                        <span className="text-sm font-medium text-foreground">
+                          {opt.label}
+                        </span>
+                        <span className="text-[11px] leading-snug text-muted-foreground">
+                          {opt.description}
+                        </span>
+                      </span>
                     </button>
                   );
                 })}
               </div>
-            </div>
-
-            <div className="px-4 py-3">
-              <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                Variants
-              </p>
-              {variants ? (
-                <div className="flex flex-col">
-                  {variants.map((v) => (
-                    <VariantRow key={v.label} variant={v} />
-                  ))}
-                </div>
-              ) : (
-                <p className="py-6 text-center text-xs text-muted-foreground">
-                  No variants registered for this route.
-                </p>
-              )}
-            </div>
-
-            <div className="mt-auto border-t border-border px-4 py-4">
-              <Button
-                variant="destructive"
-                className="w-full"
-                onClick={() => {
-                  reset();
-                }}
-              >
-                Reset all state
-              </Button>
             </div>
           </div>
         </SheetContent>
@@ -616,9 +133,6 @@ function StateInspectorInner() {
 // environments (Lovable preview, localhost). Production hostnames are the
 // allowlist — update washmen.com check when we deploy to a real domain.
 export function StateInspector() {
-  // Show inspector everywhere EXCEPT the production custom domain.
-  // Lovable previews and dev all show it. Update the production hostname
-  // when we deploy to a real domain.
   if (typeof window !== "undefined") {
     const host = window.location.hostname;
     const isProduction = host === "washmen.com" || host.endsWith(".washmen.com");
