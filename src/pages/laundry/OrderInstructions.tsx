@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Camera,
@@ -30,13 +30,8 @@ import {
 } from "@/lib/orderInstructionsLabels";
 import { useUserPrefsStore } from "@/stores/userPrefsStore";
 
-// TEMP: dummy photos for UI dev. Replace with real native camera/picker when bridge is ready.
-const DUMMY_PHOTOS = [
-  "https://images.unsplash.com/photo-1521566652839-697aa473761a?w=160&h=160&fit=crop",
-  "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=160&h=160&fit=crop",
-  "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=160&h=160&fit=crop",
-  "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=160&h=160&fit=crop",
-];
+const MAX_PHOTOS = 5;
+const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
 
 export default function OrderInstructions() {
   const navigate = useNavigate();
@@ -56,6 +51,9 @@ export default function OrderInstructions() {
   const [foldingSheetOpen, setFoldingSheetOpen] = useState(false);
   const [autoApprovalsSheetOpen, setAutoApprovalsSheetOpen] = useState(false);
 
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [photoError, setPhotoError] = useState<string | null>(null);
+
   const userPrefsFolding = useUserPrefsStore((s) => s.folding);
   const setUserPrefsFolding = useUserPrefsStore((s) => s.setFolding);
 
@@ -67,19 +65,81 @@ export default function OrderInstructions() {
     Boolean(starch) ||
     Boolean(autoApprovals);
 
-  const addDummyPhoto = () => {
+  const readFileAsDataURL = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === "string") resolve(reader.result);
+        else reject(new Error("Unexpected reader result"));
+      };
+      reader.onerror = () => reject(reader.error ?? new Error("Read error"));
+      reader.readAsDataURL(file);
+    });
+
+  const onFilesSelected = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files ?? []);
+    // Reset the input value so the same file can be picked again later
+    event.target.value = "";
+    if (files.length === 0) return;
+
     haptics.light();
-    const next = DUMMY_PHOTOS[photos.length % DUMMY_PHOTOS.length];
-    setOrderInstructions({ photos: [...photos, next] });
+    setPhotoError(null);
+
+    const imageFiles = files.filter((f) => f.type.startsWith("image/"));
+    if (imageFiles.length === 0) {
+      setPhotoError("Please select an image file.");
+      return;
+    }
+
+    const validFiles: File[] = [];
+    let oversizeCount = 0;
+    for (const file of imageFiles) {
+      if (file.size > MAX_FILE_SIZE_BYTES) {
+        oversizeCount += 1;
+      } else {
+        validFiles.push(file);
+      }
+    }
+
+    const remainingSlots = MAX_PHOTOS - photos.length;
+    const filesToAdd = validFiles.slice(0, Math.max(0, remainingSlots));
+    const droppedForCount = validFiles.length - filesToAdd.length;
+
+    const errors: string[] = [];
+    if (oversizeCount > 0) {
+      errors.push(
+        oversizeCount === 1
+          ? "1 file was too large (max 5 MB)."
+          : `${oversizeCount} files were too large (max 5 MB).`,
+      );
+    }
+    if (droppedForCount > 0) {
+      errors.push(`Only ${MAX_PHOTOS} photos allowed — extra files were skipped.`);
+    }
+    if (errors.length > 0) {
+      setPhotoError(errors.join(" "));
+    }
+
+    if (filesToAdd.length === 0) return;
+
+    try {
+      const dataUrls = await Promise.all(filesToAdd.map(readFileAsDataURL));
+      setOrderInstructions({ photos: [...photos, ...dataUrls] });
+    } catch (err) {
+      console.error("Failed to read photo file(s)", err);
+      setPhotoError("Couldn't read the selected file(s). Please try again.");
+    }
   };
 
   const removePhoto = (idx: number) => {
     haptics.light();
+    setPhotoError(null);
     setOrderInstructions({ photos: photos.filter((_, i) => i !== idx) });
   };
 
   const togglePhotoCard = () => {
     haptics.light();
+    setPhotoError(null);
     setPhotoExpanded((v) => !v);
   };
 
@@ -165,13 +225,30 @@ export default function OrderInstructions() {
                 ))}
                 <button
                   type="button"
-                  onClick={addDummyPhoto}
-                  className="press-effect flex h-20 w-20 items-center justify-center rounded-md border-2 border-dashed border-washmen-secondary-300"
-                  aria-label="Attach files"
+                  onClick={() => {
+                    haptics.light();
+                    fileInputRef.current?.click();
+                  }}
+                  disabled={photos.length >= MAX_PHOTOS}
+                  className="press-effect flex h-20 w-20 items-center justify-center rounded-md border-2 border-dashed border-washmen-secondary-300 disabled:opacity-50"
+                  aria-label="Attach photos"
                 >
                   <Camera className="h-6 w-6 text-washmen-secondary-500" />
                 </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  className="hidden"
+                  onChange={onFilesSelected}
+                />
               </div>
+              {photoError ? (
+                <p className="mt-2 text-[12px] font-light leading-[18px] text-red-500">
+                  {photoError}
+                </p>
+              ) : null}
             </div>
           ) : null}
         </div>
