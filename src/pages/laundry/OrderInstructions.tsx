@@ -19,6 +19,7 @@ import { haptics } from "@/lib/haptics";
 import { CreasesSheet } from "@/components/order/CreasesSheet";
 import { StarchSheet } from "@/components/order/StarchSheet";
 import { FoldingSheet } from "@/components/order/FoldingSheet";
+import { AutoApprovalsSheet } from "@/components/order/AutoApprovalsSheet";
 import {
   summarizeCreases,
   summarizeStarch,
@@ -54,6 +55,7 @@ export default function OrderInstructions() {
   const [creasesSheetOpen, setCreasesSheetOpen] = useState(false);
   const [starchSheetOpen, setStarchSheetOpen] = useState(false);
   const [foldingSheetOpen, setFoldingSheetOpen] = useState(false);
+  const [autoApprovalsSheetOpen, setAutoApprovalsSheetOpen] = useState(false);
 
   const userPrefsFolding = useUserPrefsStore((s) => s.folding);
   const setUserPrefsFolding = useUserPrefsStore((s) => s.setFolding);
@@ -224,7 +226,10 @@ export default function OrderInstructions() {
           title="Auto-Approvals"
           icon={BadgeCheck}
           value={autoApprovals ? summarizeAutoApprovals(autoApprovals) : null}
-          onPress={() => toggle("autoApprovals", DEFAULT_AUTO_APPROVALS)}
+          onPress={() => {
+            haptics.light();
+            setAutoApprovalsSheetOpen(true);
+          }}
         />
       </div>
       <CreasesSheet
@@ -251,6 +256,12 @@ export default function OrderInstructions() {
           setOrderInstructions({ folding: value });
           setUserPrefsFolding(value);
         }}
+      />
+      <AutoApprovalsSheet
+        open={autoApprovalsSheetOpen}
+        onOpenChange={setAutoApprovalsSheetOpen}
+        initialValue={autoApprovals ?? DEFAULT_AUTO_APPROVALS}
+        onApply={(value) => setOrderInstructions({ autoApprovals: value })}
       />
     </OrderLayout>
   );
