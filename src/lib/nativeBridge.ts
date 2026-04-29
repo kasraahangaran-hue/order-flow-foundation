@@ -26,7 +26,6 @@ const listeners = new Map<NativeSheetName, Set<Listener>>();
 
 export const nativeBridge = {
   openSheet(sheetName: NativeSheetName, currentValue?: unknown) {
-    // eslint-disable-next-line no-console
     console.log("[NativeBridge stub] openSheet", sheetName, currentValue);
     // TODO: replace with window.WashmenBridge.openSheet when native side is ready
     if (typeof window !== "undefined" && window.WashmenBridge?.openSheet) {
@@ -35,7 +34,6 @@ export const nativeBridge = {
   },
 
   onSheetResult(sheetName: NativeSheetName, callback: Listener) {
-    // eslint-disable-next-line no-console
     console.log("[NativeBridge stub] onSheetResult listener for", sheetName);
     if (!listeners.has(sheetName)) listeners.set(sheetName, new Set());
     listeners.get(sheetName)!.add(callback);
