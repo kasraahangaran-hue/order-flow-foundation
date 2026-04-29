@@ -1,0 +1,256 @@
+import { useEffect, useMemo, useState } from "react";
+import type { ComponentType } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import {
+  ArrowLeft,
+  Camera,
+  Check,
+  ChevronRight,
+  Droplet,
+  MessageCircle,
+  Sparkles,
+} from "lucide-react";
+import { useOrderStore } from "@/stores/orderStore";
+import { haptics } from "@/lib/haptics";
+import { CameraCaptureSheet } from "@/components/order/CameraCaptureSheet";
+import { StainSheet } from "@/components/order/StainSheet";
+import { CleaningInstructionsSheet } from "@/components/order/CleaningInstructionsSheet";
+import { OthersSheet } from "@/components/order/OthersSheet";
+import type {
+  StainType,
+  CleaningInstruction,
+  OtherFlag,
+} from "@/stores/orderStore";
+
+export default function PhotoMetadata() {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get("id");
+
+  const orderInstructions = useOrderStore((s) => s.orderInstructions);
+  const setOrderInstructions = useOrderStore((s) => s.setOrderInstructions);
+  const delicateItems = orderInstructions?.delicateItems ?? [];
+
+  const item = useMemo(
+    () => delicateItems.find((d) => d.id === id) ?? null,
+    [delicateItems, id],
+  );
+
+  const [brand, setBrand] = useState(item?.brand ?? "");
+  const [stains, setStains] = useState<StainType[]>(item?.stains ?? []);
+  const [cleaningInstruction, setCleaningInstruction] =
+    useState<CleaningInstruction | null>(item?.cleaningInstruction ?? null);
+  const [others, setOthers] = useState<OtherFlag[]>(item?.others ?? []);
+  const [photo, setPhoto] = useState(item?.photo ?? "");
+
+  const [stainSheetOpen, setStainSheetOpen] = useState(false);
+  const [cleaningSheetOpen, setCleaningSheetOpen] = useState(false);
+  const [othersSheetOpen, setOthersSheetOpen] = useState(false);
+  const [retakeCameraOpen, setRetakeCameraOpen] = useState(false);
+
+  useEffect(() => {
+    if (!id || !item) {
+      navigate("/laundry/order-instructions", { replace: true });
+    }
+  }, [id, item, navigate]);
+
+  useEffect(() => {
+    if (item) setPhoto(item.photo);
+  }, [item]);
+
+  if (!item) return null;
+
+  const stainConfigured = stains.length > 0;
+  const cleaningConfigured = cleaningInstruction !== null;
+  const othersConfigured = others.length > 0;
+  const anyCategoryConfigured =
+    stainConfigured || cleaningConfigured || othersConfigured;
+  const saveEnabled = brand.trim().length > 0 && anyCategoryConfigured;
+
+  const onSave = () => {
+    if (!saveEnabled) return;
+    haptics.medium();
+    setOrderInstructions({
+      delicateItems: delicateItems.map((d) =>
+        d.id === item.id
+          ? {
+              ...d,
+              brand: brand.trim(),
+              stains,
+              cleaningInstruction,
+              others,
+              photo,
+            }
+          : d,
+      ),
+    });
+    navigate("/laundry/order-instructions");
+  };
+
+  const onBack = () => {
+    haptics.light();
+    navigate("/laundry/order-instructions");
+  };
+
+  const onRetakeCaptured = (dataUrl: string) => {
+    setPhoto(dataUrl);
+    setRetakeCameraOpen(false);
+  };
+
+  return (
+    <div className="flex min-h-screen flex-col bg-[#FAFBFC]">
+      <div className="flex-1 overflow-y-auto px-5 pt-6 pb-32">
+        {/* Photo with retake overlay */}
+        <div className="flex justify-center">
+          <div className="relative">
+            <img
+              src={photo}
+              alt="Delicate item"
+              className="h-[220px] w-[220px] rounded-[12px] object-cover"
+            />
+            <button
+              type="button"
+              onClick={() => {
+                haptics.light();
+                setRetakeCameraOpen(true);
+              }}
+              aria-label="Retake photo"
+              className="press-effect absolute -bottom-3 -right-3 flex h-10 w-10 items-center justify-center rounded-full bg-[#585871] text-white shadow-md"
+            >
+              <Camera className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+
+        {/* Brand input */}
+        <div className="mt-8">
+          <label className="text-[14px] font-medium leading-[20px] text-washmen-primary">
+            What's the name of the brand?
+          </label>
+          <input
+            type="text"
+            value={brand}
+            onChange={(e) => setBrand(e.target.value.slice(0, 15))}
+            maxLength={15}
+            placeholder="Enter brand (max 15 characters)"
+            className="mt-2 h-12 w-full rounded-[6px] border border-[#f2f3f8] bg-white px-3 text-[14px] font-light leading-[20px] tracking-[0.1px] text-washmen-primary placeholder:text-[#c3c8db] focus:border-washmen-primary focus:outline-none focus:ring-2 focus:ring-washmen-primary/20"
+          />
+        </div>
+
+        <p className="mt-6 text-[12px] font-light leading-[18px] tracking-[0.1px] text-[#585871]">
+          Let us know which items are delicate or have stains
+        </p>
+
+        <div className="mt-3 flex flex-col gap-2">
+          <CategoryCard
+            icon={Droplet}
+            title="Report Stain"
+            configured={stainConfigured}
+            onTap={() => {
+              haptics.light();
+              setStainSheetOpen(true);
+            }}
+          />
+          <CategoryCard
+            icon={Sparkles}
+            title="Cleaning Instructions"
+            configured={cleaningConfigured}
+            onTap={() => {
+              haptics.light();
+              setCleaningSheetOpen(true);
+            }}
+          />
+          <CategoryCard
+            icon={MessageCircle}
+            title="Others"
+            configured={othersConfigured}
+            onTap={() => {
+              haptics.light();
+              setOthersSheetOpen(true);
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div
+        className="fixed inset-x-0 bottom-0 border-t border-[#f2f3f8] bg-white px-5 pt-3 pb-4"
+        style={{ paddingBottom: "max(env(safe-area-inset-bottom), 16px)" }}
+      >
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onBack}
+            className="press-effect flex h-12 w-12 items-center justify-center rounded-[6px] border border-washmen-primary bg-white"
+            aria-label="Back"
+          >
+            <ArrowLeft className="h-4 w-4 text-washmen-primary" />
+          </button>
+          <button
+            type="button"
+            onClick={onSave}
+            disabled={!saveEnabled}
+            className="press-effect h-12 flex-1 rounded-[6px] bg-washmen-primary text-[14px] font-semibold text-white disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+
+      <StainSheet
+        open={stainSheetOpen}
+        onOpenChange={setStainSheetOpen}
+        initialValue={stains}
+        onApply={setStains}
+      />
+      <CleaningInstructionsSheet
+        open={cleaningSheetOpen}
+        onOpenChange={setCleaningSheetOpen}
+        initialValue={cleaningInstruction}
+        onApply={setCleaningInstruction}
+      />
+      <OthersSheet
+        open={othersSheetOpen}
+        onOpenChange={setOthersSheetOpen}
+        initialValue={others}
+        onApply={setOthers}
+      />
+      <CameraCaptureSheet
+        open={retakeCameraOpen}
+        onClose={() => setRetakeCameraOpen(false)}
+        onCapture={onRetakeCaptured}
+      />
+    </div>
+  );
+}
+
+interface CategoryCardProps {
+  icon: ComponentType<{ className?: string }>;
+  title: string;
+  configured: boolean;
+  onTap: () => void;
+}
+
+function CategoryCard({ icon: Icon, title, configured, onTap }: CategoryCardProps) {
+  return (
+    <button
+      type="button"
+      onClick={onTap}
+      className="press-effect flex items-center gap-3 rounded-[8px] border border-[#f2f3f8] bg-white px-4 py-3 text-left"
+    >
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] bg-[#e1defb]">
+        <Icon className="h-5 w-5 text-washmen-primary" />
+      </div>
+      <span className="flex-1 text-[14px] font-normal leading-[20px] tracking-[0.1px] text-washmen-primary">
+        {title}
+      </span>
+      {configured ? (
+        <span className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-[#A4FF00]">
+          <Check className="h-3 w-3 text-washmen-primary" strokeWidth={3} />
+        </span>
+      ) : (
+        <ChevronRight className="h-4 w-4 text-washmen-secondary-500" />
+      )}
+    </button>
+  );
+}

@@ -8,6 +8,7 @@ import SelectService from "./pages/laundry/SelectService";
 import WashAndFoldInfo from "./pages/laundry/WashAndFoldInfo";
 import OrderDetails from "./pages/laundry/OrderDetails";
 import OrderInstructions from "./pages/laundry/OrderInstructions";
+import PhotoMetadata from "./pages/laundry/PhotoMetadata";
 import LastStep from "./pages/laundry/LastStep";
 import QuickCheckout from "./pages/quick-checkout/QuickCheckout";
 import OrderConfirmation from "./pages/OrderConfirmation";
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/laundry/wash-and-fold-info" element={<WashAndFoldInfo />} />
           <Route path="/laundry/order-details" element={<OrderDetails />} />
           <Route path="/laundry/order-instructions" element={<OrderInstructions />} />
+          <Route path="/laundry/order-instructions/photo" element={<PhotoMetadata />} />
           <Route path="/laundry/last-step" element={<LastStep />} />
           <Route path="/order-confirmation" element={<OrderConfirmation />} />
           <Route path="/quick-checkout" element={<QuickCheckout />} />

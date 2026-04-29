@@ -93,7 +93,7 @@ export default function OrderInstructions() {
       delicateItems: [...delicateItems, newItem],
     });
     setCameraOpen(false);
-    // TODO (next prompt): navigate to /laundry/order-instructions/photo?id={id}
+    navigate(`/laundry/order-instructions/photo?id=${id}`);
   };
 
   const onConfirmDelete = () => {
@@ -106,8 +106,7 @@ export default function OrderInstructions() {
 
   const onThumbnailTap = (id: string) => {
     haptics.light();
-    // TODO (next prompt): navigate to /laundry/order-instructions/photo?id={id}
-    void id;
+    navigate(`/laundry/order-instructions/photo?id=${id}`);
   };
 
   return (
