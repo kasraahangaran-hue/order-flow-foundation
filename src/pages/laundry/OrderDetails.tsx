@@ -4,7 +4,6 @@ import { Bell, Clock, Home, Package, PackageOpen, Pencil, Plus } from "lucide-re
 import { OrderLayout } from "@/components/order/OrderLayout";
 import { Button } from "@/components/ui/button";
 import { useOrderStore } from "@/stores/orderStore";
-import type { DriverInstructionsState } from "@/stores/orderStore";
 import { nativeBridge, NativeSheetName } from "@/lib/nativeBridge";
 import { haptics } from "@/lib/haptics";
 import { cn } from "@/lib/utils";
