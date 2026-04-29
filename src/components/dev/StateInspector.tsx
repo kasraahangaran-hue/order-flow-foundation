@@ -109,6 +109,7 @@ function applyFlowType(store: OrderState, flow: FlowType) {
       folding: null,
       creases: null,
       starch: null,
+      autoApprovals: null,
     });
     store.setServices({
       washAndFold: false,
@@ -279,6 +280,17 @@ const ROUTE_VARIANTS: Record<string, Variant[]> = {
       label: "Starch",
       read: (s) => !!s.orderInstructions?.starch,
       write: (s, v) => s.setOrderInstructions({ starch: v ? "light" : null }),
+    },
+    {
+      type: "toggle",
+      label: "Auto-Approvals",
+      read: (s) => !!s.orderInstructions?.autoApprovals,
+      write: (s, v) =>
+        s.setOrderInstructions({
+          autoApprovals: v
+            ? { stainDamageAutoApprove: true, washAndFold: "transfer_clean_press" }
+            : null,
+        }),
     },
   ],
   "/laundry/last-step": [
