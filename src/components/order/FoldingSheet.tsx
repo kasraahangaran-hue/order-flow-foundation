@@ -70,12 +70,21 @@ export function FoldingSheet({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
-  const selectedCount = useMemo(
-    () => Object.values(draft).filter(Boolean).length,
-    [draft],
+  // Helper: count truthy entries in a FoldingSelection. Treats null as 0.
+  const countSelected = (s: FoldingSelection | null): number =>
+    s ? Object.values(s).filter(Boolean).length : 0;
+
+  // CTAs disable ONLY when both the draft and the saved order state are empty —
+  // i.e. there is genuinely nothing to save. In every other case (draft has
+  // selections, OR saved had selections that the user just cleared, OR draft
+  // equals saved) the CTAs are enabled so the user can re-affirm or change
+  // what's saved.
+  const ctasDisabled = useMemo(
+    () => countSelected(draft) === 0 && countSelected(initialOrderValue) === 0,
+    [draft, initialOrderValue],
   );
 
-  const hasAnySelection = selectedCount > 0;
+  const hasAnySelection = countSelected(draft) > 0;
 
   const handleClearAll = () => {
     setDraft({});
@@ -99,7 +108,7 @@ export function FoldingSheet({
       footer="dual-apply"
       primaryLabel="Apply on this Order Only"
       secondaryLabel="Apply on All Future Orders"
-      primaryDisabled={!hasAnySelection}
+      primaryDisabled={ctasDisabled}
       onPrimary={() => {
         onApplyToOrder(draft);
         onOpenChange(false);
