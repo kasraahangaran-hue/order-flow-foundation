@@ -8,6 +8,7 @@ import {
   Shirt,
   SprayCan,
   X,
+  BadgeCheck,
 } from "lucide-react";
 import { OrderLayout } from "@/components/order/OrderLayout";
 import { InstructionsCard } from "@/components/order/InstructionsCard";
@@ -20,8 +21,10 @@ import { StarchSheet } from "@/components/order/StarchSheet";
 import {
   summarizeCreases,
   summarizeStarch,
+  summarizeAutoApprovals,
   DEFAULT_CREASES,
   DEFAULT_STARCH,
+  DEFAULT_AUTO_APPROVALS,
 } from "@/lib/orderInstructionsLabels";
 
 // TEMP: dummy photos for UI dev. Replace with real native camera/picker when bridge is ready.
@@ -42,6 +45,7 @@ export default function OrderInstructions() {
   const folding = orderInstructions?.folding ?? null;
   const creases = orderInstructions?.creases ?? null;
   const starch = orderInstructions?.starch ?? null;
+  const autoApprovals = orderInstructions?.autoApprovals ?? null;
 
   const [photoExpanded, setPhotoExpanded] = useState(false);
   const [creasesSheetOpen, setCreasesSheetOpen] = useState(false);
@@ -52,7 +56,8 @@ export default function OrderInstructions() {
     photos.length > 0 ||
     Boolean(folding) ||
     Boolean(creases) ||
-    Boolean(starch);
+    Boolean(starch) ||
+    Boolean(autoApprovals);
 
   const addDummyPhoto = () => {
     haptics.light();
@@ -178,7 +183,7 @@ export default function OrderInstructions() {
         <InstructionsCard
           title="Folding"
           icon={Shirt}
-          valueLabel={folding ? "T-Shirts, Pants" : null}
+          value={folding ? "T-Shirts, Pants" : null}
           onPress={() => toggle("folding", { tshirt: true, pants: true })}
         />
 
@@ -186,7 +191,7 @@ export default function OrderInstructions() {
         <InstructionsCard
           title="Creases"
           icon={Layers}
-          valueLabel={creases ? summarizeCreases(creases) : null}
+          value={creases ? summarizeCreases(creases) : null}
           onPress={() => {
             haptics.light();
             setCreasesSheetOpen(true);
@@ -197,11 +202,19 @@ export default function OrderInstructions() {
         <InstructionsCard
           title="Starch"
           icon={SprayCan}
-          valueLabel={starch && starch !== "none" ? summarizeStarch(starch) : null}
+          value={starch && starch !== "none" ? summarizeStarch(starch) : null}
           onPress={() => {
             haptics.light();
             setStarchSheetOpen(true);
           }}
+        />
+
+        {/* 6. Auto-Approvals */}
+        <InstructionsCard
+          title="Auto-Approvals"
+          icon={BadgeCheck}
+          value={autoApprovals ? summarizeAutoApprovals(autoApprovals) : null}
+          onPress={() => toggle("autoApprovals", DEFAULT_AUTO_APPROVALS)}
         />
       </div>
       <CreasesSheet
