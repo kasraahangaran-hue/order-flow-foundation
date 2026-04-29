@@ -205,3 +205,62 @@ export const DEFAULT_AUTO_APPROVALS: AutoApprovalsState = {
   stainDamageAutoApprove: false,
   washAndFold: "notify_me",
 };
+export const STAIN_OPTIONS: { value: StainType; label: string }[] = [
+  { value: "i_dont_know", label: "I don't Know" },
+  { value: "coffee", label: "Coffee" },
+  { value: "food", label: "Food" },
+  { value: "oil", label: "Oil" },
+  { value: "blood", label: "Blood" },
+  { value: "other", label: "Other" },
+];
+
+export const CLEANING_INSTRUCTION_OPTIONS: {
+  value: CleaningInstruction;
+  label: string;
+}[] = [
+  { value: "no_preference", label: "I do not have a preference" },
+  { value: "dry_clean_only", label: "Dry cleaning only" },
+  { value: "opticlean", label: "OptiClean (delicate handwash)" },
+  { value: "cold_wash", label: "Cold wash" },
+  { value: "high_temp", label: "Wash at high temperature" },
+];
+
+export const OTHER_FLAG_OPTIONS: { value: OtherFlag; label: string }[] = [
+  { value: "new_item", label: "New Item, take extra care" },
+  { value: "delicate", label: "Delicate item, take extra care" },
+  { value: "expensive", label: "Expensive item, take extra care" },
+  { value: "bad_smell", label: "It has a bad smell" },
+];
+
+const STAIN_LABELS: Record<StainType, string> = STAIN_OPTIONS.reduce(
+  (acc, o) => ({ ...acc, [o.value]: o.label }),
+  {} as Record<StainType, string>,
+);
+
+const CLEANING_LABELS: Record<CleaningInstruction, string> =
+  CLEANING_INSTRUCTION_OPTIONS.reduce(
+    (acc, o) => ({ ...acc, [o.value]: o.label }),
+    {} as Record<CleaningInstruction, string>,
+  );
+
+const OTHER_LABELS: Record<OtherFlag, string> = OTHER_FLAG_OPTIONS.reduce(
+  (acc, o) => ({ ...acc, [o.value]: o.label }),
+  {} as Record<OtherFlag, string>,
+);
+
+export function summarizeStains(stains: StainType[]): string | null {
+  if (stains.length === 0) return null;
+  return stains.map((s) => STAIN_LABELS[s]).join(", ");
+}
+
+export function summarizeCleaningInstruction(
+  c: CleaningInstruction | null,
+): string | null {
+  if (!c) return null;
+  return CLEANING_LABELS[c];
+}
+
+export function summarizeOthers(others: OtherFlag[]): string | null {
+  if (others.length === 0) return null;
+  return others.map((o) => OTHER_LABELS[o]).join(", ");
+}
