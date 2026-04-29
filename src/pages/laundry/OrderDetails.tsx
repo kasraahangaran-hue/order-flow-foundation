@@ -4,13 +4,17 @@ import { Bell, Clock, Home, Package, PackageOpen, Pencil, Plus } from "lucide-re
 import { OrderLayout } from "@/components/order/OrderLayout";
 import { Button } from "@/components/ui/button";
 import { useOrderStore } from "@/stores/orderStore";
-import type { DriverInstructionsState } from "@/stores/orderStore";
 import { nativeBridge, NativeSheetName } from "@/lib/nativeBridge";
 import { haptics } from "@/lib/haptics";
 import { cn } from "@/lib/utils";
 import { formatScheduleLines } from "@/lib/dateFormat";
 import { PickupSchedulingSheet } from "@/components/order/PickupSchedulingSheet";
 import { DropOffSheet } from "@/components/order/DropOffSheet";
+import { DriverInstructionsSheet } from "@/components/order/DriverInstructionsSheet";
+import {
+  summarizeDriverInstructions,
+  DEFAULT_DRIVER_INSTRUCTIONS,
+} from "@/lib/orderInstructionsLabels";
 
 interface DetailCardProps {
   title: string;
@@ -109,6 +113,7 @@ export default function OrderDetails() {
 
   const [pickupSheetOpen, setPickupSheetOpen] = useState(false);
   const [dropoffSheetOpen, setDropoffSheetOpen] = useState(false);
+  const [driverInstructionsSheetOpen, setDriverInstructionsSheetOpen] = useState(false);
 
   // TEMP: seed defaults for UI dev. Remove when bottom sheets are wired up.
   useEffect(() => {
@@ -130,20 +135,9 @@ export default function OrderDetails() {
     nativeBridge.openSheet(name);
   };
 
-  // TEMP: tap to toggle dummy driver instructions for UI dev. Replace with nativeBridge.openSheet() when wired up.
-  const toggleDriverInstructions = () => {
+  const openDriverInstructions = () => {
     haptics.light();
-    if (driverInstructions) {
-      setDriverInstructions(null);
-    } else {
-      setDriverInstructions({
-        pickup: "ring_doorbell",
-        pickupCallOnArrival: false,
-        dropoff: "knock_door",
-        hanging: "door_handle",
-        dropoffCallOnArrival: false,
-      });
-    }
+    setDriverInstructionsSheetOpen(true);
   };
 
   const ctaEnabled = !!address && !!pickup && !!dropoff;
@@ -235,7 +229,7 @@ export default function OrderDetails() {
         <DetailCard
           title="Driver Instructions"
           hasValue={!!driverInstructions}
-          onPress={toggleDriverInstructions}
+          onPress={openDriverInstructions}
           addAction
         >
           {driverInstructions ? (
@@ -245,10 +239,7 @@ export default function OrderDetails() {
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-sm leading-tight text-foreground">
-                  <span className="font-semibold">Pick up:</span> {driverInstructions.pickup}
-                </p>
-                <p className="mt-0.5 text-sm leading-tight text-foreground">
-                  <span className="font-semibold">Drop off:</span> {driverInstructions.dropoff}
+                  {summarizeDriverInstructions(driverInstructions)}
                 </p>
               </div>
             </div>
@@ -257,6 +248,12 @@ export default function OrderDetails() {
       </div>
       <PickupSchedulingSheet open={pickupSheetOpen} onOpenChange={setPickupSheetOpen} />
       <DropOffSheet open={dropoffSheetOpen} onOpenChange={setDropoffSheetOpen} />
+      <DriverInstructionsSheet
+        open={driverInstructionsSheetOpen}
+        onOpenChange={setDriverInstructionsSheetOpen}
+        initialValue={driverInstructions ?? DEFAULT_DRIVER_INSTRUCTIONS}
+        onApply={(value) => setDriverInstructions(value)}
+      />
     </OrderLayout>
   );
 }

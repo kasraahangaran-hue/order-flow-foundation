@@ -15,6 +15,14 @@ import { Button } from "@/components/ui/button";
 import { useOrderStore } from "@/stores/orderStore";
 import type { OrderInstructionsState } from "@/stores/orderStore";
 import { haptics } from "@/lib/haptics";
+import { CreasesSheet } from "@/components/order/CreasesSheet";
+import { StarchSheet } from "@/components/order/StarchSheet";
+import {
+  summarizeCreases,
+  summarizeStarch,
+  DEFAULT_CREASES,
+  DEFAULT_STARCH,
+} from "@/lib/orderInstructionsLabels";
 
 // TEMP: dummy photos for UI dev. Replace with real native camera/picker when bridge is ready.
 const DUMMY_PHOTOS = [
@@ -36,6 +44,8 @@ export default function OrderInstructions() {
   const starch = orderInstructions?.starch ?? null;
 
   const [photoExpanded, setPhotoExpanded] = useState(false);
+  const [creasesSheetOpen, setCreasesSheetOpen] = useState(false);
+  const [starchSheetOpen, setStarchSheetOpen] = useState(false);
 
   const hasAnyInstruction =
     Boolean(specialRequests.trim()) ||
@@ -178,25 +188,36 @@ export default function OrderInstructions() {
         <InstructionsCard
           title="Creases"
           icon={Layers}
-          valueLabel={creases ? "Shirts: sleeve creases" : null}
-          onPress={() =>
-            toggle("creases", {
-              shirtsSleeveCreases: true,
-              pantsFrontCreases: false,
-              kandura: "no_preference",
-              gathra: "no_preference",
-            })
-          }
+          valueLabel={creases ? summarizeCreases(creases) : null}
+          onPress={() => {
+            haptics.light();
+            setCreasesSheetOpen(true);
+          }}
         />
 
         {/* 5. Starch */}
         <InstructionsCard
           title="Starch"
           icon={SprayCan}
-          valueLabel={starch && starch !== "none" ? starch : null}
-          onPress={() => toggle("starch", "light")}
+          valueLabel={starch && starch !== "none" ? summarizeStarch(starch) : null}
+          onPress={() => {
+            haptics.light();
+            setStarchSheetOpen(true);
+          }}
         />
       </div>
+      <CreasesSheet
+        open={creasesSheetOpen}
+        onOpenChange={setCreasesSheetOpen}
+        initialValue={creases ?? DEFAULT_CREASES}
+        onApply={(value) => setOrderInstructions({ creases: value })}
+      />
+      <StarchSheet
+        open={starchSheetOpen}
+        onOpenChange={setStarchSheetOpen}
+        initialValue={starch ?? DEFAULT_STARCH}
+        onApply={(value) => setOrderInstructions({ starch: value })}
+      />
     </OrderLayout>
   );
 }
