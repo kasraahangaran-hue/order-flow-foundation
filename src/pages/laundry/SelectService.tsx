@@ -20,6 +20,7 @@ export default function SelectService() {
     <OrderLayout
       title="Select Service(s)"
       step={1}
+      // Flow root — no in-flow predecessor, so fall back to browser history.
       onBack={() => navigate(-1)}
       footerSlot={
         <Button

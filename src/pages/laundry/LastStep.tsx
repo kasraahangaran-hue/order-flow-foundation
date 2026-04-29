@@ -615,7 +615,7 @@ export default function LastStep() {
     <OrderLayout
       title="Last Step"
       step={4}
-      onBack={() => navigate(-1)}
+      onBack={() => navigate("/laundry/order-instructions")}
       footerSlot={
         <Button
           className="flex-1 h-12 text-sm font-semibold"

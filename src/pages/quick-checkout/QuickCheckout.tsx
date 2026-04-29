@@ -8,6 +8,7 @@ export default function QuickCheckout() {
   return (
     <OrderLayout
       title="Quick Checkout"
+      // Flow root — no in-flow predecessor, so fall back to browser history.
       onBack={() => navigate(-1)}
       footerSlot={
         <Button disabled className="flex-1 h-12 text-sm font-semibold">
