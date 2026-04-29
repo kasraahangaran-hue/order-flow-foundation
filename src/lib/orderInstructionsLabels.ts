@@ -7,7 +7,61 @@ import type {
   DriverDropoffChoice,
   AutoApprovalsState,
   WashAndFoldApprovalChoice,
+  FoldingSelection,
 } from "@/stores/orderStore";
+
+export type FoldingCategoryId = "tops" | "bottoms" | "linen" | "formal";
+
+export interface FoldingItem {
+  id: string;
+  label: string;
+}
+
+export interface FoldingCategory {
+  id: FoldingCategoryId;
+  label: string;
+  items: FoldingItem[];
+}
+
+// Category structure for the Folding sheet. Item ids are persisted in the store.
+// The "All" chip is NOT stored — it's a derived UI affordance.
+export const FOLDING_CATEGORIES: FoldingCategory[] = [
+  {
+    id: "tops",
+    label: "Tops",
+    items: [
+      { id: "tshirt", label: "T shirt" },
+      { id: "shirt", label: "Shirt" },
+      { id: "blouse", label: "Blouse" },
+    ],
+  },
+  {
+    id: "bottoms",
+    label: "Bottoms",
+    items: [
+      { id: "shorts", label: "Shorts" },
+      { id: "pants", label: "Pants" },
+      { id: "skirt", label: "Skirt" },
+      { id: "jeans", label: "Jeans" },
+    ],
+  },
+  {
+    id: "linen",
+    label: "Linen",
+    items: [{ id: "bathrobe", label: "Bathrobe" }],
+  },
+  {
+    id: "formal",
+    label: "Formal",
+    items: [
+      { id: "jacket", label: "Jacket" },
+      { id: "gathra_formal", label: "Gathra" },
+      { id: "lungi", label: "Lungi" },
+      { id: "scarf", label: "Scarf" },
+      { id: "tie", label: "Tie" },
+    ],
+  },
+];
 
 const PICKUP_LABELS: Record<DriverPickupChoice, string> = {
   no_preference: "No Preference",
@@ -71,6 +125,26 @@ export function summarizeCreases(c: CreasesState): string {
 export function summarizeStarch(s: StarchChoice): string {
   return STARCH_LABELS[s];
 }
+
+/**
+ * Returns a comma-separated list of selected folding item display labels
+ * in the order they appear in FOLDING_CATEGORIES (Tops first, then Bottoms,
+ * Linen, Formal). Returns null if nothing is selected.
+ */
+export function summarizeFolding(f: FoldingSelection): string | null {
+  const labels: string[] = [];
+  for (const category of FOLDING_CATEGORIES) {
+    for (const item of category.items) {
+      if (f[item.id]) {
+        labels.push(item.label);
+      }
+    }
+  }
+  if (labels.length === 0) return null;
+  return labels.join(", ");
+}
+
+export const DEFAULT_FOLDING: FoldingSelection = {};
 
 export const DEFAULT_DRIVER_INSTRUCTIONS: DriverInstructionsState = {
   pickup: "no_preference",

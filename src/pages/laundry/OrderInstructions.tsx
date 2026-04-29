@@ -18,14 +18,17 @@ import type { OrderInstructionsState } from "@/stores/orderStore";
 import { haptics } from "@/lib/haptics";
 import { CreasesSheet } from "@/components/order/CreasesSheet";
 import { StarchSheet } from "@/components/order/StarchSheet";
+import { FoldingSheet } from "@/components/order/FoldingSheet";
 import {
   summarizeCreases,
   summarizeStarch,
   summarizeAutoApprovals,
+  summarizeFolding,
   DEFAULT_CREASES,
   DEFAULT_STARCH,
   DEFAULT_AUTO_APPROVALS,
 } from "@/lib/orderInstructionsLabels";
+import { useUserPrefsStore } from "@/stores/userPrefsStore";
 
 // TEMP: dummy photos for UI dev. Replace with real native camera/picker when bridge is ready.
 const DUMMY_PHOTOS = [
@@ -50,6 +53,10 @@ export default function OrderInstructions() {
   const [photoExpanded, setPhotoExpanded] = useState(false);
   const [creasesSheetOpen, setCreasesSheetOpen] = useState(false);
   const [starchSheetOpen, setStarchSheetOpen] = useState(false);
+  const [foldingSheetOpen, setFoldingSheetOpen] = useState(false);
+
+  const userPrefsFolding = useUserPrefsStore((s) => s.folding);
+  const setUserPrefsFolding = useUserPrefsStore((s) => s.setFolding);
 
   const hasAnyInstruction =
     Boolean(specialRequests.trim()) ||
@@ -183,8 +190,11 @@ export default function OrderInstructions() {
         <InstructionsCard
           title="Folding"
           icon={Shirt}
-          value={folding ? "T-Shirts, Pants" : null}
-          onPress={() => toggle("folding", { tshirt: true, pants: true })}
+          value={folding ? summarizeFolding(folding) : null}
+          onPress={() => {
+            haptics.light();
+            setFoldingSheetOpen(true);
+          }}
         />
 
         {/* 4. Creases */}
@@ -228,6 +238,19 @@ export default function OrderInstructions() {
         onOpenChange={setStarchSheetOpen}
         initialValue={starch ?? DEFAULT_STARCH}
         onApply={(value) => setOrderInstructions({ starch: value })}
+      />
+      <FoldingSheet
+        open={foldingSheetOpen}
+        onOpenChange={setFoldingSheetOpen}
+        initialOrderValue={folding}
+        userPrefValue={userPrefsFolding}
+        onApplyToOrder={(value) => {
+          setOrderInstructions({ folding: value });
+        }}
+        onApplyToFuture={(value) => {
+          setOrderInstructions({ folding: value });
+          setUserPrefsFolding(value);
+        }}
       />
     </OrderLayout>
   );
