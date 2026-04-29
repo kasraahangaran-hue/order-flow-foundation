@@ -14,11 +14,11 @@ import { OrderLayout } from "@/components/order/OrderLayout";
 import { InstructionsCard } from "@/components/order/InstructionsCard";
 import { Button } from "@/components/ui/button";
 import { useOrderStore } from "@/stores/orderStore";
-import type { OrderInstructionsState } from "@/stores/orderStore";
 import { haptics } from "@/lib/haptics";
 import { CreasesSheet } from "@/components/order/CreasesSheet";
 import { StarchSheet } from "@/components/order/StarchSheet";
 import { FoldingSheet } from "@/components/order/FoldingSheet";
+import { AutoApprovalsSheet } from "@/components/order/AutoApprovalsSheet";
 import {
   summarizeCreases,
   summarizeStarch,
@@ -54,6 +54,7 @@ export default function OrderInstructions() {
   const [creasesSheetOpen, setCreasesSheetOpen] = useState(false);
   const [starchSheetOpen, setStarchSheetOpen] = useState(false);
   const [foldingSheetOpen, setFoldingSheetOpen] = useState(false);
+  const [autoApprovalsSheetOpen, setAutoApprovalsSheetOpen] = useState(false);
 
   const userPrefsFolding = useUserPrefsStore((s) => s.folding);
   const setUserPrefsFolding = useUserPrefsStore((s) => s.setFolding);
@@ -80,17 +81,6 @@ export default function OrderInstructions() {
   const togglePhotoCard = () => {
     haptics.light();
     setPhotoExpanded((v) => !v);
-  };
-
-  // TEMP: tap to toggle dummy data for UI dev. Replace with nativeBridge.openSheet() when sheets are wired up.
-  const toggle = <K extends keyof OrderInstructionsState>(
-    key: K,
-    dummyValue: OrderInstructionsState[K],
-  ) => {
-    const current = orderInstructions?.[key];
-    const cleared = null as OrderInstructionsState[K];
-    setOrderInstructions({ [key]: current ? cleared : dummyValue } as Partial<OrderInstructionsState>);
-    haptics.light();
   };
 
   return (
@@ -224,7 +214,10 @@ export default function OrderInstructions() {
           title="Auto-Approvals"
           icon={BadgeCheck}
           value={autoApprovals ? summarizeAutoApprovals(autoApprovals) : null}
-          onPress={() => toggle("autoApprovals", DEFAULT_AUTO_APPROVALS)}
+          onPress={() => {
+            haptics.light();
+            setAutoApprovalsSheetOpen(true);
+          }}
         />
       </div>
       <CreasesSheet
@@ -251,6 +244,12 @@ export default function OrderInstructions() {
           setOrderInstructions({ folding: value });
           setUserPrefsFolding(value);
         }}
+      />
+      <AutoApprovalsSheet
+        open={autoApprovalsSheetOpen}
+        onOpenChange={setAutoApprovalsSheetOpen}
+        initialValue={autoApprovals ?? DEFAULT_AUTO_APPROVALS}
+        onApply={(value) => setOrderInstructions({ autoApprovals: value })}
       />
     </OrderLayout>
   );
