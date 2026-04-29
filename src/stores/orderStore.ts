@@ -68,6 +68,17 @@ export interface CreasesState {
   gathra: CreaseChoice;
 }
 
+export type WashAndFoldApprovalChoice =
+  | "notify_me"
+  | "transfer_clean_press"
+  | "always_wash"
+  | "do_not_wash";
+
+export interface AutoApprovalsState {
+  stainDamageAutoApprove: boolean;
+  washAndFold: WashAndFoldApprovalChoice;
+}
+
 // Folding selection: keys are item type ids; value is true when selected.
 export type FoldingSelection = Record<string, boolean>;
 
@@ -77,6 +88,7 @@ export interface OrderInstructionsState {
   folding: FoldingSelection | null;
   creases: CreasesState | null;
   starch: StarchChoice | null;
+  autoApprovals: AutoApprovalsState | null;
 }
 
 export interface PaymentState {
@@ -141,6 +153,7 @@ const initialOrderInstructions: OrderInstructionsState = {
   folding: null,
   creases: null,
   starch: null,
+  autoApprovals: null,
 };
 
 export const useOrderStore = create<OrderState>()(
@@ -215,7 +228,7 @@ export const useOrderStore = create<OrderState>()(
     {
       // v2: bumped from v1 to invalidate old locale-formatted date strings.
       // Old persisted state had pickup.date like "Tue, Apr 28" which broke formatRelativeDay.
-      name: "washmen.laundry-order.v3",
+      name: "washmen.laundry-order.v4",
       storage: createJSONStorage(() => localStorage),
       partialize: (s) => ({
         flowType: s.flowType,
