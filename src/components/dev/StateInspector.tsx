@@ -257,7 +257,10 @@ const ROUTE_VARIANTS: Record<string, Variant[]> = {
       type: "toggle",
       label: "Folding",
       read: (s) => !!s.orderInstructions?.folding,
-      write: (s, v) => s.setOrderInstructions({ folding: v ? { tshirt: true } : null }),
+      write: (s, v) =>
+        s.setOrderInstructions({
+          folding: v ? { blouse: true, skirt: true } : null,
+        }),
     },
     {
       type: "toggle",

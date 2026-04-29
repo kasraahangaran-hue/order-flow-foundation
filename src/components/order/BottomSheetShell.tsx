@@ -10,6 +10,7 @@ interface BottomSheetShellProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title: string;
+  titleSlot?: ReactNode;
   children: ReactNode;
   footer: FooterVariant;
   primaryLabel?: string;
@@ -24,6 +25,7 @@ export function BottomSheetShell({
   open,
   onOpenChange,
   title,
+  titleSlot,
   children,
   footer,
   primaryLabel,
@@ -50,9 +52,12 @@ export function BottomSheetShell({
       >
         <div className="flex flex-col max-h-[92vh]">
           <div className="px-6 pt-4">
-            <h2 className="text-[20px] font-bold leading-[24px] tracking-[0.4px] text-washmen-primary">
-              {title}
-            </h2>
+            <div className="flex items-center justify-between gap-2">
+              <h2 className="text-[20px] font-bold leading-[24px] tracking-[0.4px] text-washmen-primary">
+                {title}
+              </h2>
+              {titleSlot}
+            </div>
           </div>
 
           <div className="flex-1 overflow-y-auto no-scrollbar px-6 pt-2 pb-4">
