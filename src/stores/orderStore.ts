@@ -82,9 +82,39 @@ export interface AutoApprovalsState {
 // Folding selection: keys are item type ids; value is true when selected.
 export type FoldingSelection = Record<string, boolean>;
 
+export type StainType =
+  | "i_dont_know"
+  | "coffee"
+  | "food"
+  | "oil"
+  | "blood"
+  | "other";
+
+export type CleaningInstruction =
+  | "no_preference"
+  | "dry_clean_only"
+  | "opticlean"
+  | "cold_wash"
+  | "high_temp";
+
+export type OtherFlag =
+  | "new_item"
+  | "delicate"
+  | "expensive"
+  | "bad_smell";
+
+export interface DelicateItem {
+  id: string;
+  photo: string;
+  brand: string;
+  stains: StainType[];
+  cleaningInstruction: CleaningInstruction | null;
+  others: OtherFlag[];
+}
+
 export interface OrderInstructionsState {
   specialRequests: string;
-  photos: string[];
+  delicateItems: DelicateItem[];
   folding: FoldingSelection | null;
   creases: CreasesState | null;
   starch: StarchChoice | null;
@@ -149,7 +179,7 @@ const initialServices: ServicesState = {
 
 const initialOrderInstructions: OrderInstructionsState = {
   specialRequests: "",
-  photos: [],
+  delicateItems: [],
   folding: null,
   creases: null,
   starch: null,
@@ -228,7 +258,7 @@ export const useOrderStore = create<OrderState>()(
     {
       // v2: bumped from v1 to invalidate old locale-formatted date strings.
       // Old persisted state had pickup.date like "Tue, Apr 28" which broke formatRelativeDay.
-      name: "washmen.laundry-order.v4",
+      name: "washmen.laundry-order.v5",
       storage: createJSONStorage(() => localStorage),
       partialize: (s) => ({
         flowType: s.flowType,
