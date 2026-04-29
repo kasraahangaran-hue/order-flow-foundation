@@ -105,7 +105,7 @@ function applyFlowType(store: OrderState, flow: FlowType) {
     store.setPayment(null);
     store.setOrderInstructions({
       specialRequests: "",
-      photos: [],
+      delicateItems: [],
       folding: null,
       creases: null,
       starch: null,
@@ -245,12 +245,19 @@ const ROUTE_VARIANTS: Record<string, Variant[]> = {
     },
     {
       type: "select",
-      label: "Photo count",
-      options: ["0", "1", "2", "3"],
-      read: (s) => String(s.orderInstructions?.photos?.length ?? 0),
+      label: "Delicate items count",
+      options: ["0", "1", "3", "5"],
+      read: (s) => String(s.orderInstructions?.delicateItems?.length ?? 0),
       write: (s, v) =>
         s.setOrderInstructions({
-          photos: Array.from({ length: Number(v) }, (_, i) => DUMMY_PHOTOS[i % 4]),
+          delicateItems: Array.from({ length: Number(v) }, (_, i) => ({
+            id: `seed_${i}`,
+            photo: DUMMY_PHOTOS[i % DUMMY_PHOTOS.length],
+            brand: i === 0 ? "Bottle" : "",
+            stains: i === 0 ? ["coffee" as const] : [],
+            cleaningInstruction: i === 1 ? ("dry_clean_only" as const) : null,
+            others: i === 0 ? ["delicate" as const] : [],
+          })),
         }),
     },
     {
