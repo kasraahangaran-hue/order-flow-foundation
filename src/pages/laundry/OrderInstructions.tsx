@@ -130,7 +130,7 @@ export default function OrderInstructions() {
     >
       <div className="flex flex-col gap-2">
         {/* 1. Special Requests */}
-        <div className="rounded-[8px] bg-white border border-[#f2f3f8] px-4 pt-[14px] pb-4">
+        <div className="rounded-card bg-white border border-[#f2f3f8] px-4 pt-[14px] pb-4">
           <p className="text-[14px] font-normal leading-[20px] tracking-[0.1px] text-washmen-primary">
             Any Special Requests?
           </p>
@@ -146,7 +146,7 @@ export default function OrderInstructions() {
         </div>
 
         {/* 2. Send a Photo */}
-        <div className="rounded-[8px] bg-white border border-[#f2f3f8]">
+        <div className="rounded-card bg-white border border-[#f2f3f8]">
           <button
             type="button"
             onClick={togglePhotoCard}

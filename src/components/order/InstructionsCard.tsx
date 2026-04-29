@@ -49,7 +49,7 @@ export function InstructionsCard({
           onPress();
         }
       }}
-      className="press-effect w-full rounded-[8px] bg-white border border-[#f2f3f8] px-4 py-[10px] text-left"
+      className="press-effect w-full rounded-card bg-white border border-[#f2f3f8] px-4 py-[10px] text-left"
     >
       <div className={`flex gap-2 ${subtitleWraps && hasValue ? "items-start" : "items-center"}`}>
         <div className="flex h-8 w-8 shrink-0 items-center justify-center">
