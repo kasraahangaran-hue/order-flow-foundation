@@ -16,11 +16,58 @@ export interface ServicesState {
   pressOnly: boolean;
 }
 
-export interface AddressState {
-  line1: string;
-  apartment?: string;
-  lat?: number;
-  lng?: number;
+export type AddressType = "apartment" | "villa" | "hotel" | "office";
+
+export interface ApartmentFields {
+  building: string;
+  aptNumber: string;
+  notes?: string;
+}
+
+export interface VillaFields {
+  community: string;
+  street: string;
+  villaNumber: string;
+  notes?: string;
+}
+
+export interface HotelFields {
+  hotelName: string;
+  roomNumber: string;
+  guestName: string;
+  notes?: string;
+}
+
+export interface OfficeFields {
+  building: string;
+  officeNumber: string;
+  notes?: string;
+}
+
+export type AddressFields =
+  | { type: "apartment"; fields: ApartmentFields }
+  | { type: "villa"; fields: VillaFields }
+  | { type: "hotel"; fields: HotelFields }
+  | { type: "office"; fields: OfficeFields };
+
+export type Address = {
+  id: string;
+  lat: number;
+  lng: number;
+  formattedAddress: string;
+} & AddressFields;
+
+/**
+ * Pending address draft — populated as the user moves through the map → type
+ * → details flow. Cleared when the address is saved or the flow is cancelled.
+ */
+export interface PendingAddressDraft {
+  id?: string;
+  lat: number;
+  lng: number;
+  formattedAddress: string;
+  type?: AddressType;
+  fields?: ApartmentFields | VillaFields | HotelFields | OfficeFields;
 }
 
 export interface PickupState {
@@ -141,7 +188,9 @@ export interface CartItem {
 export interface OrderState {
   flowType: FlowType;
   services: ServicesState;
-  address: AddressState | null;
+  addresses: Address[];
+  selectedAddressId: string | null;
+  pendingAddressDraft: PendingAddressDraft | null;
   pickup: PickupState | null;
   dropoff: DropoffState | null;
   driverInstructions: DriverInstructionsState | null;
@@ -155,7 +204,11 @@ export interface OrderState {
   setFlowType: (t: FlowType) => void;
   setServices: (patch: Partial<ServicesState>) => void;
   setPressingPrefs: (prefs: PressingPrefs | null) => void;
-  setAddress: (a: AddressState | null) => void;
+  addAddress: (a: Address) => void;
+  updateAddress: (a: Address) => void;
+  deleteAddress: (id: string) => void;
+  selectAddress: (id: string | null) => void;
+  setPendingAddressDraft: (d: PendingAddressDraft | null) => void;
   setPickup: (p: PickupState | null) => void;
   setDropoff: (d: DropoffState | null) => void;
   setDriverInstructions: (d: DriverInstructionsState | null) => void;
@@ -191,7 +244,9 @@ export const useOrderStore = create<OrderState>()(
     (set) => ({
       flowType: "existingUser",
       services: initialServices,
-      address: null,
+      addresses: [],
+      selectedAddressId: null,
+      pendingAddressDraft: null,
       pickup: getDefaultPickup(),
       dropoff: getDefaultDropoff(),
       driverInstructions: null,
@@ -215,7 +270,26 @@ export const useOrderStore = create<OrderState>()(
             addPressing: !!(prefs && prefs.items.length > 0),
           },
         })),
-      setAddress: (address) => set({ address }),
+      addAddress: (a) =>
+        set((state) => ({
+          addresses: [...state.addresses, a],
+          selectedAddressId: a.id,
+          pendingAddressDraft: null,
+        })),
+      updateAddress: (a) =>
+        set((state) => ({
+          addresses: state.addresses.map((x) => (x.id === a.id ? a : x)),
+          pendingAddressDraft: null,
+        })),
+      deleteAddress: (id) =>
+        set((state) => {
+          if (state.selectedAddressId === id) return state;
+          return {
+            addresses: state.addresses.filter((x) => x.id !== id),
+          };
+        }),
+      selectAddress: (id) => set({ selectedAddressId: id }),
+      setPendingAddressDraft: (d) => set({ pendingAddressDraft: d }),
       setPickup: (pickup) => set({ pickup }),
       setDropoff: (dropoff) => set({ dropoff }),
       setDriverInstructions: (driverInstructions) => set({ driverInstructions }),
@@ -241,10 +315,12 @@ export const useOrderStore = create<OrderState>()(
           };
         }),
       reset: () =>
-        set({
+        set((state) => ({
           flowType: "existingUser",
           services: initialServices,
-          address: null,
+          addresses: state.addresses,
+          selectedAddressId: state.selectedAddressId,
+          pendingAddressDraft: null,
           pickup: getDefaultPickup(),
           dropoff: getDefaultDropoff(),
           driverInstructions: null,
@@ -253,17 +329,17 @@ export const useOrderStore = create<OrderState>()(
           promoCode: null,
           tip: 0,
           cart: [],
-        }),
+        })),
     }),
     {
-      // v2: bumped from v1 to invalidate old locale-formatted date strings.
-      // Old persisted state had pickup.date like "Tue, Apr 28" which broke formatRelativeDay.
-      name: "washmen.laundry-order.v6",
+      // v7: bumped from v6 to invalidate old single-address shape.
+      name: "washmen.laundry-order.v7",
       storage: createJSONStorage(() => localStorage),
       partialize: (s) => ({
         flowType: s.flowType,
         services: s.services,
-        address: s.address,
+        addresses: s.addresses,
+        selectedAddressId: s.selectedAddressId,
         pickup: s.pickup,
         dropoff: s.dropoff,
         driverInstructions: s.driverInstructions,

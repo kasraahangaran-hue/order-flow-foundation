@@ -4,7 +4,7 @@ import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import { haptics } from "@/lib/haptics";
 import { cn } from "@/lib/utils";
 
-type FooterVariant = "apply-only" | "back-and-apply" | "dual-apply";
+type FooterVariant = "apply-only" | "back-and-apply" | "dual-apply" | "none";
 
 interface BottomSheetShellProps {
   open: boolean;
@@ -64,6 +64,7 @@ export function BottomSheetShell({
             {children}
           </div>
 
+          {footer !== "none" && (
           <div className="px-6 pt-3 pb-4">
             {footer === "apply-only" && (
               <button
@@ -117,6 +118,7 @@ export function BottomSheetShell({
               </div>
             )}
           </div>
+          )}
         </div>
       </DrawerContent>
     </Drawer>

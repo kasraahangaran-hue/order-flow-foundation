@@ -23,6 +23,7 @@ import {
   type OrderState,
   type FlowType,
   type CartItem,
+  type Address,
 } from "@/stores/orderStore";
 import { cn } from "@/lib/utils";
 import { getDefaultPickup, getDefaultDropoff } from "@/data/scheduleDefaults";
@@ -98,7 +99,7 @@ function applyFlowType(store: OrderState, flow: FlowType) {
   store.setFlowType(flow);
 
   if (flow === "newUser") {
-    store.setAddress(null);
+    useOrderStore.setState({ addresses: [], selectedAddressId: null });
     store.setPickup(getDefaultPickup());
     store.setDropoff(getDefaultDropoff());
     store.setDriverInstructions(null);
@@ -124,7 +125,18 @@ function applyFlowType(store: OrderState, flow: FlowType) {
   }
 
   // existingUser + pricingPage share the seeded address/pickup/dropoff/payment
-  store.setAddress({ line1: "108, Azurite tower" });
+  const seedAddress: Address = {
+    id: "seed_addr_1",
+    type: "apartment",
+    lat: 25.2048,
+    lng: 55.2708,
+    formattedAddress: "Azurite Tower, Dubai Marina, Dubai",
+    fields: { building: "Azurite tower", aptNumber: "108" },
+  };
+  useOrderStore.setState({
+    addresses: [seedAddress],
+    selectedAddressId: seedAddress.id,
+  });
   store.setPickup({
     mode: "door",
     date: todayPlus(0),
@@ -194,13 +206,42 @@ const ROUTE_VARIANTS: Record<string, Variant[]> = {
   ],
   "/laundry/order-details": [
     {
-      type: "toggle",
-      label: "Address",
-      read: (s) => !!s.address,
-      write: (s, v) =>
-        v
-          ? s.setAddress({ line1: "108, Azurite tower", apartment: "Apt 4B" })
-          : s.setAddress(null),
+      type: "select",
+      label: "Addresses count",
+      options: ["0", "1", "2", "3"],
+      read: (s) => String(s.addresses.length),
+      write: (_s, v) => {
+        const count = Number(v);
+        const seeds: Address[] = [
+          {
+            id: "seed_addr_1",
+            type: "apartment",
+            lat: 25.2048,
+            lng: 55.2708,
+            formattedAddress: "Azurite Tower, Dubai Marina, Dubai",
+            fields: { building: "Azurite tower", aptNumber: "108" },
+          },
+          {
+            id: "seed_addr_2",
+            type: "office",
+            lat: 25.2105,
+            lng: 55.2796,
+            formattedAddress: "Al Ferdous 4, DIFC, Dubai",
+            fields: { building: "Al Ferdous 4", officeNumber: "118" },
+          },
+          {
+            id: "seed_addr_3",
+            type: "villa",
+            lat: 25.2294,
+            lng: 55.2620,
+            formattedAddress: "Jumeirah 1, Dubai",
+            fields: { community: "Jumeirah 1", street: "Beach Road", villaNumber: "12" },
+          },
+        ];
+        const addresses = seeds.slice(0, count);
+        const selectedAddressId = addresses[0]?.id ?? null;
+        useOrderStore.setState({ addresses, selectedAddressId });
+      },
     },
     {
       type: "toggle",
