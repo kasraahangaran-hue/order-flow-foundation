@@ -100,45 +100,43 @@ export default function OrderInstructions() {
     >
       <div className="flex flex-col gap-2">
         {/* 1. Special Requests */}
-        <div className="rounded-card bg-card p-4 shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
-          <p className="text-sm font-semibold text-washmen-primary">
+        <div className="rounded-[8px] bg-white border border-[#f2f3f8] px-4 pt-[14px] pb-4">
+          <p className="text-[14px] font-normal leading-[20px] tracking-[0.1px] text-washmen-primary">
             Any Special Requests?
           </p>
-          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+          <p className="mt-1 text-[12px] font-light leading-[18px] tracking-[0.1px] text-[#585871]">
             Your requests will be shared to the customer service team to action
           </p>
           <textarea
             value={specialRequests}
             onChange={(e) => setOrderInstructions({ specialRequests: e.target.value })}
-            placeholder="Add requests"
-            className="mt-3 min-h-[80px] w-full rounded-md border border-washmen-secondary-200 bg-washmen-secondary-50 p-3 text-sm text-foreground placeholder:text-washmen-secondary-400 focus:border-washmen-primary focus:outline-none focus:ring-2 focus:ring-washmen-primary/20"
+            placeholder="Use fragrance-free detergent"
+            className="mt-2 min-h-[80px] w-full rounded-[6px] border border-[#f2f3f8] bg-white p-3 text-[12px] font-light leading-[18px] tracking-[0.1px] text-foreground placeholder:text-[#c3c8db] focus:border-washmen-primary focus:outline-none focus:ring-2 focus:ring-washmen-primary/20"
           />
         </div>
 
         {/* 2. Send a Photo */}
-        <div className="rounded-card bg-card p-4 shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
+        <div className="rounded-[8px] bg-white border border-[#f2f3f8]">
           <button
             type="button"
             onClick={togglePhotoCard}
-            className="press-effect flex w-full items-center justify-between text-left"
+            className="press-effect flex w-full items-center gap-2 px-4 py-[10px] text-left"
           >
-            <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
-                <Camera className="h-4 w-4 text-washmen-primary" />
-              </div>
-              <p className="text-sm font-semibold text-washmen-primary">
-                Send a Photo
-              </p>
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center">
+              <Camera className="h-6 w-6 text-washmen-primary" />
             </div>
+            <p className="flex-1 text-[14px] font-normal leading-[20px] tracking-[0.1px] text-washmen-primary">
+              Send a Photo
+            </p>
             {photoExpanded ? (
-              <Pencil className="h-4 w-4 text-muted-foreground" strokeWidth={2} aria-hidden />
+              <Pencil className="h-4 w-4 text-washmen-primary" strokeWidth={2} aria-hidden />
             ) : (
-              <Plus className="h-4 w-4 text-muted-foreground" strokeWidth={2} aria-hidden />
+              <Plus className="h-4 w-4 text-washmen-primary" strokeWidth={2} aria-hidden />
             )}
           </button>
           {photoExpanded ? (
-            <>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+            <div className="px-4 pb-4">
+              <p className="text-[12px] font-light leading-[18px] tracking-[0.1px] text-[#585871]">
                 You can upload additional photos and leave notes for our experts. We will
                 contact you after reviewing them
               </p>
@@ -172,7 +170,7 @@ export default function OrderInstructions() {
                   <Camera className="h-6 w-6 text-washmen-secondary-500" />
                 </button>
               </div>
-            </>
+            </div>
           ) : null}
         </div>
 
