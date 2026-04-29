@@ -42,7 +42,7 @@ export function InstructionsCard({
       }}
       className="press-effect w-full rounded-[8px] bg-white border border-[#f2f3f8] px-4 py-[10px] text-left"
     >
-      <div className="flex items-start gap-2">
+      <div className={`flex gap-2 ${isMultiLine && hasValue ? "items-start" : "items-center"}`}>
         <div className="flex h-8 w-8 shrink-0 items-center justify-center">
           <Icon className="h-6 w-6 text-washmen-primary" />
         </div>
