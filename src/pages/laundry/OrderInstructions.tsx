@@ -14,7 +14,6 @@ import { OrderLayout } from "@/components/order/OrderLayout";
 import { InstructionsCard } from "@/components/order/InstructionsCard";
 import { Button } from "@/components/ui/button";
 import { useOrderStore } from "@/stores/orderStore";
-import type { OrderInstructionsState } from "@/stores/orderStore";
 import { haptics } from "@/lib/haptics";
 import { CreasesSheet } from "@/components/order/CreasesSheet";
 import { StarchSheet } from "@/components/order/StarchSheet";
@@ -82,17 +81,6 @@ export default function OrderInstructions() {
   const togglePhotoCard = () => {
     haptics.light();
     setPhotoExpanded((v) => !v);
-  };
-
-  // TEMP: tap to toggle dummy data for UI dev. Replace with nativeBridge.openSheet() when sheets are wired up.
-  const toggle = <K extends keyof OrderInstructionsState>(
-    key: K,
-    dummyValue: OrderInstructionsState[K],
-  ) => {
-    const current = orderInstructions?.[key];
-    const cleared = null as OrderInstructionsState[K];
-    setOrderInstructions({ [key]: current ? cleared : dummyValue } as Partial<OrderInstructionsState>);
-    haptics.light();
   };
 
   return (
