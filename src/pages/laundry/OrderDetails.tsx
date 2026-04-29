@@ -151,7 +151,7 @@ export default function OrderDetails() {
     <OrderLayout
       title="Laundry Order"
       step={2}
-      onBack={() => navigate(-1)}
+      onBack={() => navigate("/laundry/select-service")}
       footerSlot={
         <Button
           className="flex-1 h-12 text-sm font-semibold"

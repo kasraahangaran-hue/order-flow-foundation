@@ -37,7 +37,7 @@ export default function WashAndFoldInfo() {
   return (
     <OrderLayout
       title="Add Pressing"
-      onBack={() => navigate(-1)}
+      onBack={() => navigate("/laundry/select-service")}
       footerSlot={
         <Button
           className="flex-1 h-12 text-sm font-semibold"
