@@ -45,11 +45,13 @@ function DetailCard({ title, onPress, hasValue, addAction, titleClassName, child
       }}
       className="press-effect w-full rounded-card bg-card p-4 text-left shadow-[0_1px_2px_rgba(16,24,40,0.04)]"
     >
-      <div className="flex items-center justify-between">
-        <p className={cn("text-sm font-semibold leading-tight text-washmen-primary", titleClassName)}>{title}</p>
-        <ActionIcon className="h-4 w-4 text-muted-foreground" strokeWidth={2} aria-hidden />
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center justify-between">
+          <p className={cn("text-sm font-normal leading-tight text-washmen-primary", titleClassName)}>{title}</p>
+          <ActionIcon className="h-4 w-4 text-muted-foreground" strokeWidth={2} aria-hidden />
+        </div>
+        {children ? <div>{children}</div> : null}
       </div>
-      {children ? <div className="mt-1">{children}</div> : null}
     </div>
   );
 }
@@ -64,14 +66,14 @@ function ValueRow({
   muted?: boolean;
 }) {
   return (
-    <div className="flex items-center gap-3">
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
-        <Icon className="h-4 w-4 text-washmen-primary" />
+    <div className="flex items-center gap-2">
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center">
+        <Icon className="h-6 w-6 text-washmen-primary" />
       </div>
       <p
         className={cn(
-          "min-w-0 flex-1 text-sm",
-          muted ? "italic font-light text-washmen-secondary-400" : "text-foreground"
+          "min-w-0 flex-1 text-sm leading-[20px] tracking-[0.1px]",
+          muted ? "italic font-light text-washmen-secondary-400" : "font-normal text-[#585871]"
         )}
       >
         {text}
@@ -88,13 +90,13 @@ function EmptyRow({ text }: { text: string }) {
 
 function TimeRow({ day, time }: { day: string; time: string }) {
   return (
-    <div className="flex items-center gap-3">
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
-        <Clock className="h-4 w-4 text-washmen-primary" />
+    <div className="flex items-center gap-2">
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center">
+        <Clock className="h-6 w-6 text-washmen-primary" />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-sm leading-tight text-foreground">{day}</p>
-        <p className="text-xs leading-tight text-muted-foreground">{time}</p>
+        <p className="text-sm font-normal leading-[20px] tracking-[0.1px] text-[#585871]">{day}</p>
+        <p className="text-sm font-normal leading-[20px] tracking-[0.1px] text-[#585871]">{time}</p>
       </div>
     </div>
   );
@@ -236,16 +238,16 @@ export default function OrderDetails() {
             (() => {
               const summary = summarizeDriverInstructions(driverInstructions);
               return (
-                <div className="flex items-start gap-3">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
-                    <Bell className="h-4 w-4 text-washmen-primary" />
+                <div className="flex items-start gap-2">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center">
+                    <Bell className="h-6 w-6 text-washmen-primary" />
                   </div>
-                  <div className="min-w-0 flex-1 flex flex-col gap-0.5">
-                    <p className="text-sm leading-tight text-foreground">
-                      <span className="font-semibold">Pick up:</span> {summary.pickupSuffix}
+                  <div className="min-w-0 flex-1 space-y-0.5">
+                    <p className="text-sm leading-tight text-[#585871]">
+                      <span className="font-semibold">Pick up:</span> <span className="font-normal">{summary.pickupSuffix}</span>
                     </p>
-                    <p className="text-sm leading-tight text-foreground">
-                      <span className="font-semibold">Drop off:</span> {summary.dropoffSuffix}
+                    <p className="text-sm leading-tight text-[#585871]">
+                      <span className="font-semibold">Drop off:</span> <span className="font-normal">{summary.dropoffSuffix}</span>
                     </p>
                   </div>
                 </div>
