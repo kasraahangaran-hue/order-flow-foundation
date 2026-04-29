@@ -255,7 +255,8 @@ const ROUTE_VARIANTS: Record<string, Variant[]> = {
             photo: DUMMY_PHOTOS[i % DUMMY_PHOTOS.length],
             brand: i === 0 ? "Bottle" : "",
             stains: i === 0 ? ["coffee" as const] : [],
-            cleaningInstruction: i === 1 ? ("dry_clean_only" as const) : null,
+            cleaningInstruction:
+              i === 1 ? ("dry_clean_only" as const) : ("no_preference" as const),
             others: i === 0 ? ["delicate" as const] : [],
           })),
         }),

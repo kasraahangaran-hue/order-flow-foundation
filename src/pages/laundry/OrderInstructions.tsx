@@ -46,7 +46,9 @@ export default function OrderInstructions() {
   const starch = orderInstructions?.starch ?? null;
   const autoApprovals = orderInstructions?.autoApprovals ?? null;
 
-  const [photoExpanded, setPhotoExpanded] = useState(false);
+  const [photoExpanded, setPhotoExpanded] = useState(
+    () => (orderInstructions?.delicateItems?.length ?? 0) > 0,
+  );
   const [creasesSheetOpen, setCreasesSheetOpen] = useState(false);
   const [starchSheetOpen, setStarchSheetOpen] = useState(false);
   const [foldingSheetOpen, setFoldingSheetOpen] = useState(false);
@@ -85,9 +87,9 @@ export default function OrderInstructions() {
       id,
       photo: dataUrl,
       brand: "",
-      stains: [],
-      cleaningInstruction: null,
-      others: [],
+      stains: [] as never[],
+      cleaningInstruction: "no_preference" as const,
+      others: [] as never[],
     };
     setOrderInstructions({
       delicateItems: [...delicateItems, newItem],

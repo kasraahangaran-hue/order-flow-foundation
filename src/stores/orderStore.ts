@@ -108,7 +108,7 @@ export interface DelicateItem {
   photo: string;
   brand: string;
   stains: StainType[];
-  cleaningInstruction: CleaningInstruction | null;
+  cleaningInstruction: CleaningInstruction;
   others: OtherFlag[];
 }
 
@@ -258,7 +258,7 @@ export const useOrderStore = create<OrderState>()(
     {
       // v2: bumped from v1 to invalidate old locale-formatted date strings.
       // Old persisted state had pickup.date like "Tue, Apr 28" which broke formatRelativeDay.
-      name: "washmen.laundry-order.v5",
+      name: "washmen.laundry-order.v6",
       storage: createJSONStorage(() => localStorage),
       partialize: (s) => ({
         flowType: s.flowType,

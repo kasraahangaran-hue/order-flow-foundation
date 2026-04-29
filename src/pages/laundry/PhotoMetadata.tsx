@@ -39,7 +39,7 @@ export default function PhotoMetadata() {
   const [brand, setBrand] = useState(item?.brand ?? "");
   const [stains, setStains] = useState<StainType[]>(item?.stains ?? []);
   const [cleaningInstruction, setCleaningInstruction] =
-    useState<CleaningInstruction | null>(item?.cleaningInstruction ?? null);
+    useState<CleaningInstruction>(item?.cleaningInstruction ?? "no_preference");
   const [others, setOthers] = useState<OtherFlag[]>(item?.others ?? []);
   const [photo, setPhoto] = useState(item?.photo ?? "");
 
@@ -61,7 +61,7 @@ export default function PhotoMetadata() {
   if (!item) return null;
 
   const stainConfigured = stains.length > 0;
-  const cleaningConfigured = cleaningInstruction !== null;
+  const cleaningConfigured = cleaningInstruction !== "no_preference";
   const othersConfigured = others.length > 0;
   const anyCategoryConfigured =
     stainConfigured || cleaningConfigured || othersConfigured;
@@ -89,6 +89,18 @@ export default function PhotoMetadata() {
 
   const onBack = () => {
     haptics.light();
+    // If the user backed out of a brand-new capture without configuring anything,
+    // discard the empty draft item so we don't leave a stale entry in the store.
+    const isDraftEmpty =
+      brand.trim().length === 0 &&
+      stains.length === 0 &&
+      cleaningInstruction === "no_preference" &&
+      others.length === 0;
+    if (isDraftEmpty) {
+      setOrderInstructions({
+        delicateItems: delicateItems.filter((d) => d.id !== item.id),
+      });
+    }
     navigate("/laundry/order-instructions");
   };
 
