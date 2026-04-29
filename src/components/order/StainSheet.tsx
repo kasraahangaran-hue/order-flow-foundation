@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { Check, Droplet, X } from "lucide-react";
+import { Droplet, X } from "lucide-react";
 import { BottomSheetShell } from "./BottomSheetShell";
+import { CheckboxRow } from "./CheckboxRow";
 import { STAIN_OPTIONS } from "@/lib/orderInstructionsLabels";
 import { haptics } from "@/lib/haptics";
 import type { StainType } from "@/stores/orderStore";
@@ -63,38 +64,17 @@ export function StainSheet({
             What type of stain is it?
           </p>
         </div>
-        <div className="flex flex-col">
-          {STAIN_OPTIONS.map((opt) => {
-            const selected = draft.includes(opt.value);
-            return (
-              <button
-                key={opt.value}
-                type="button"
-                onClick={() => toggle(opt.value)}
-                className="press-effect flex h-[52px] items-center justify-between border-t border-[#f2f3f8] px-2"
-              >
-                <span className="text-[14px] font-light leading-[20px] tracking-[0.1px] text-washmen-primary">
-                  {opt.label}
-                </span>
-                <CheckboxIcon selected={selected} />
-              </button>
-            );
-          })}
+        <div className="flex flex-col divide-y divide-[#f2f3f8]">
+          {STAIN_OPTIONS.map((opt) => (
+            <CheckboxRow
+              key={opt.value}
+              label={opt.label}
+              selected={draft.includes(opt.value)}
+              onToggle={() => toggle(opt.value)}
+            />
+          ))}
         </div>
       </div>
     </BottomSheetShell>
-  );
-}
-
-function CheckboxIcon({ selected }: { selected: boolean }) {
-  if (selected) {
-    return (
-      <span className="flex h-[18px] w-[18px] items-center justify-center rounded-[4px] bg-[#A4FF00]">
-        <Check className="h-3 w-3 text-washmen-primary" strokeWidth={3} />
-      </span>
-    );
-  }
-  return (
-    <span className="h-[18px] w-[18px] rounded-[4px] border-2 border-washmen-secondary-300" />
   );
 }

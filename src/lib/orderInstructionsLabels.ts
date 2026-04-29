@@ -206,7 +206,7 @@ export const DEFAULT_AUTO_APPROVALS: AutoApprovalsState = {
   washAndFold: "notify_me",
 };
 export const STAIN_OPTIONS: { value: StainType; label: string }[] = [
-  { value: "i_dont_know", label: "I don't Know" },
+  { value: "i_dont_know", label: "I don't know" },
   { value: "coffee", label: "Coffee" },
   { value: "food", label: "Food" },
   { value: "oil", label: "Oil" },

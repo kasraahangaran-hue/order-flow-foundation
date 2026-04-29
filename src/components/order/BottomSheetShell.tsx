@@ -47,7 +47,7 @@ export function BottomSheetShell({
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent
-        className="max-h-[92vh] rounded-t-[24px] border-0 bg-[#FAFBFC]"
+        className="max-h-[92vh] rounded-t-[24px] border-0 bg-white"
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
         <div className="flex flex-col max-h-[92vh]">

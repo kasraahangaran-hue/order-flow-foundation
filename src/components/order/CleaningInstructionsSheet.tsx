@@ -8,8 +8,8 @@ import type { CleaningInstruction } from "@/stores/orderStore";
 interface CleaningInstructionsSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  initialValue: CleaningInstruction | null;
-  onApply: (value: CleaningInstruction | null) => void;
+  initialValue: CleaningInstruction;
+  onApply: (value: CleaningInstruction) => void;
 }
 
 export function CleaningInstructionsSheet({
@@ -18,7 +18,7 @@ export function CleaningInstructionsSheet({
   initialValue,
   onApply,
 }: CleaningInstructionsSheetProps) {
-  const [draft, setDraft] = useState<CleaningInstruction | null>(initialValue);
+  const [draft, setDraft] = useState<CleaningInstruction>(initialValue);
 
   useEffect(() => {
     if (open) setDraft(initialValue);
