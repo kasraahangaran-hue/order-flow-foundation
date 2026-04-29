@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  BadgeCheck,
   Camera,
   Layers,
   Pencil,
@@ -35,7 +34,6 @@ export default function OrderInstructions() {
   const folding = orderInstructions?.folding ?? null;
   const creases = orderInstructions?.creases ?? null;
   const starch = orderInstructions?.starch ?? null;
-  const autoApprovals = orderInstructions?.autoApprovals ?? false;
 
   const [photoExpanded, setPhotoExpanded] = useState(false);
 
@@ -44,8 +42,7 @@ export default function OrderInstructions() {
     photos.length > 0 ||
     Boolean(folding) ||
     Boolean(creases) ||
-    Boolean(starch) ||
-    Boolean(autoApprovals);
+    Boolean(starch);
 
   const addDummyPhoto = () => {
     haptics.light();
@@ -69,7 +66,7 @@ export default function OrderInstructions() {
     dummyValue: OrderInstructionsState[K],
   ) => {
     const current = orderInstructions?.[key];
-    const cleared = key === "autoApprovals" ? (false as OrderInstructionsState[K]) : (null as OrderInstructionsState[K]);
+    const cleared = null as OrderInstructionsState[K];
     setOrderInstructions({ [key]: current ? cleared : dummyValue } as Partial<OrderInstructionsState>);
     haptics.light();
   };
@@ -173,34 +170,31 @@ export default function OrderInstructions() {
         <InstructionsCard
           title="Folding"
           icon={Shirt}
-          valueLabel={folding}
-          onPress={() => toggle("folding", "T-Shirts, Pants")}
+          valueLabel={folding ? "T-Shirts, Pants" : null}
+          onPress={() => toggle("folding", { tshirt: true, pants: true })}
         />
 
         {/* 4. Creases */}
         <InstructionsCard
           title="Creases"
           icon={Layers}
-          valueLabel={creases}
-          onPress={() => toggle("creases", "Shirts: sleeve creases")}
+          valueLabel={creases ? "Shirts: sleeve creases" : null}
+          onPress={() =>
+            toggle("creases", {
+              shirtsSleeveCreases: true,
+              pantsFrontCreases: false,
+              kandura: "no_preference",
+              gathra: "no_preference",
+            })
+          }
         />
 
         {/* 5. Starch */}
         <InstructionsCard
           title="Starch"
           icon={SprayCan}
-          valueLabel={starch}
-          onPress={() => toggle("starch", "Light")}
-        />
-
-        {/* 6. Auto-Approvals */}
-        <InstructionsCard
-          title="Auto-Approvals"
-          icon={BadgeCheck}
-          valueLabel={
-            autoApprovals ? "Stain and Damage Approval: Auto-approve" : null
-          }
-          onPress={() => toggle("autoApprovals", true)}
+          valueLabel={starch && starch !== "none" ? starch : null}
+          onPress={() => toggle("starch", "light")}
         />
       </div>
     </OrderLayout>

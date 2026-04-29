@@ -137,8 +137,11 @@ export default function OrderDetails() {
       setDriverInstructions(null);
     } else {
       setDriverInstructions({
-        pickup: "At concierge / reception",
-        dropoff: "Hang on door handle",
+        pickup: "ring_doorbell",
+        pickupCallOnArrival: false,
+        dropoff: "knock_door",
+        hanging: "door_handle",
+        dropoffCallOnArrival: false,
       });
     }
   };

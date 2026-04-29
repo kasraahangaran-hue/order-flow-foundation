@@ -109,7 +109,6 @@ function applyFlowType(store: OrderState, flow: FlowType) {
       folding: null,
       creases: null,
       starch: null,
-      autoApprovals: false,
     });
     store.setServices({
       washAndFold: false,
@@ -137,8 +136,11 @@ function applyFlowType(store: OrderState, flow: FlowType) {
     surcharge: 0,
   });
   store.setDriverInstructions({
-    pickup: "At concierge / reception",
-    dropoff: "Hang on door handle",
+    pickup: "ring_doorbell",
+    pickupCallOnArrival: false,
+    dropoff: "knock_door",
+    hanging: "door_handle",
+    dropoffCallOnArrival: false,
   });
   store.setPayment({ method: "Apple Pay" });
 
@@ -227,8 +229,11 @@ const ROUTE_VARIANTS: Record<string, Variant[]> = {
       write: (s, v) =>
         v
           ? s.setDriverInstructions({
-              pickup: "Ring the bell twice",
-              dropoff: "Leave at door",
+              pickup: "ring_doorbell",
+              pickupCallOnArrival: false,
+              dropoff: "knock_door",
+              hanging: "none",
+              dropoffCallOnArrival: false,
             })
           : s.setDriverInstructions(null),
     },
@@ -257,25 +262,29 @@ const ROUTE_VARIANTS: Record<string, Variant[]> = {
       type: "toggle",
       label: "Folding",
       read: (s) => !!s.orderInstructions?.folding,
-      write: (s, v) => s.setOrderInstructions({ folding: v ? "Standard" : null }),
+      write: (s, v) => s.setOrderInstructions({ folding: v ? { tshirt: true } : null }),
     },
     {
       type: "toggle",
       label: "Creases",
       read: (s) => !!s.orderInstructions?.creases,
-      write: (s, v) => s.setOrderInstructions({ creases: v ? "Yes" : null }),
+      write: (s, v) =>
+        s.setOrderInstructions({
+          creases: v
+            ? {
+                shirtsSleeveCreases: true,
+                pantsFrontCreases: false,
+                kandura: "no_preference",
+                gathra: "no_preference",
+              }
+            : null,
+        }),
     },
     {
       type: "toggle",
       label: "Starch",
       read: (s) => !!s.orderInstructions?.starch,
-      write: (s, v) => s.setOrderInstructions({ starch: v ? "Light" : null }),
-    },
-    {
-      type: "toggle",
-      label: "Auto-Approvals",
-      read: (s) => !!s.orderInstructions?.autoApprovals,
-      write: (s, v) => s.setOrderInstructions({ autoApprovals: v }),
+      write: (s, v) => s.setOrderInstructions({ starch: v ? "light" : null }),
     },
   ],
   "/laundry/last-step": [
