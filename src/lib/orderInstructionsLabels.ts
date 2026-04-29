@@ -8,6 +8,9 @@ import type {
   AutoApprovalsState,
   WashAndFoldApprovalChoice,
   FoldingSelection,
+  StainType,
+  CleaningInstruction,
+  OtherFlag,
 } from "@/stores/orderStore";
 
 export type FoldingCategoryId = "tops" | "bottoms" | "linen" | "formal" | "others";
