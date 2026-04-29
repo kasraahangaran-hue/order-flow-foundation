@@ -16,11 +16,58 @@ export interface ServicesState {
   pressOnly: boolean;
 }
 
-export interface AddressState {
-  line1: string;
-  apartment?: string;
-  lat?: number;
-  lng?: number;
+export type AddressType = "apartment" | "villa" | "hotel" | "office";
+
+export interface ApartmentFields {
+  building: string;
+  aptNumber: string;
+  notes?: string;
+}
+
+export interface VillaFields {
+  community: string;
+  street: string;
+  villaNumber: string;
+  notes?: string;
+}
+
+export interface HotelFields {
+  hotelName: string;
+  roomNumber: string;
+  guestName: string;
+  notes?: string;
+}
+
+export interface OfficeFields {
+  building: string;
+  officeNumber: string;
+  notes?: string;
+}
+
+export type AddressFields =
+  | { type: "apartment"; fields: ApartmentFields }
+  | { type: "villa"; fields: VillaFields }
+  | { type: "hotel"; fields: HotelFields }
+  | { type: "office"; fields: OfficeFields };
+
+export type Address = {
+  id: string;
+  lat: number;
+  lng: number;
+  formattedAddress: string;
+} & AddressFields;
+
+/**
+ * Pending address draft — populated as the user moves through the map → type
+ * → details flow. Cleared when the address is saved or the flow is cancelled.
+ */
+export interface PendingAddressDraft {
+  id?: string;
+  lat: number;
+  lng: number;
+  formattedAddress: string;
+  type?: AddressType;
+  fields?: ApartmentFields | VillaFields | HotelFields | OfficeFields;
 }
 
 export interface PickupState {
@@ -141,7 +188,9 @@ export interface CartItem {
 export interface OrderState {
   flowType: FlowType;
   services: ServicesState;
-  address: AddressState | null;
+  addresses: Address[];
+  selectedAddressId: string | null;
+  pendingAddressDraft: PendingAddressDraft | null;
   pickup: PickupState | null;
   dropoff: DropoffState | null;
   driverInstructions: DriverInstructionsState | null;
@@ -155,7 +204,11 @@ export interface OrderState {
   setFlowType: (t: FlowType) => void;
   setServices: (patch: Partial<ServicesState>) => void;
   setPressingPrefs: (prefs: PressingPrefs | null) => void;
-  setAddress: (a: AddressState | null) => void;
+  addAddress: (a: Address) => void;
+  updateAddress: (a: Address) => void;
+  deleteAddress: (id: string) => void;
+  selectAddress: (id: string | null) => void;
+  setPendingAddressDraft: (d: PendingAddressDraft | null) => void;
   setPickup: (p: PickupState | null) => void;
   setDropoff: (d: DropoffState | null) => void;
   setDriverInstructions: (d: DriverInstructionsState | null) => void;
