@@ -56,12 +56,9 @@ export function InstructionsCard({
           <Icon className="h-6 w-6 text-washmen-primary" />
         </div>
         <div className="min-w-0 flex-1">
-          <div className="flex items-center justify-between gap-2">
-            <p className="text-[14px] font-normal leading-[20px] tracking-[0.1px] text-washmen-primary">
-              {title}
-            </p>
-            <ActionIcon className="h-4 w-4 shrink-0 text-washmen-primary" strokeWidth={2} aria-hidden />
-          </div>
+          <p className="text-[14px] font-normal leading-[20px] tracking-[0.1px] text-washmen-primary">
+            {title}
+          </p>
           {hasValue && !isMultiLine ? (
             <p className="mt-1 text-[12px] font-light leading-[18px] tracking-[0.1px] text-[#585871]">
               {value as string}
@@ -80,6 +77,9 @@ export function InstructionsCard({
               ))}
             </div>
           ) : null}
+        </div>
+        <div className="flex h-8 w-4 shrink-0 items-center justify-center">
+          <ActionIcon className="h-4 w-4 text-washmen-primary" strokeWidth={2} aria-hidden />
         </div>
       </div>
     </div>
