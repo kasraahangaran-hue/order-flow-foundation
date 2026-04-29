@@ -244,8 +244,20 @@ export const useOrderStore = create<OrderState>()(
     (set) => ({
       flowType: "existingUser",
       services: initialServices,
-      addresses: [],
-      selectedAddressId: null,
+      addresses: [
+        {
+          id: "seed_addr_default",
+          type: "office",
+          lat: 25.2105,
+          lng: 55.2796,
+          formattedAddress: "Al Ferdous 4, DIFC, Dubai",
+          fields: {
+            building: "Al Ferdous 4",
+            officeNumber: "118",
+          },
+        },
+      ],
+      selectedAddressId: "seed_addr_default",
       pendingAddressDraft: null,
       pickup: getDefaultPickup(),
       dropoff: getDefaultDropoff(),
@@ -332,8 +344,8 @@ export const useOrderStore = create<OrderState>()(
         })),
     }),
     {
-      // v7: bumped from v6 to invalidate old single-address shape.
-      name: "washmen.laundry-order.v7",
+      // v8: bumped from v7 to seed a default address.
+      name: "washmen.laundry-order.v8",
       storage: createJSONStorage(() => localStorage),
       partialize: (s) => ({
         flowType: s.flowType,
