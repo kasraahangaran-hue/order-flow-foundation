@@ -10,6 +10,8 @@ import OrderDetails from "./pages/laundry/OrderDetails";
 import OrderInstructions from "./pages/laundry/OrderInstructions";
 import PhotoMetadata from "./pages/laundry/PhotoMetadata";
 import AddressMapScreen from "./pages/laundry/AddressMapScreen";
+import AddressTypeScreen from "./pages/laundry/AddressTypeScreen";
+import AddressDetailsScreen from "./pages/laundry/AddressDetailsScreen";
 import LastStep from "./pages/laundry/LastStep";
 import QuickCheckout from "./pages/quick-checkout/QuickCheckout";
 import OrderConfirmation from "./pages/OrderConfirmation";
@@ -32,6 +34,8 @@ const App = () => (
           <Route path="/laundry/order-instructions" element={<OrderInstructions />} />
           <Route path="/laundry/order-instructions/photo" element={<PhotoMetadata />} />
           <Route path="/laundry/order-details/address/map" element={<AddressMapScreen />} />
+          <Route path="/laundry/order-details/address/type" element={<AddressTypeScreen />} />
+          <Route path="/laundry/order-details/address/details" element={<AddressDetailsScreen />} />
           <Route path="/laundry/last-step" element={<LastStep />} />
           <Route path="/order-confirmation" element={<OrderConfirmation />} />
           <Route path="/quick-checkout" element={<QuickCheckout />} />
