@@ -24,6 +24,15 @@ export function InstructionsCard({
         : false;
   const ActionIcon = hasValue ? Pencil : Plus;
   const isMultiLine = Array.isArray(value);
+  // Decide whether the subtitle will likely wrap to 2+ lines.
+  // For multi-line values (arrays), always treat as multi-line.
+  // For string subtitles, use a character-count heuristic — at text-[12px]
+  // font-light Inter, roughly 38 characters fit on one line in the available
+  // ~270px subtitle width.
+  const STRING_SUBTITLE_WRAP_THRESHOLD = 38;
+  const subtitleWraps =
+    isMultiLine ||
+    (typeof value === "string" && value.length > STRING_SUBTITLE_WRAP_THRESHOLD);
 
   return (
     <div
@@ -42,7 +51,7 @@ export function InstructionsCard({
       }}
       className="press-effect w-full rounded-[8px] bg-white border border-[#f2f3f8] px-4 py-[10px] text-left"
     >
-      <div className={`flex gap-2 ${isMultiLine && hasValue ? "items-start" : "items-center"}`}>
+      <div className={`flex gap-2 ${subtitleWraps && hasValue ? "items-start" : "items-center"}`}>
         <div className="flex h-8 w-8 shrink-0 items-center justify-center">
           <Icon className="h-6 w-6 text-washmen-primary" />
         </div>

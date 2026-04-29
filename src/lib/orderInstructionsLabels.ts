@@ -10,7 +10,7 @@ import type {
   FoldingSelection,
 } from "@/stores/orderStore";
 
-export type FoldingCategoryId = "tops" | "bottoms" | "linen" | "formal";
+export type FoldingCategoryId = "tops" | "bottoms" | "linen" | "formal" | "others";
 
 export interface FoldingItem {
   id: string;
@@ -59,6 +59,15 @@ export const FOLDING_CATEGORIES: FoldingCategory[] = [
       { id: "lungi", label: "Lungi" },
       { id: "scarf", label: "Scarf" },
       { id: "tie", label: "Tie" },
+    ],
+  },
+  {
+    id: "others",
+    label: "Others",
+    items: [
+      { id: "pyjama_pants", label: "Pyjama pants" },
+      { id: "sweater", label: "Sweater" },
+      { id: "pullover", label: "Pullover" },
     ],
   },
 ];
