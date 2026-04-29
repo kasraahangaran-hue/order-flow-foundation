@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Camera,
@@ -19,6 +19,8 @@ import { CreasesSheet } from "@/components/order/CreasesSheet";
 import { StarchSheet } from "@/components/order/StarchSheet";
 import { FoldingSheet } from "@/components/order/FoldingSheet";
 import { AutoApprovalsSheet } from "@/components/order/AutoApprovalsSheet";
+import { CameraCaptureSheet } from "@/components/order/CameraCaptureSheet";
+import { DeleteItemDialog } from "@/components/order/DeleteItemDialog";
 import {
   summarizeCreases,
   summarizeStarch,
@@ -30,8 +32,7 @@ import {
 } from "@/lib/orderInstructionsLabels";
 import { useUserPrefsStore } from "@/stores/userPrefsStore";
 
-const MAX_PHOTOS = 5;
-const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
+const MAX_DELICATE_ITEMS = 5;
 
 export default function OrderInstructions() {
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ export default function OrderInstructions() {
   const setOrderInstructions = useOrderStore((s) => s.setOrderInstructions);
 
   const specialRequests = orderInstructions?.specialRequests ?? "";
-  const photos = orderInstructions?.photos ?? [];
+  const delicateItems = orderInstructions?.delicateItems ?? [];
   const folding = orderInstructions?.folding ?? null;
   const creases = orderInstructions?.creases ?? null;
   const starch = orderInstructions?.starch ?? null;
@@ -50,97 +51,63 @@ export default function OrderInstructions() {
   const [starchSheetOpen, setStarchSheetOpen] = useState(false);
   const [foldingSheetOpen, setFoldingSheetOpen] = useState(false);
   const [autoApprovalsSheetOpen, setAutoApprovalsSheetOpen] = useState(false);
-
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [photoError, setPhotoError] = useState<string | null>(null);
+  const [cameraOpen, setCameraOpen] = useState(false);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 
   const userPrefsFolding = useUserPrefsStore((s) => s.folding);
   const setUserPrefsFolding = useUserPrefsStore((s) => s.setFolding);
 
   const hasAnyInstruction =
     Boolean(specialRequests.trim()) ||
-    photos.length > 0 ||
+    delicateItems.length > 0 ||
     Boolean(folding) ||
     Boolean(creases) ||
     Boolean(starch) ||
     Boolean(autoApprovals);
 
-  const readFileAsDataURL = (file: File): Promise<string> =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (typeof reader.result === "string") resolve(reader.result);
-        else reject(new Error("Unexpected reader result"));
-      };
-      reader.onerror = () => reject(reader.error ?? new Error("Read error"));
-      reader.readAsDataURL(file);
-    });
-
-  const onFilesSelected = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files ?? []);
-    // Reset the input value so the same file can be picked again later
-    event.target.value = "";
-    if (files.length === 0) return;
-
-    haptics.light();
-    setPhotoError(null);
-
-    const imageFiles = files.filter((f) => f.type.startsWith("image/"));
-    if (imageFiles.length === 0) {
-      setPhotoError("Please select an image file.");
-      return;
-    }
-
-    const validFiles: File[] = [];
-    let oversizeCount = 0;
-    for (const file of imageFiles) {
-      if (file.size > MAX_FILE_SIZE_BYTES) {
-        oversizeCount += 1;
-      } else {
-        validFiles.push(file);
-      }
-    }
-
-    const remainingSlots = MAX_PHOTOS - photos.length;
-    const filesToAdd = validFiles.slice(0, Math.max(0, remainingSlots));
-    const droppedForCount = validFiles.length - filesToAdd.length;
-
-    const errors: string[] = [];
-    if (oversizeCount > 0) {
-      errors.push(
-        oversizeCount === 1
-          ? "1 file was too large (max 5 MB)."
-          : `${oversizeCount} files were too large (max 5 MB).`,
-      );
-    }
-    if (droppedForCount > 0) {
-      errors.push(`Only ${MAX_PHOTOS} photos allowed — extra files were skipped.`);
-    }
-    if (errors.length > 0) {
-      setPhotoError(errors.join(" "));
-    }
-
-    if (filesToAdd.length === 0) return;
-
-    try {
-      const dataUrls = await Promise.all(filesToAdd.map(readFileAsDataURL));
-      setOrderInstructions({ photos: [...photos, ...dataUrls] });
-    } catch (err) {
-      console.error("Failed to read photo file(s)", err);
-      setPhotoError("Couldn't read the selected file(s). Please try again.");
-    }
-  };
-
-  const removePhoto = (idx: number) => {
-    haptics.light();
-    setPhotoError(null);
-    setOrderInstructions({ photos: photos.filter((_, i) => i !== idx) });
-  };
-
   const togglePhotoCard = () => {
     haptics.light();
-    setPhotoError(null);
     setPhotoExpanded((v) => !v);
+  };
+
+  const openCamera = () => {
+    if (delicateItems.length >= MAX_DELICATE_ITEMS) return;
+    haptics.light();
+    setCameraOpen(true);
+  };
+
+  const onPhotoCaptured = (dataUrl: string) => {
+    const id =
+      typeof crypto !== "undefined" && "randomUUID" in crypto
+        ? crypto.randomUUID()
+        : `item_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+    const newItem = {
+      id,
+      photo: dataUrl,
+      brand: "",
+      stains: [],
+      cleaningInstruction: null,
+      others: [],
+    };
+    setOrderInstructions({
+      delicateItems: [...delicateItems, newItem],
+    });
+    setCameraOpen(false);
+    // TODO (next prompt): navigate to /laundry/order-instructions/photo?id={id}
+  };
+
+  const onConfirmDelete = () => {
+    if (!pendingDeleteId) return;
+    setOrderInstructions({
+      delicateItems: delicateItems.filter((d) => d.id !== pendingDeleteId),
+    });
+    setPendingDeleteId(null);
+  };
+
+  const onThumbnailTap = (id: string) => {
+    haptics.light();
+    // TODO (next prompt): navigate to /laundry/order-instructions/photo?id={id}
+    void id;
   };
 
   return (
@@ -202,53 +169,44 @@ export default function OrderInstructions() {
                 You can upload additional photos and leave notes for our experts. We will
                 contact you after reviewing them
               </p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {photos.map((src, idx) => (
+              <div className="mt-3 grid grid-cols-4 gap-2">
+                <button
+                  type="button"
+                  onClick={openCamera}
+                  disabled={delicateItems.length >= MAX_DELICATE_ITEMS}
+                  className="press-effect flex aspect-square items-center justify-center rounded-md border-2 border-dashed border-washmen-secondary-300 disabled:opacity-50"
+                  aria-label="Take a photo"
+                >
+                  <Camera className="h-6 w-6 text-washmen-secondary-500" />
+                </button>
+                {delicateItems.map((item) => (
                   <div
-                    key={`${src}-${idx}`}
-                    className="relative h-20 w-20 overflow-hidden rounded-md"
+                    key={item.id}
+                    className="relative aspect-square overflow-hidden rounded-md"
                   >
-                    <img
-                      src={src}
-                      alt={`Uploaded photo ${idx + 1}`}
-                      className="h-full w-full object-cover"
-                    />
                     <button
                       type="button"
-                      onClick={() => removePhoto(idx)}
-                      aria-label={`Remove photo ${idx + 1}`}
+                      onClick={() => onThumbnailTap(item.id)}
+                      className="press-effect h-full w-full"
+                      aria-label={`Edit item ${item.brand || "(no brand)"}`}
+                    >
+                      <img
+                        src={item.photo}
+                        alt={item.brand || "Delicate item"}
+                        className="h-full w-full object-cover"
+                      />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPendingDeleteId(item.id)}
+                      aria-label="Delete item"
                       className="press-effect absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-black/60 text-white"
                     >
                       <X className="h-3 w-3" />
                     </button>
                   </div>
                 ))}
-                <button
-                  type="button"
-                  onClick={() => {
-                    haptics.light();
-                    fileInputRef.current?.click();
-                  }}
-                  disabled={photos.length >= MAX_PHOTOS}
-                  className="press-effect flex h-20 w-20 items-center justify-center rounded-md border-2 border-dashed border-washmen-secondary-300 disabled:opacity-50"
-                  aria-label="Attach photos"
-                >
-                  <Camera className="h-6 w-6 text-washmen-secondary-500" />
-                </button>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  className="hidden"
-                  onChange={onFilesSelected}
-                />
               </div>
-              {photoError ? (
-                <p className="mt-2 text-[12px] font-light leading-[18px] text-red-500">
-                  {photoError}
-                </p>
-              ) : null}
             </div>
           ) : null}
         </div>
@@ -327,6 +285,18 @@ export default function OrderInstructions() {
         onOpenChange={setAutoApprovalsSheetOpen}
         initialValue={autoApprovals ?? DEFAULT_AUTO_APPROVALS}
         onApply={(value) => setOrderInstructions({ autoApprovals: value })}
+      />
+      <CameraCaptureSheet
+        open={cameraOpen}
+        onClose={() => setCameraOpen(false)}
+        onCapture={onPhotoCaptured}
+      />
+      <DeleteItemDialog
+        open={pendingDeleteId !== null}
+        onOpenChange={(open) => {
+          if (!open) setPendingDeleteId(null);
+        }}
+        onConfirm={onConfirmDelete}
       />
     </OrderLayout>
   );
