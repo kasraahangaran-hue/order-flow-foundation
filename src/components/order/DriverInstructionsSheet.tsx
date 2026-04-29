@@ -1,54 +1,84 @@
 import { useEffect, useState } from "react";
-import { Package, Truck, Shirt, Phone } from "lucide-react";
+import { Package, Truck } from "lucide-react";
 import { BottomSheetShell } from "./BottomSheetShell";
 import { RadioRow } from "./RadioRow";
-import { ToggleRow } from "./ToggleRow";
 import type {
   DriverInstructionsState,
   DriverPickupChoice,
   DriverDropoffChoice,
-  HangingInstructionChoice,
 } from "@/stores/orderStore";
+
+export type PickupMode = "door" | "in_person";
+export type DropoffMode = "door" | "in_person";
 
 interface DriverInstructionsSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   initialValue: DriverInstructionsState;
+  pickupMode: PickupMode;
+  dropoffMode: DropoffMode;
   onApply: (value: DriverInstructionsState) => void;
 }
 
-const PICKUP_OPTIONS: { value: DriverPickupChoice; label: string }[] = [
+const PICKUP_OPTIONS_DOOR: { value: DriverPickupChoice; label: string }[] = [
+  { value: "no_preference", label: "No Preference" },
+  { value: "at_concierge", label: "At concierge / reception" },
+  { value: "call_when_arrive", label: "Call me when you arrive" },
+];
+
+const PICKUP_OPTIONS_IN_PERSON: { value: DriverPickupChoice; label: string }[] = [
   { value: "no_preference", label: "No Preference" },
   { value: "ring_doorbell", label: "Ring the doorbell" },
   { value: "knock_door", label: "Knock the door" },
-  { value: "do_not_disturb_outside", label: "Do not disturb, bags outside" },
+  { value: "do_not_disturb_bags_outside", label: "Do not disturb, bags outside" },
+  { value: "call_when_arrive", label: "Call me when you arrive" },
 ];
 
-const DROPOFF_OPTIONS: { value: DriverDropoffChoice; label: string }[] = [
+const DROPOFF_OPTIONS_DOOR: { value: DriverDropoffChoice; label: string }[] = [
+  { value: "no_preference", label: "No Preference" },
+  { value: "hang_door_handle", label: "Hang on door handle" },
+  { value: "at_concierge", label: "At concierge / reception" },
+  { value: "knock_door", label: "Knock the door" },
+  { value: "call_when_arrive", label: "Call me when you arrive" },
+];
+
+const DROPOFF_OPTIONS_IN_PERSON: { value: DriverDropoffChoice; label: string }[] = [
   { value: "no_preference", label: "No Preference" },
   { value: "ring_doorbell", label: "Ring the doorbell" },
   { value: "knock_door", label: "Knock the door" },
-  { value: "do_not_disturb_outside", label: "Do not disturb, leave packages outside" },
+  { value: "do_not_disturb_packages_outside", label: "Do not disturb, leave packages outside" },
+  { value: "call_when_arrive", label: "Call me when you arrive" },
 ];
 
-const HANGING_OPTIONS: { value: HangingInstructionChoice; label: string }[] = [
-  { value: "door_handle", label: "Hang on the door handle" },
-  { value: "door_frame", label: "Hang on the door frame" },
-  { value: "none", label: "None" },
-];
+function pickupOptionsFor(mode: PickupMode) {
+  return mode === "door" ? PICKUP_OPTIONS_DOOR : PICKUP_OPTIONS_IN_PERSON;
+}
 
-const phoneIcon = <Phone className="h-5 w-5 text-washmen-primary" />;
+function dropoffOptionsFor(mode: DropoffMode) {
+  return mode === "door" ? DROPOFF_OPTIONS_DOOR : DROPOFF_OPTIONS_IN_PERSON;
+}
 
 export function DriverInstructionsSheet({
   open,
   onOpenChange,
   initialValue,
+  pickupMode,
+  dropoffMode,
   onApply,
 }: DriverInstructionsSheetProps) {
+  const pickupOptions = pickupOptionsFor(pickupMode);
+  const dropoffOptions = dropoffOptionsFor(dropoffMode);
+
   const [draft, setDraft] = useState<DriverInstructionsState>(initialValue);
 
   useEffect(() => {
-    if (open) setDraft(initialValue);
+    if (!open) return;
+    const pickupValid = pickupOptions.some((o) => o.value === initialValue.pickup);
+    const dropoffValid = dropoffOptions.some((o) => o.value === initialValue.dropoff);
+    setDraft({
+      pickup: pickupValid ? initialValue.pickup : "no_preference",
+      dropoff: dropoffValid ? initialValue.dropoff : "no_preference",
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
@@ -57,9 +87,8 @@ export function DriverInstructionsSheet({
       open={open}
       onOpenChange={onOpenChange}
       title="Driver Instructions"
-      footer="back-and-apply"
-      primaryLabel="Apply"
-      onBack={() => onOpenChange(false)}
+      footer="apply-only"
+      primaryLabel="Done"
       onPrimary={() => {
         onApply(draft);
         onOpenChange(false);
@@ -67,7 +96,7 @@ export function DriverInstructionsSheet({
     >
       <div className="flex flex-col gap-4">
         {/* PICK UP SECTION */}
-        <div className="flex flex-col gap-4 pb-6 border-b border-washmen-secondary-300/50">
+        <div className="flex flex-col gap-4 pb-4 border-b border-washmen-secondary-300/50">
           <div className="flex items-center gap-3">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center">
               <Package className="h-6 w-6 text-washmen-primary" />
@@ -83,7 +112,7 @@ export function DriverInstructionsSheet({
           </div>
 
           <div className="flex flex-col">
-            {PICKUP_OPTIONS.map((opt) => (
+            {pickupOptions.map((opt) => (
               <RadioRow
                 key={opt.value}
                 label={opt.label}
@@ -91,15 +120,6 @@ export function DriverInstructionsSheet({
                 onSelect={() => setDraft((d) => ({ ...d, pickup: opt.value }))}
               />
             ))}
-          </div>
-
-          <div className="border-t border-washmen-secondary-300/50 pt-4">
-            <ToggleRow
-              label="Call on arrival"
-              checked={draft.pickupCallOnArrival}
-              onCheckedChange={(v) => setDraft((d) => ({ ...d, pickupCallOnArrival: v }))}
-              icon={phoneIcon}
-            />
           </div>
         </div>
 
@@ -120,7 +140,7 @@ export function DriverInstructionsSheet({
           </div>
 
           <div className="flex flex-col">
-            {DROPOFF_OPTIONS.map((opt) => (
+            {dropoffOptions.map((opt) => (
               <RadioRow
                 key={opt.value}
                 label={opt.label}
@@ -128,37 +148,6 @@ export function DriverInstructionsSheet({
                 onSelect={() => setDraft((d) => ({ ...d, dropoff: opt.value }))}
               />
             ))}
-          </div>
-
-          {/* Hanging Instructions sub-section */}
-          <div className="border-t border-washmen-secondary-300/50 pt-4 flex flex-col gap-2">
-            <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center">
-                <Shirt className="h-6 w-6 text-washmen-primary" />
-              </div>
-              <p className="text-[14px] font-normal leading-[20px] text-washmen-primary">
-                Hanging Instructions
-              </p>
-            </div>
-            <div className="flex flex-col">
-              {HANGING_OPTIONS.map((opt) => (
-                <RadioRow
-                  key={opt.value}
-                  label={opt.label}
-                  selected={draft.hanging === opt.value}
-                  onSelect={() => setDraft((d) => ({ ...d, hanging: opt.value }))}
-                />
-              ))}
-            </div>
-          </div>
-
-          <div className="border-t border-washmen-secondary-300/50 pt-4">
-            <ToggleRow
-              label="Call on arrival"
-              checked={draft.dropoffCallOnArrival}
-              onCheckedChange={(v) => setDraft((d) => ({ ...d, dropoffCallOnArrival: v }))}
-              icon={phoneIcon}
-            />
           </div>
         </div>
       </div>

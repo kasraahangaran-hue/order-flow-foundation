@@ -137,10 +137,7 @@ function applyFlowType(store: OrderState, flow: FlowType) {
   });
   store.setDriverInstructions({
     pickup: "ring_doorbell",
-    pickupCallOnArrival: false,
     dropoff: "knock_door",
-    hanging: "door_handle",
-    dropoffCallOnArrival: false,
   });
   store.setPayment({ method: "Apple Pay" });
 
@@ -230,10 +227,7 @@ const ROUTE_VARIANTS: Record<string, Variant[]> = {
         v
           ? s.setDriverInstructions({
               pickup: "ring_doorbell",
-              pickupCallOnArrival: false,
               dropoff: "knock_door",
-              hanging: "none",
-              dropoffCallOnArrival: false,
             })
           : s.setDriverInstructions(null),
     },

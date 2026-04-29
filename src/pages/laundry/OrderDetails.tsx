@@ -228,21 +228,29 @@ export default function OrderDetails() {
         {/* 4. Driver Instructions */}
         <DetailCard
           title="Driver Instructions"
-          hasValue={!!driverInstructions}
+          hasValue={!!driverInstructions && !summarizeDriverInstructions(driverInstructions).isEmpty}
           onPress={openDriverInstructions}
           addAction
         >
-          {driverInstructions ? (
-            <div className="flex items-start gap-3">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
-                <Bell className="h-4 w-4 text-washmen-primary" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-sm leading-tight text-foreground">
-                  {summarizeDriverInstructions(driverInstructions)}
-                </p>
-              </div>
-            </div>
+          {driverInstructions && !summarizeDriverInstructions(driverInstructions).isEmpty ? (
+            (() => {
+              const summary = summarizeDriverInstructions(driverInstructions);
+              return (
+                <div className="flex items-start gap-3">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
+                    <Bell className="h-4 w-4 text-washmen-primary" />
+                  </div>
+                  <div className="min-w-0 flex-1 flex flex-col gap-0.5">
+                    <p className="text-sm leading-tight text-foreground">
+                      <span className="font-semibold">Pick up:</span> {summary.pickupSuffix}
+                    </p>
+                    <p className="text-sm leading-tight text-foreground">
+                      <span className="font-semibold">Drop off:</span> {summary.dropoffSuffix}
+                    </p>
+                  </div>
+                </div>
+              );
+            })()
           ) : null}
         </DetailCard>
       </div>
@@ -252,6 +260,8 @@ export default function OrderDetails() {
         open={driverInstructionsSheetOpen}
         onOpenChange={setDriverInstructionsSheetOpen}
         initialValue={driverInstructions ?? DEFAULT_DRIVER_INSTRUCTIONS}
+        pickupMode={pickup?.mode ?? "door"}
+        dropoffMode={dropoff?.mode ?? "door"}
         onApply={(value) => setDriverInstructions(value)}
       />
     </OrderLayout>
