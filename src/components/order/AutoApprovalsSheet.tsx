@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Droplets, CircleCheck, WashingMachine } from "lucide-react";
+import { ShoppingBag, CircleCheck } from "lucide-react";
 import { BottomSheetShell } from "./BottomSheetShell";
 import { RadioRow } from "./RadioRow";
 import { Switch } from "@/components/ui/switch";
@@ -63,7 +63,7 @@ export function AutoApprovalsSheet({
         <div className="flex flex-col gap-4 pb-6 mb-6 border-b border-[#f2f3f8]">
           <div className="flex items-center gap-2">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center">
-              <Droplets className="h-6 w-6 text-washmen-primary" />
+              <ShoppingBag className="h-6 w-6 text-[#A4FF00]" strokeWidth={2} />
             </div>
             <p className="text-[14px] font-medium leading-[20px] text-washmen-primary">
               Stain and Damage Approval
@@ -92,7 +92,7 @@ export function AutoApprovalsSheet({
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-2">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center">
-              <WashingMachine className="h-6 w-6 text-washmen-primary" />
+              <ShoppingBag className="h-6 w-6 text-[#02FFF7]" strokeWidth={2} />
             </div>
             <p className="text-[14px] font-medium leading-[20px] text-washmen-primary">
               Wash and Fold Approval
@@ -101,7 +101,7 @@ export function AutoApprovalsSheet({
           <p className="text-[13px] font-light leading-[18px] tracking-[0.2px] text-washmen-primary">
             In order to protect your delicate &amp; expensive items, our team will flag items that we believe might not be suitable to Wash &amp; Fold and will require your approval on how to proceed
           </p>
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-2">
             {WASH_AND_FOLD_OPTIONS.map((option) => (
               <RadioRow
                 key={option.value}
