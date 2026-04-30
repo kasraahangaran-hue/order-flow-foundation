@@ -4,18 +4,16 @@ import { OrderLayout } from "@/components/order/OrderLayout";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { useOrderStore } from "@/stores/orderStore";
+import { useUserPrefsStore } from "@/stores/userPrefsStore";
+import { PRESSING_CATEGORIES, KIDS_UNIFORM_NOTE } from "@/data/pressingCategories";
 import { haptics } from "@/lib/haptics";
-
-const PRESSING_OPTIONS: { id: string; label: string; price: string }[] = [
-  { id: "tshirts_polos", label: "All T-Shirts / Polos", price: "+ AED 9 /item" },
-  { id: "tank_crop", label: "All Tank / Crop Tops", price: "+ AED 9 /item" },
-  { id: "shirts_blouses", label: "All Shirts / Blouses", price: "+ AED 10 /item" },
-];
 
 export default function WashAndFoldInfo() {
   const navigate = useNavigate();
   const pressingPrefs = useOrderStore((s) => s.services.pressingPrefs);
   const setPressingPrefs = useOrderStore((s) => s.setPressingPrefs);
+  const setServices = useOrderStore((s) => s.setServices);
+  const wfPlusTermsAccepted = useUserPrefsStore((s) => s.wfPlusTermsAccepted);
 
   const [items, setItems] = useState<string[]>(pressingPrefs?.items ?? []);
 
@@ -28,16 +26,27 @@ export default function WashAndFoldInfo() {
 
   const handleContinue = () => {
     haptics.medium();
-    setPressingPrefs(
-      items.length > 0 ? { items, pricePerItem: 9 } : null
-    );
+    const prefsToSave = items.length > 0 ? { items, pricePerItem: 9 } : null;
+    setPressingPrefs(prefsToSave);
+    // Edge cases 2 & 4: any prefs added → WF auto-activates
+    if (prefsToSave) {
+      setServices({ washAndFold: true });
+    }
+    // First-time T&Cs gate
+    if (prefsToSave && !wfPlusTermsAccepted) {
+      navigate("/laundry/wash-and-fold-info/terms", {
+        state: { mode: "gate", returnTo: "/laundry/select-service" },
+        replace: true,
+      });
+      return;
+    }
     navigate("/laundry/select-service");
   };
 
   return (
     <OrderLayout
       title="Add Pressing"
-      onBack={() => navigate("/laundry/select-service")}
+      onBack={handleContinue}
       footerSlot={
         <Button
           className="flex-1 h-[42px] rounded-[8px] text-sm font-semibold"
@@ -54,14 +63,14 @@ export default function WashAndFoldInfo() {
         </p>
 
         <div className="rounded-card bg-card shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
-          {PRESSING_OPTIONS.map((opt, idx) => {
+          {PRESSING_CATEGORIES.map((opt, idx) => {
             const checked = items.includes(opt.id);
             return (
               <div
                 key={opt.id}
                 className={
                   "flex items-center justify-between gap-3 px-4 py-4 " +
-                  (idx !== PRESSING_OPTIONS.length - 1
+                  (idx !== PRESSING_CATEGORIES.length - 1
                     ? "border-b border-washmen-secondary-100"
                     : "")
                 }
@@ -70,9 +79,19 @@ export default function WashAndFoldInfo() {
                   <p className="truncate text-base font-medium text-washmen-secondary-900">
                     {opt.label}
                   </p>
-                  <p className="mt-0.5 text-sm text-washmen-primary">
-                    {opt.price}
+                  <p className="mt-0.5 text-sm">
+                    <span className="text-washmen-primary">
+                      + AED {opt.ratePlus} /item
+                    </span>
+                    <span className="ml-2 text-washmen-secondary-400 line-through">
+                      AED {opt.rateStrikethrough}
+                    </span>
                   </p>
+                  {opt.id === "kids_uniform" && (
+                    <p className="mt-0.5 text-[11px] text-washmen-secondary-500">
+                      {KIDS_UNIFORM_NOTE}
+                    </p>
+                  )}
                 </div>
                 <Switch
                   checked={checked}
