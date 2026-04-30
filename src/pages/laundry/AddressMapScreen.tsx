@@ -397,7 +397,7 @@ export default function AddressMapScreen() {
       </button>
 
       {/* Bottom: warning + footer */}
-      <div className="absolute bottom-0 left-0 right-0 z-20 border-t border-border bg-card p-4">
+      <div className="absolute bottom-0 left-0 right-0 z-20 border-t border-border bg-card px-6 pt-3 pb-4">
         {isFarFromGps ? (
           <div className="mb-2 flex items-center gap-2 rounded-lg bg-amber-50 px-3 py-2">
             <AlertCircle className="h-4 w-4 text-amber-600" />
@@ -422,7 +422,7 @@ export default function AddressMapScreen() {
           </div>
         )}
         <Button
-          className="h-12 w-full text-sm font-semibold"
+          className="h-[42px] w-full text-sm font-semibold"
           onClick={onConfirm}
           disabled={!mapReady}
         >

@@ -53,7 +53,7 @@ export default function AddressTypeScreen() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <div className="flex items-center gap-2 px-4 py-3">
+      <div className="flex items-center gap-2 px-6 py-3">
         <button
           onClick={onBack}
           className="flex h-10 w-10 items-center justify-center rounded-full"
@@ -63,7 +63,7 @@ export default function AddressTypeScreen() {
         </button>
       </div>
 
-      <div className="flex-1 px-4 pb-4">
+      <div className="flex-1 px-6 pb-4">
         <h1 className="mb-6 text-[20px] font-semibold text-washmen-primary">
           Select Address Type
         </h1>
@@ -80,9 +80,9 @@ export default function AddressTypeScreen() {
         </div>
       </div>
 
-      <div className="border-t border-border bg-card p-4">
+      <div className="border-t border-border bg-card px-6 pt-3 pb-4">
         <Button
-          className="h-12 w-full text-sm font-semibold"
+          className="h-[42px] w-full text-sm font-semibold"
           onClick={onContinue}
           disabled={!selectedType}
         >

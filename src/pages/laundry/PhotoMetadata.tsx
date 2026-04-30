@@ -112,7 +112,7 @@ export default function PhotoMetadata() {
 
   return (
     <div className="flex min-h-screen flex-col bg-washmen-bg">
-      <div className="flex-1 overflow-y-auto px-5 pt-6 pb-32">
+      <div className="flex-1 overflow-y-auto px-6 pt-6 pb-32">
         {/* Photo with retake overlay */}
         <div className="flex justify-center">
           <div className="relative">
@@ -187,14 +187,14 @@ export default function PhotoMetadata() {
 
       {/* Footer */}
       <div
-        className="fixed inset-x-0 bottom-0 border-t border-washmen-pale-grey bg-white px-5 pt-3 pb-4"
+        className="fixed inset-x-0 bottom-0 border-t border-washmen-pale-grey bg-white px-6 pt-3 pb-4"
         style={{ paddingBottom: "max(env(safe-area-inset-bottom), 16px)" }}
       >
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={onBack}
-            className="press-effect flex h-12 w-12 items-center justify-center rounded-[6px] border border-washmen-primary bg-white"
+            className="press-effect flex w-12 h-[42px] items-center justify-center rounded-[6px] border border-washmen-primary bg-white"
             aria-label="Back"
           >
             <ArrowLeft className="h-4 w-4 text-washmen-primary" />
@@ -203,7 +203,7 @@ export default function PhotoMetadata() {
             type="button"
             onClick={onSave}
             disabled={!saveEnabled}
-            className="press-effect h-12 flex-1 rounded-[6px] bg-washmen-primary text-[14px] font-semibold text-white disabled:opacity-50 disabled:cursor-not-allowed"
+            className="press-effect h-[42px] flex-1 rounded-[6px] bg-washmen-primary text-[14px] font-semibold text-white disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Save
           </button>
