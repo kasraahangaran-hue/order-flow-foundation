@@ -40,7 +40,7 @@ export default function WashAndFoldInfo() {
       onBack={() => navigate("/laundry/select-service")}
       footerSlot={
         <Button
-          className="flex-1 h-12 text-sm font-semibold"
+          className="flex-1 h-[42px] text-sm font-semibold"
           onClick={handleContinue}
         >
           {items.length > 0 ? "Continue to Order" : "Skip"}

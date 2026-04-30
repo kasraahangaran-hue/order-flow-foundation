@@ -118,7 +118,7 @@ export default function OrderInstructions() {
       onBack={() => navigate("/laundry/order-details")}
       footerSlot={
         <Button
-          className="flex-1 h-12 text-sm font-semibold"
+          className="flex-1 h-[42px] text-sm font-semibold"
           onClick={() => {
             haptics.medium();
             navigate("/laundry/last-step");
