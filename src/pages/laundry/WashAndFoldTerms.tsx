@@ -133,7 +133,7 @@ export default function WashAndFoldTerms() {
           {/* FAQ */}
           <Collapsible open={faqOpen} onOpenChange={setFaqOpen}>
             <div className="rounded-card bg-washmen-light-red px-4 py-3">
-              <CollapsibleTrigger className="flex w-full items-center justify-between gap-3 text-left">
+              <CollapsibleTrigger className="flex w-full items-center justify-between gap-3 text-left leading-none">
                 <div className="flex items-center gap-3">
                   <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-washmen-primary text-white">
                     <HelpCircle className="h-4 w-4" strokeWidth={2} />
