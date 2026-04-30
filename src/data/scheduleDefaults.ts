@@ -1,6 +1,17 @@
 import type { PickupState, DropoffState } from "@/stores/orderStore";
 import { todayIso, buildPickupSlotsForDay, buildDropoffSlotsForDay } from "@/data/slots";
 
+// HANDOFF — NU/RU schedule defaulting:
+//
+// New users (first-time orders) per Jira GC-1310 must default to the first
+// non-premium drop-off slot. The current logic already satisfies this: we
+// start at +2 days, which skips Tomorrow's +50% premium surcharge. For
+// pickup, laundry has no premium tier — all pickup slots are flat-priced —
+// so no NU-specific filter is needed.
+//
+// If a future change introduces premium pickup slots (e.g. early-AM or
+// late-PM bands), getDefaultPickup must add a `userType`-aware filter to
+// skip them for new users. See useIsFirstOrder in src/lib/userType.ts.
 export function getDefaultPickup(): PickupState {
   const todaySlots = buildPickupSlotsForDay(0);
   const firstToday = todaySlots[0];

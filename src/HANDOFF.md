@@ -150,3 +150,36 @@ The exact mapping should be confirmed with the designer since the canonical grey
 - [ ] Complete Phase 4: migrate neutral ladder (item #6)
 - [ ] Decide whether to suppress shadcn lint warnings (item #7)
 - [ ] Run final `grep -rn "HANDOFF:" src/` and confirm every flagged item is addressed
+
+## New User flow — deferred items
+
+### GC-1334 — WF+ explainer video autoplay on first WashAndFoldInfo open
+Status: not built. The native iOS WashAndFoldInfo page shows an explainer
+video that autoplays on first open for new users. The web port has no
+video asset yet. When marketing supplies the video, add a `<video>` tag
+above the pressing toggle list on WashAndFoldInfo, gated by
+`useIsFirstOrder()`, with `autoPlay muted playsInline` and a manual
+play/pause toggle.
+
+### GC-1201 — Saved for Future Orders modal
+Status: not built. Highest priority on Jira. Triggers ONCE per account on
+the user's first-time toggle ON of any Press & Hang category. Modal copy:
+
+  Title: "Saved for Future Orders"
+  Body: "Your Press & Hang selection has been saved and will be used for
+        all future orders"
+  CTA: "Got It"
+  Illustration: iron + hanger
+
+The seen flag is account-level server-side, persists across reinstall.
+Modal is non-dismissable except via "Got It" — no swipe, tap-outside, or
+back-gesture dismissal.
+
+Implementation hook: in src/pages/laundry/WashAndFoldInfo.tsx, the toggle
+function should fire the modal when:
+  - useUserPrefsStore's `pressHangModalSeen` flag is false, AND
+  - the toggle action is the first ON-state change of this category in
+    this session.
+
+Add a `pressHangModalSeen: boolean` field to userPrefsStore alongside
+`wfPlusTermsAccepted`. Same HANDOFF caveat about server-side persistence.

@@ -7,6 +7,7 @@ import { haptics } from "@/lib/haptics";
 import { cn } from "@/lib/utils";
 import { DateSlotPicker, type SlotOption } from "./DateSlotPicker";
 import { buildPickupMockDays } from "@/data/slots";
+import { useIsFirstOrder } from "@/lib/userType";
 import doorImg from "@/assets/pickup-at-door.jpg";
 import driverImg from "@/assets/pickup-meet-driver.jpg";
 
@@ -72,6 +73,7 @@ export function PickupSchedulingSheet({ open, onOpenChange }: PickupSchedulingSh
   const [pickupMode, setPickupMode] = useState<PickupMode>("door");
   const [selectedDate, setSelectedDate] = useState<string>(days[0].date);
   const [selectedSlot, setSelectedSlot] = useState<SlotOption | null>(null);
+  const isFirstOrder = useIsFirstOrder();
 
   useEffect(() => {
     if (open) {
@@ -124,9 +126,11 @@ export function PickupSchedulingSheet({ open, onOpenChange }: PickupSchedulingSh
                 />
               </div>
               <p className="mt-5 px-2 text-center text-sm leading-relaxed text-foreground/80">
-                {pickupMode === "door"
-                  ? "Leave your bags outside your door for a Washmen driver to collect"
-                  : "Meet the Washmen driver in person and hand over your bags"}
+                {isFirstOrder
+                  ? "For your first order, select a time for our driver to greet you and hand over your laundry bags or leave your bags outside your door."
+                  : pickupMode === "door"
+                    ? "Leave your bags outside your door for a Washmen driver to collect"
+                    : "Meet the Washmen driver in person and hand over your bags"}
               </p>
           </div>
         ) : (
