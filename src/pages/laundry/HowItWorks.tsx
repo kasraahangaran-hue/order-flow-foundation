@@ -131,7 +131,7 @@ export default function HowItWorks() {
             because horizontal padding on overflow-x-auto containers gets
             inconsistently honored across browsers (especially Safari).
             Spacer divs as flex children always work. */}
-        <div className="no-scrollbar flex snap-x snap-mandatory gap-2 overflow-x-auto">
+        <div className="no-scrollbar flex snap-x snap-mandatory gap-2 overflow-x-auto scroll-pl-6 scroll-pr-6">
           <div className="w-6 shrink-0" aria-hidden />
           {CARDS.map((card, idx) => (
             <div
