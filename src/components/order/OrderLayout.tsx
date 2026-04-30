@@ -70,9 +70,9 @@ export function OrderLayout({
       {/* Footer */}
       {footerSlot !== undefined && (
         <footer
-          className="sticky bottom-0 z-10 bg-washmen-primary-light px-6 pt-3 pb-[max(env(safe-area-inset-bottom),1rem)]"
+          className="sticky bottom-0 z-10 bg-washmen-primary-light pb-[max(env(safe-area-inset-bottom),1rem)]"
         >
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 px-6 pt-3 pb-4">
             {onBack && (
               <button
                 type="button"
@@ -81,7 +81,7 @@ export function OrderLayout({
                   haptics.light();
                   onBack();
                 }}
-                className="flex w-12 h-[42px] shrink-0 items-center justify-center rounded-md border border-primary bg-background text-primary transition-transform active:scale-95"
+                className="flex w-12 h-[42px] shrink-0 items-center justify-center rounded-[8px] border border-primary bg-background text-primary transition-transform active:scale-95"
               >
                 <ArrowLeft className="h-5 w-5" />
               </button>

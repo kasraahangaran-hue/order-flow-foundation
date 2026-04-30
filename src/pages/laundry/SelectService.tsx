@@ -24,7 +24,7 @@ export default function SelectService() {
       onBack={() => navigate(-1)}
       footerSlot={
         <Button
-          className="flex-1 h-[42px] text-sm font-semibold"
+          className="flex-1 h-[42px] rounded-[8px] text-sm font-semibold"
           onClick={() => {
             haptics.medium();
             navigate("/laundry/order-details");
