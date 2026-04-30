@@ -172,6 +172,7 @@ export default function HowItWorks() {
               </div>
             </div>
           ))}
+          <div className="w-6 shrink-0" aria-hidden />
         </div>
 
         {/* Ready? section — same px-6 gutter as the rest of the app */}
