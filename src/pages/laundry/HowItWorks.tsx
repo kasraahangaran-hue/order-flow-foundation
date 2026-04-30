@@ -126,13 +126,20 @@ export default function HowItWorks() {
           edge-to-edge; the carousel applies its own px-6 gutter. The
           Ready? section below uses px-6 to match. */}
       <main className="flex-1 pb-8 pt-6">
-        {/* Carousel — fixed-pixel cards (256/265px wide), 8px gap. */}
-        <div className="no-scrollbar flex snap-x snap-mandatory gap-2 overflow-x-auto px-6">
+        {/* Carousel — fixed-pixel cards (256/265px wide), 8px gap.
+            Edge gutter is implemented via `first:ml-6 last:mr-6` on the
+            cards instead of `px-6` on the scroll container, because
+            padding on a flex+overflow-x scroll container is not reliably
+            honored on iOS Safari (the right padding is dropped, and on
+            some builds the left padding visually collapses too). Margin
+            on the first/last flex item produces the same visual gutter
+            and keeps snap alignment correct. */}
+        <div className="no-scrollbar flex snap-x snap-mandatory gap-2 overflow-x-auto">
           {CARDS.map((card, idx) => (
             <div
               key={card.id}
               className={cn(
-                "flex shrink-0 snap-start flex-col",
+                "flex shrink-0 snap-start flex-col first:ml-6 last:mr-6",
                 idx === 0 ? "w-[265px]" : "w-[256px]",
               )}
             >
