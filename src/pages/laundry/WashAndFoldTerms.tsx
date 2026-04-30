@@ -1,4 +1,4 @@
-import { ArrowLeft, Check, X, HelpCircle, ChevronDown, ChevronRight, CheckCircle2, Plus } from "lucide-react";
+import { ArrowLeft, Check, X, HelpCircle, ChevronDown, ChevronRight, CircleCheck, Plus } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -87,7 +87,7 @@ export default function WashAndFoldTerms() {
       <main className="no-scrollbar flex-1 overflow-y-auto px-6 pt-[26px] pb-4">
         <div className="flex flex-col gap-3">
           {/* Card 1 — Suitable */}
-          <div className="rounded-card bg-card p-4 shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
+          <div className="rounded-card border border-washmen-secondary-100 bg-card p-4">
             <div className="flex items-center gap-3">
               <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-washmen-light-green text-washmen-primary-green">
                 <Check className="h-4 w-4" strokeWidth={3} />
@@ -104,7 +104,7 @@ export default function WashAndFoldTerms() {
           </div>
 
           {/* Card 2 — Not Suitable */}
-          <div className="rounded-card bg-card p-4 shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
+          <div className="rounded-card border border-washmen-secondary-100 bg-card p-4">
             <div className="flex items-center gap-3">
               <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-washmen-light-red text-washmen-primary-red">
                 <X className="h-4 w-4" strokeWidth={3} />
@@ -112,7 +112,6 @@ export default function WashAndFoldTerms() {
               <p className="text-base font-semibold text-washmen-secondary-900">
                 NOT Suitable for:
               </p>
-              <span className="text-xs text-washmen-secondary-500">(to avoid damage)</span>
             </div>
             <ul className="mt-3 list-disc pl-5 text-sm text-washmen-secondary-700 flex flex-col gap-2">
               {NOT_SUITABLE_BULLETS.map((b) => (
@@ -125,29 +124,28 @@ export default function WashAndFoldTerms() {
                   </ul>
                 </li>
               ))}
+              <li className="mt-2 text-sm font-semibold text-washmen-secondary-900 underline">
+                Damage compensation will be limited to AED 200 an item
+              </li>
             </ul>
-            <div className="my-3 border-t border-washmen-secondary-200" />
-            <p className="text-sm font-semibold text-washmen-secondary-900 underline">
-              Damage compensation will be limited to AED 200 an item
-            </p>
           </div>
 
           {/* FAQ */}
           <Collapsible open={faqOpen} onOpenChange={setFaqOpen}>
-            <div className="rounded-card bg-washmen-light-pink p-4">
+            <div className="rounded-card bg-washmen-light-red p-4">
               <CollapsibleTrigger className="flex w-full items-center justify-between gap-3 text-left">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-card text-washmen-primary-pink">
-                    <HelpCircle className="h-4 w-4" />
+                  <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-card text-washmen-primary">
+                    <HelpCircle className="h-4 w-4" strokeWidth={2} />
                   </div>
                   <p className="text-sm font-medium text-washmen-secondary-900">
                     What if I send an unsuitable item?
                   </p>
                 </div>
                 {faqOpen ? (
-                  <ChevronDown className="h-5 w-5 text-washmen-secondary-700 shrink-0" />
+                  <ChevronDown className="h-5 w-5 text-washmen-primary shrink-0" />
                 ) : (
-                  <ChevronRight className="h-5 w-5 text-washmen-secondary-700 shrink-0" />
+                  <ChevronRight className="h-5 w-5 text-washmen-primary shrink-0" />
                 )}
               </CollapsibleTrigger>
               <CollapsibleContent className="mt-3 flex flex-col gap-3">
@@ -167,7 +165,7 @@ export default function WashAndFoldTerms() {
                   className="press-effect flex w-full items-center justify-between gap-3 rounded-card bg-card px-4 py-3 text-left"
                 >
                   <div className="flex items-center gap-3">
-                    <CheckCircle2 className="h-5 w-5 text-washmen-primary-purple" />
+                    <CircleCheck className="h-5 w-5 text-washmen-primary" strokeWidth={2} />
                     <span className="text-sm font-medium text-washmen-secondary-900">
                       Auto-Approvals
                     </span>
@@ -181,7 +179,7 @@ export default function WashAndFoldTerms() {
       </main>
 
       {/* Footer */}
-      <footer className="sticky bottom-0 z-10 bg-washmen-primary-light pb-[max(env(safe-area-inset-bottom),1rem)]">
+      <footer className="sticky bottom-0 z-10 bg-washmen-secondary-express pb-[max(env(safe-area-inset-bottom),1rem)]">
         <div className="flex items-center gap-2 px-6 pt-3 pb-4">
           {mode === "view" && (
             <button
@@ -206,6 +204,7 @@ export default function WashAndFoldTerms() {
         onOpenChange={setAutoApprovalsSheetOpen}
         initialValue={autoApprovals ?? DEFAULT_AUTO_APPROVALS}
         onApply={(value) => setOrderInstructions({ autoApprovals: value })}
+        sections="wash_and_fold_only"
       />
     </div>
   );

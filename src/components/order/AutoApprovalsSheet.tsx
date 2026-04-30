@@ -10,6 +10,12 @@ interface AutoApprovalsSheetProps {
   onOpenChange: (open: boolean) => void;
   initialValue: AutoApprovalsState;
   onApply: (value: AutoApprovalsState) => void;
+  /**
+   * Which approval sections to render.
+   * - "all" (default): both Stain & Damage and Wash & Fold
+   * - "wash_and_fold_only": only the Wash & Fold Approval section.
+   */
+  sections?: "all" | "wash_and_fold_only";
 }
 
 const WASH_AND_FOLD_OPTIONS: { value: WashAndFoldApprovalChoice; label: string }[] = [
@@ -37,6 +43,7 @@ export function AutoApprovalsSheet({
   onOpenChange,
   initialValue,
   onApply,
+  sections = "all",
 }: AutoApprovalsSheetProps) {
   const [draft, setDraft] = useState<AutoApprovalsState>(initialValue);
 
@@ -60,6 +67,7 @@ export function AutoApprovalsSheet({
     >
       <div className="flex flex-col">
         {/* Section 1 — Stain and Damage Approval */}
+        {sections === "all" && (
         <div className="flex flex-col gap-4 pb-6 mb-6 border-b border-washmen-pale-grey">
           <div className="flex items-center gap-2">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center">
@@ -87,6 +95,7 @@ export function AutoApprovalsSheet({
             />
           </div>
         </div>
+        )}
 
         {/* Section 2 — Wash and Fold Approval */}
         <div className="flex flex-col gap-4">
