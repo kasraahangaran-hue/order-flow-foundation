@@ -73,6 +73,7 @@ export function PickupSchedulingSheet({ open, onOpenChange }: PickupSchedulingSh
   const [pickupMode, setPickupMode] = useState<PickupMode>("door");
   const [selectedDate, setSelectedDate] = useState<string>(days[0].date);
   const [selectedSlot, setSelectedSlot] = useState<SlotOption | null>(null);
+  const isFirstOrder = useIsFirstOrder();
 
   useEffect(() => {
     if (open) {
@@ -125,9 +126,11 @@ export function PickupSchedulingSheet({ open, onOpenChange }: PickupSchedulingSh
                 />
               </div>
               <p className="mt-5 px-2 text-center text-sm leading-relaxed text-foreground/80">
-                {pickupMode === "door"
-                  ? "Leave your bags outside your door for a Washmen driver to collect"
-                  : "Meet the Washmen driver in person and hand over your bags"}
+                {isFirstOrder
+                  ? "For your first order, select a time for our driver to greet you and hand over your laundry bags or leave your bags outside your door."
+                  : pickupMode === "door"
+                    ? "Leave your bags outside your door for a Washmen driver to collect"
+                    : "Meet the Washmen driver in person and hand over your bags"}
               </p>
           </div>
         ) : (
