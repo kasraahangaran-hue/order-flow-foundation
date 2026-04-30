@@ -323,7 +323,7 @@ export default function AddressMapScreen() {
           >
             <ArrowLeft className="h-5 w-5 text-washmen-primary" />
           </button>
-          <Search className="h-4 w-4 text-[#585871]" />
+          <Search className="h-4 w-4 text-washmen-slate-grey" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -337,7 +337,7 @@ export default function AddressMapScreen() {
             data-1p-ignore="true"
             data-lpignore="true"
             data-form-type="other"
-            className="flex-1 bg-transparent text-[14px] outline-none placeholder:text-[#585871]"
+            className="flex-1 bg-transparent text-[14px] outline-none placeholder:text-washmen-slate-grey"
           />
           {search ? (
             <button
@@ -346,7 +346,7 @@ export default function AddressMapScreen() {
               aria-label="Clear search"
               className="flex h-6 w-6 items-center justify-center"
             >
-              <X className="h-4 w-4 text-[#585871]" />
+              <X className="h-4 w-4 text-washmen-slate-grey" />
             </button>
           ) : null}
         </div>
@@ -360,7 +360,7 @@ export default function AddressMapScreen() {
                 className={
                   "flex w-full items-start gap-3 px-4 py-3 text-left " +
                   (i < suggestions.length - 1
-                    ? "border-b border-[#f2f3f8]"
+                    ? "border-b border-washmen-pale-grey"
                     : "")
                 }
               >
@@ -372,7 +372,7 @@ export default function AddressMapScreen() {
                     {m.primary}
                   </div>
                   {m.secondary ? (
-                    <div className="truncate text-[12px] text-[#585871]">
+                    <div className="truncate text-[12px] text-washmen-slate-grey">
                       {m.secondary}
                     </div>
                   ) : null}
@@ -408,8 +408,8 @@ export default function AddressMapScreen() {
         ) : null}
         {reverseLoading ? (
           <div className="mb-2 flex items-center gap-2">
-            <Loader2 className="h-4 w-4 animate-spin text-[#585871]" />
-            <span className="text-[13px] text-[#585871]">
+            <Loader2 className="h-4 w-4 animate-spin text-washmen-slate-grey" />
+            <span className="text-[13px] text-washmen-slate-grey">
               Looking up location…
             </span>
           </div>

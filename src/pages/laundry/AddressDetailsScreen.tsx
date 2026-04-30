@@ -24,7 +24,7 @@ const TYPE_TITLE: Record<AddressType, string> = {
 };
 
 const inputClass =
-  "h-12 w-full rounded-[6px] border border-[#f2f3f8] bg-white px-3 text-[14px] font-light leading-[20px] tracking-[0.1px] text-washmen-primary placeholder:text-[#c3c8db] focus:border-washmen-primary focus:outline-none focus:ring-2 focus:ring-washmen-primary/20";
+  "h-12 w-full rounded-[6px] border border-washmen-pale-grey bg-white px-3 text-[14px] font-light leading-[20px] tracking-[0.1px] text-washmen-primary placeholder:text-washmen-cloudy-blue focus:border-washmen-primary focus:outline-none focus:ring-2 focus:ring-washmen-primary/20";
 
 const noAutofill = {
   autoComplete: "new-password",
@@ -408,7 +408,7 @@ function NotesField({ notes, setNotes }: NotesFieldProps) {
       autoCorrect="off"
       autoCapitalize="sentences"
       spellCheck
-      className="w-full resize-none rounded-[6px] border border-[#f2f3f8] bg-white px-3 py-3 text-[14px] font-light leading-[20px] tracking-[0.1px] text-washmen-primary placeholder:text-[#c3c8db] focus:border-washmen-primary focus:outline-none focus:ring-2 focus:ring-washmen-primary/20"
+      className="w-full resize-none rounded-[6px] border border-washmen-pale-grey bg-white px-3 py-3 text-[14px] font-light leading-[20px] tracking-[0.1px] text-washmen-primary placeholder:text-washmen-cloudy-blue focus:border-washmen-primary focus:outline-none focus:ring-2 focus:ring-washmen-primary/20"
     />
   );
 }

@@ -60,10 +60,10 @@ export function AutoApprovalsSheet({
     >
       <div className="flex flex-col">
         {/* Section 1 — Stain and Damage Approval */}
-        <div className="flex flex-col gap-4 pb-6 mb-6 border-b border-[#f2f3f8]">
+        <div className="flex flex-col gap-4 pb-6 mb-6 border-b border-washmen-pale-grey">
           <div className="flex items-center gap-2">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center">
-              <ShoppingBag className="h-6 w-6 text-[#A4FF00]" strokeWidth={2} />
+              <ShoppingBag className="h-6 w-6 text-washmen-primary-green" strokeWidth={2} />
             </div>
             <p className="text-[14px] font-medium leading-[20px] text-washmen-primary">
               Stain and Damage Approval
@@ -75,7 +75,7 @@ export function AutoApprovalsSheet({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <CircleCheck className="h-6 w-6 text-washmen-primary" />
-              <p className="text-[14px] font-light leading-[20px] tracking-[0.1px] text-[#585871]">
+              <p className="text-[14px] font-light leading-[20px] tracking-[0.1px] text-washmen-slate-grey">
                 Auto-Approve
               </p>
             </div>
@@ -92,7 +92,7 @@ export function AutoApprovalsSheet({
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-2">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center">
-              <ShoppingBag className="h-6 w-6 text-[#02FFF7]" strokeWidth={2} />
+              <ShoppingBag className="h-6 w-6 text-washmen-primary-aqua" strokeWidth={2} />
             </div>
             <p className="text-[14px] font-medium leading-[20px] text-washmen-primary">
               Wash and Fold Approval

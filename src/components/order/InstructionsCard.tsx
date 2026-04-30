@@ -49,7 +49,7 @@ export function InstructionsCard({
           onPress();
         }
       }}
-      className="press-effect w-full rounded-card bg-white border border-[#f2f3f8] px-4 py-[10px] text-left"
+      className="press-effect w-full rounded-card bg-white border border-washmen-pale-grey px-4 py-[10px] text-left"
     >
       <div className={`flex gap-2 ${subtitleWraps && hasValue ? "items-start" : "items-center"}`}>
         <div className="flex h-8 w-8 shrink-0 items-center justify-center">
@@ -60,7 +60,7 @@ export function InstructionsCard({
             {title}
           </p>
           {hasValue && !isMultiLine ? (
-            <p className="mt-1 text-[12px] font-light leading-[18px] tracking-[0.1px] text-[#585871]">
+            <p className="mt-1 text-[12px] font-light leading-[18px] tracking-[0.1px] text-washmen-slate-grey">
               {value as string}
             </p>
           ) : null}
@@ -69,7 +69,7 @@ export function InstructionsCard({
               {(value as AutoApprovalsSummaryLine[]).map((line, i) => (
                 <p
                   key={i}
-                  className="text-[12px] leading-[18px] tracking-[0.1px] text-[#585871]"
+                  className="text-[12px] leading-[18px] tracking-[0.1px] text-washmen-slate-grey"
                 >
                   <span className="font-medium">{line.prefix}</span>{" "}
                   <span className="font-light">{line.suffix}</span>

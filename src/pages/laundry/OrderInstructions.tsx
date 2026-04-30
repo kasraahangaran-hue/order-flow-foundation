@@ -130,23 +130,23 @@ export default function OrderInstructions() {
     >
       <div className="flex flex-col gap-2">
         {/* 1. Special Requests */}
-        <div className="rounded-card bg-white border border-[#f2f3f8] px-4 pt-[14px] pb-4">
+        <div className="rounded-card bg-white border border-washmen-pale-grey px-4 pt-[14px] pb-4">
           <p className="text-[14px] font-normal leading-[20px] tracking-[0.1px] text-washmen-primary">
             Any Special Requests?
           </p>
-          <p className="mt-1 text-[12px] font-light leading-[18px] tracking-[0.1px] text-[#585871]">
+          <p className="mt-1 text-[12px] font-light leading-[18px] tracking-[0.1px] text-washmen-slate-grey">
             Your requests will be shared to the customer service team to action
           </p>
           <textarea
             value={specialRequests}
             onChange={(e) => setOrderInstructions({ specialRequests: e.target.value })}
             placeholder="Use fragrance-free detergent"
-            className="mt-2 min-h-[80px] w-full rounded-[6px] border border-[#f2f3f8] bg-white p-3 text-[12px] font-light leading-[18px] tracking-[0.1px] text-foreground placeholder:text-[#c3c8db] focus:border-washmen-primary focus:outline-none focus:ring-2 focus:ring-washmen-primary/20"
+            className="mt-2 min-h-[80px] w-full rounded-[6px] border border-washmen-pale-grey bg-white p-3 text-[12px] font-light leading-[18px] tracking-[0.1px] text-foreground placeholder:text-washmen-cloudy-blue focus:border-washmen-primary focus:outline-none focus:ring-2 focus:ring-washmen-primary/20"
           />
         </div>
 
         {/* 2. Send a Photo */}
-        <div className="rounded-card bg-white border border-[#f2f3f8]">
+        <div className="rounded-card bg-white border border-washmen-pale-grey">
           <button
             type="button"
             onClick={togglePhotoCard}
@@ -166,7 +166,7 @@ export default function OrderInstructions() {
           </button>
           {photoExpanded ? (
             <div className="px-4 pb-4">
-              <p className="text-[12px] font-light leading-[18px] tracking-[0.1px] text-[#585871]">
+              <p className="text-[12px] font-light leading-[18px] tracking-[0.1px] text-washmen-slate-grey">
                 You can upload additional photos and leave notes for our experts. We will
                 contact you after reviewing them
               </p>

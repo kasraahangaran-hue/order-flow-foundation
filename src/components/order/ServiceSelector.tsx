@@ -304,8 +304,8 @@ export function ServiceSelector({
         <>
           <ServiceCard
             icon={Footprints}
-            iconBgClass="bg-[#FFF3E0]"
-            iconFgClass="text-[#FB923C]"
+            iconBgClass="bg-washmen-light-orange"
+            iconFgClass="text-washmen-primary-orange"
             title="Shoe & Bag Care"
             pricingLink={{ label: "View Pricing", onPress: () => {} }}
           />
@@ -452,7 +452,7 @@ function ComboRow({
           className={cn(
             "flex h-6 w-6 shrink-0 items-center justify-center self-center rounded-full border-[1.5px] transition-colors",
           selected
-              ? "border-[#A4FF00] bg-[#A4FF00] text-washmen-primary"
+              ? "border-washmen-primary-green bg-washmen-primary-green text-washmen-primary"
               : "border-washmen-primary bg-transparent text-washmen-primary"
           )}
           aria-hidden

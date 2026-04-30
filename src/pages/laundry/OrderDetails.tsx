@@ -75,7 +75,7 @@ function ValueRow({
       <p
         className={cn(
           "min-w-0 flex-1 text-sm leading-[20px] tracking-[0.1px]",
-          muted ? "italic font-light text-washmen-secondary-400" : "font-normal text-[#585871]"
+          muted ? "italic font-light text-washmen-secondary-400" : "font-normal text-washmen-slate-grey"
         )}
       >
         {text}
@@ -97,8 +97,8 @@ function TimeRow({ day, time }: { day: string; time: string }) {
         <Clock className="h-6 w-6 text-washmen-primary" />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-normal leading-[20px] tracking-[0.1px] text-[#585871]">{day}</p>
-        <p className="text-sm font-normal leading-[20px] tracking-[0.1px] text-[#585871]">{time}</p>
+        <p className="text-sm font-normal leading-[20px] tracking-[0.1px] text-washmen-slate-grey">{day}</p>
+        <p className="text-sm font-normal leading-[20px] tracking-[0.1px] text-washmen-slate-grey">{time}</p>
       </div>
     </div>
   );
@@ -243,10 +243,10 @@ export default function OrderDetails() {
                     <Bell className="h-6 w-6 text-washmen-primary" />
                   </div>
                   <div className="min-w-0 flex-1 space-y-0.5">
-                    <p className="text-sm leading-tight text-[#585871]">
+                    <p className="text-sm leading-tight text-washmen-slate-grey">
                       <span className="font-semibold">Pick up:</span> <span className="font-normal">{summary.pickupSuffix}</span>
                     </p>
-                    <p className="text-sm leading-tight text-[#585871]">
+                    <p className="text-sm leading-tight text-washmen-slate-grey">
                       <span className="font-semibold">Drop off:</span> <span className="font-normal">{summary.dropoffSuffix}</span>
                     </p>
                   </div>

@@ -133,7 +133,7 @@ function AddressRow({
         "press-effect relative cursor-pointer rounded-[8px] border bg-white p-4",
         selected
           ? "border-washmen-primary bg-washmen-light-green"
-          : "border-[#f2f3f8]",
+          : "border-washmen-pale-grey",
       )}
     >
       <div className="flex items-start justify-between gap-3">
@@ -147,7 +147,7 @@ function AddressRow({
           <p className="pt-1 text-[11px] font-light leading-[14px] tracking-[0.3px] text-washmen-secondary-400">
             {lines.secondaryLabel}
           </p>
-          <p className="text-[14px] font-normal leading-[20px] tracking-[0.1px] text-[#585871]">
+          <p className="text-[14px] font-normal leading-[20px] tracking-[0.1px] text-washmen-slate-grey">
             {lines.secondaryValue}
           </p>
         </div>
