@@ -260,9 +260,9 @@ function PaymentSummaryFlat({
           Payment Summary
         </p>
         {expanded ? (
-          <ChevronUp className="h-4 w-4 shrink-0 text-muted-foreground" />
+          <ChevronUp className="h-4 w-4 shrink-0 text-washmen-primary" />
         ) : (
-          <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
+          <ChevronDown className="h-4 w-4 shrink-0 text-washmen-primary" />
         )}
       </button>
       {expanded && (
@@ -371,9 +371,9 @@ function PaymentSummaryItemized({
           Payment Summary
         </p>
         {expanded ? (
-          <ChevronUp className="h-4 w-4 shrink-0 text-muted-foreground" />
+          <ChevronUp className="h-4 w-4 shrink-0 text-washmen-primary" />
         ) : (
-          <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
+          <ChevronDown className="h-4 w-4 shrink-0 text-washmen-primary" />
         )}
       </button>
       {expanded && (
@@ -651,9 +651,9 @@ export default function LastStep() {
               </p>
             </div>
             {promosExpanded ? (
-              <ChevronUp className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <ChevronUp className="h-4 w-4 shrink-0 text-washmen-primary" />
             ) : (
-              <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <ChevronDown className="h-4 w-4 shrink-0 text-washmen-primary" />
             )}
           </button>
           {promosExpanded && (
