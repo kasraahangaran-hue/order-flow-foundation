@@ -177,39 +177,53 @@ export function ServiceSelector({
             </div>
             <div className="px-4 pb-4 pl-[76px]">
               <div className="flex flex-col gap-1">
-                {PLACEHOLDER_PRESSING_ITEMS.map((item) => (
-                  <div key={item.name} className="flex items-center gap-3">
-                    <span
-                      className={cn(
-                        "flex-1 text-[12px] font-light leading-[18px] transition-colors",
-                        pressActive ? "text-washmen-secondary-700" : "text-washmen-secondary-400"
-                      )}
-                    >
-                      {item.name}
-                    </span>
-                    <span
-                      className={cn(
-                        "shrink-0 rounded-md px-1.5 py-0.5 text-[12px] font-normal leading-[18px] transition-colors",
-                        pressActive
-                          ? "bg-washmen-secondary-aqua text-washmen-primary"
-                          : "bg-washmen-secondary-100 text-washmen-secondary-400"
-                      )}
-                    >
-                      {item.price}
-                    </span>
-                  </div>
-                ))}
+                {(() => {
+                  const selectedIds = services.pressingPrefs?.items ?? [];
+                  const displayCats = selectedIds.length > 0
+                    ? PRESSING_CATEGORIES.filter((c) => selectedIds.includes(c.id))
+                    : PRESSING_CATEGORIES.slice(0, 3);
+                  return displayCats.map((cat) => (
+                    <div key={cat.id} className="flex items-center gap-3">
+                      <span
+                        className={cn(
+                          "flex-1 text-[12px] font-light leading-[18px] transition-colors",
+                          pressActive ? "text-washmen-secondary-700" : "text-washmen-secondary-400"
+                        )}
+                      >
+                        {cat.label}
+                      </span>
+                      <span
+                        className={cn(
+                          "shrink-0 rounded-md px-1.5 py-0.5 text-[12px] font-normal leading-[18px] transition-colors",
+                          pressActive
+                            ? "bg-washmen-light-aqua text-washmen-primary"
+                            : "bg-washmen-secondary-100 text-washmen-secondary-400"
+                        )}
+                      >
+                        + AED {cat.ratePlus} /item
+                      </span>
+                    </div>
+                  ));
+                })()}
               </div>
-              <button
-                type="button"
-                onClick={(e) => e.stopPropagation()}
-                className={cn(
-                  "press-effect mt-2 inline-flex text-xs font-normal underline underline-offset-2 transition-colors",
-                  pressActive ? "text-washmen-primary" : "text-washmen-secondary-400"
-                )}
-              >
-                View Terms & Conditions
-              </button>
+              {services.pressingPrefs && services.pressingPrefs.items.length > 0 && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    haptics.light();
+                    navigate("/laundry/wash-and-fold-info/terms", {
+                      state: { mode: "view" },
+                    });
+                  }}
+                  className={cn(
+                    "press-effect mt-2 inline-flex text-xs font-normal underline underline-offset-2 transition-colors",
+                    pressActive ? "text-washmen-primary" : "text-washmen-secondary-400"
+                  )}
+                >
+                  View Terms & Conditions
+                </button>
+              )}
             </div>
           </div>
         ) : (
