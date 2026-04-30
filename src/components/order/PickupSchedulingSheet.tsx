@@ -149,7 +149,7 @@ export function PickupSchedulingSheet({ open, onOpenChange }: PickupSchedulingSh
               if (step === 2) setStep(1);
               else onOpenChange(false);
             }}
-            className="press-effect flex h-[42px] w-12 items-center justify-center rounded-md border border-border bg-background"
+            className="press-effect flex h-[42px] w-12 items-center justify-center rounded-[8px] border border-border bg-background"
             aria-label="Back"
           >
             <ArrowLeft className="h-5 w-5 text-washmen-primary" />
@@ -160,7 +160,7 @@ export function PickupSchedulingSheet({ open, onOpenChange }: PickupSchedulingSh
                 haptics.light();
                 setStep(2);
               }}
-              className="h-[42px] flex-1 text-sm font-semibold"
+              className="h-[42px] flex-1 rounded-[8px] text-sm font-semibold"
             >
               Confirm
             </Button>
@@ -168,7 +168,7 @@ export function PickupSchedulingSheet({ open, onOpenChange }: PickupSchedulingSh
             <Button
               onClick={onDone}
               disabled={!selectedSlot}
-              className="h-[42px] flex-1 text-sm font-semibold"
+              className="h-[42px] flex-1 rounded-[8px] text-sm font-semibold"
             >
               Done
             </Button>
