@@ -19,7 +19,7 @@ export function RadioRow({ label, selected, onSelect, indented = false }: RadioR
         onSelect();
       }}
       className={cn(
-        "flex w-full items-center gap-[14px] min-h-[40px] pr-2 active:scale-[0.99] transition-transform",
+        "press-effect flex w-full items-center gap-[14px] min-h-[40px] pr-2",
         indented ? "pl-4" : "pl-2"
       )}
     >

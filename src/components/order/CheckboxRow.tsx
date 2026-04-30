@@ -18,7 +18,7 @@ export function CheckboxRow({ label, selected, onToggle }: CheckboxRowProps) {
         haptics.light();
         onToggle();
       }}
-      className="flex w-full items-center gap-[14px] min-h-[40px] pl-2 pr-2 active:scale-[0.99] transition-transform"
+      className="press-effect flex w-full items-center gap-[14px] min-h-[40px] pl-2 pr-2"
     >
       <span
         className={cn(
