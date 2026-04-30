@@ -239,25 +239,28 @@ const initialOrderInstructions: OrderInstructionsState = {
   autoApprovals: null,
 };
 
+// Seed address used in dev-mode RU testing. Production RU users have at
+// least one saved address from their previous orders; NU users have none
+// until they add one through the address flow.
+const SEED_ADDRESS: Address = {
+  id: "seed_addr_default",
+  type: "office" as const,
+  lat: 25.2105,
+  lng: 55.2796,
+  formattedAddress: "Al Ferdous 4, DIFC, Dubai",
+  fields: {
+    building: "Al Ferdous 4",
+    officeNumber: "118",
+  },
+};
+
 export const useOrderStore = create<OrderState>()(
   persist(
     (set) => ({
       flowType: "existingUser",
       services: initialServices,
-      addresses: [
-        {
-          id: "seed_addr_default",
-          type: "office",
-          lat: 25.2105,
-          lng: 55.2796,
-          formattedAddress: "Al Ferdous 4, DIFC, Dubai",
-          fields: {
-            building: "Al Ferdous 4",
-            officeNumber: "118",
-          },
-        },
-      ],
-      selectedAddressId: "seed_addr_default",
+      addresses: [SEED_ADDRESS],
+      selectedAddressId: SEED_ADDRESS.id,
       pendingAddressDraft: null,
       pickup: getDefaultPickup(),
       dropoff: getDefaultDropoff(),
@@ -272,12 +275,31 @@ export const useOrderStore = create<OrderState>()(
       // priced order regardless of addPressing flag — needs to be handled in
       // cart/checkout logic.
       setFlowType: (flowType) =>
-        set(() => ({
-          flowType,
-          // Re-derive the pickup default so NU lands on "in_person" and RU
-          // on "door" when the flow type changes via the State Inspector.
-          pickup: getDefaultPickup(flowType === "newUser"),
-        })),
+        set((state) => {
+          const isNu = flowType === "newUser";
+          // Address handling:
+          // - Switching to NU: clear addresses so the user goes through
+          //   the address-add flow. NU has no addresses on first session.
+          // - Switching to RU: restore the seed address if there are no
+          //   real addresses (dev convenience). If real addresses exist,
+          //   leave them.
+          const nextAddresses = isNu
+            ? []
+            : state.addresses.length > 0
+              ? state.addresses
+              : [SEED_ADDRESS];
+          const nextSelectedId = isNu
+            ? null
+            : state.selectedAddressId ?? nextAddresses[0]?.id ?? null;
+          return {
+            flowType,
+            addresses: nextAddresses,
+            selectedAddressId: nextSelectedId,
+            // Re-derive the pickup default so NU lands on "in_person" and RU
+            // on "door" when the flow type changes via the State Inspector.
+            pickup: getDefaultPickup(isNu),
+          };
+        }),
       setServices: (patch) =>
         set((s) => ({ services: { ...s.services, ...patch } })),
       setPressingPrefs: (prefs) =>
@@ -333,25 +355,41 @@ export const useOrderStore = create<OrderState>()(
           };
         }),
       reset: () =>
-        set((state) => ({
-          // Preserve current flowType so dev-panel mode toggles aren't clobbered
-          // and getDefaultPickup() picks the right mode for the active flow.
-          flowType: state.flowType,
-          services: initialServices,
-          addresses: state.addresses,
-          selectedAddressId: state.selectedAddressId,
-          pendingAddressDraft: null,
-          // Re-derive pickup defaults under the preserved flowType so NU stays
-          // on "in_person" and RU on "door" after a reset.
-          pickup: getDefaultPickup(state.flowType === "newUser"),
-          dropoff: getDefaultDropoff(),
-          driverInstructions: null,
-          orderInstructions: null,
-          payment: null,
-          promoCode: null,
-          tip: 0,
-          cart: [],
-        })),
+        set((state) => {
+          const isNu = state.flowType === "newUser";
+          // Address handling on reset:
+          // - NU: keep empty addresses (NU has no saved address until the
+          //   address-add flow completes during their first order).
+          // - RU: preserve existing addresses. If somehow empty, restore
+          //   the seed for dev convenience.
+          const nextAddresses = isNu
+            ? state.addresses
+            : state.addresses.length > 0
+              ? state.addresses
+              : [SEED_ADDRESS];
+          const nextSelectedId = isNu
+            ? state.selectedAddressId
+            : state.selectedAddressId ?? nextAddresses[0]?.id ?? null;
+          return {
+            // Preserve current flowType so dev-panel mode toggles aren't clobbered
+            // and getDefaultPickup() picks the right mode for the active flow.
+            flowType: state.flowType,
+            services: initialServices,
+            addresses: nextAddresses,
+            selectedAddressId: nextSelectedId,
+            pendingAddressDraft: null,
+            // Re-derive pickup defaults under the preserved flowType so NU stays
+            // on "in_person" and RU on "door" after a reset.
+            pickup: getDefaultPickup(isNu),
+            dropoff: getDefaultDropoff(),
+            driverInstructions: null,
+            orderInstructions: null,
+            payment: null,
+            promoCode: null,
+            tip: 0,
+            cart: [],
+          };
+        }),
     }),
     {
       // v8: bumped from v7 to seed a default address.
