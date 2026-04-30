@@ -592,17 +592,14 @@ export default function LastStep() {
     }
   };
 
-  const ctaEnabled = !!payment;
-  const ctaLabel = payment
-    ? payment.method === "Apple Pay"
-      ? "Pay with Apple Pay"
-      : `Pay AED ${estimatedTotal.toFixed(2)}`
-    : "Add Payment Method";
+  const isApplePay = payment?.method === "Apple Pay";
+  const ctaLabel = isApplePay ? "Pay with Apple Pay" : "Place Order";
 
   const onPay = () => {
-    if (!ctaEnabled) {
+    if (!payment) {
+      // No payment selected — open the native payment sheet so the user can add one.
       haptics.light();
-      nativeBridge.openSheet("payment_method", payment ?? undefined);
+      nativeBridge.openSheet("payment_method", undefined);
       return;
     }
     haptics.medium();
@@ -622,7 +619,6 @@ export default function LastStep() {
       footerSlot={
         <Button
           className="flex-1 h-[42px] rounded-[8px] text-sm font-semibold"
-          disabled={!ctaEnabled}
           onClick={onPay}
         >
           {ctaLabel}
