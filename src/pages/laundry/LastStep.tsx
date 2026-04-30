@@ -306,7 +306,7 @@ function PaymentSummaryFlat({
 function PaymentSummaryFootnotes() {
   return (
     <div className="space-y-3 bg-amber-50 px-4 py-4 text-amber-900">
-      <p className="text-xs font-semibold leading-relaxed">*Delivery Fee Increase</p>
+      <p className="text-[10px] font-normal leading-relaxed">*Delivery Fee Increase</p>
       <p className="text-[10px] leading-relaxed">
         Due to the increase of diesel & natural gas prices and its impact on our supply chain,
         delivery fee has increased to AED 15. Once the situation normalizes, we will reduce it
