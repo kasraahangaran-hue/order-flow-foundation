@@ -9,6 +9,12 @@ interface OrderLayoutProps {
   totalSteps?: number;
   onBack?: () => void;
   footerSlot?: ReactNode;
+  /**
+   * Content that renders above the back+CTA row inside the same sticky
+   * footer band. Used for the tip selector on Last Step. Spans the full
+   * width of the band content area (327px gutter-aligned).
+   */
+  footerAboveSlot?: ReactNode;
   supportSlot?: ReactNode;
   children?: ReactNode;
 }
@@ -19,6 +25,7 @@ export function OrderLayout({
   totalSteps = 4,
   onBack,
   footerSlot,
+  footerAboveSlot,
   supportSlot,
   children,
 }: OrderLayoutProps) {
@@ -70,8 +77,13 @@ export function OrderLayout({
       {/* Footer */}
       {footerSlot !== undefined && (
         <footer
-          className="sticky bottom-0 z-10 bg-washmen-primary-light pb-[max(env(safe-area-inset-bottom),1rem)]"
+          className="sticky bottom-0 z-10 bg-washmen-secondary-express pb-[max(env(safe-area-inset-bottom),1rem)] shadow-[0px_-1px_8px_rgba(0,0,0,0.06)]"
         >
+          {footerAboveSlot && (
+            <div className="px-6 pt-4">
+              {footerAboveSlot}
+            </div>
+          )}
           <div className="flex items-center gap-2 px-6 pt-3 pb-4">
             {onBack && (
               <button
@@ -81,7 +93,7 @@ export function OrderLayout({
                   haptics.light();
                   onBack();
                 }}
-          className="press-effect flex w-12 h-[42px] shrink-0 items-center justify-center rounded-[8px] border border-primary bg-background text-primary"
+                className="press-effect flex w-12 h-[42px] shrink-0 items-center justify-center rounded-[8px] border border-primary bg-background text-primary"
               >
                 <ArrowLeft className="h-5 w-5" />
               </button>
