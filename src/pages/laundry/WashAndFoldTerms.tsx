@@ -132,7 +132,7 @@ export default function WashAndFoldTerms() {
 
           {/* FAQ */}
           <Collapsible open={faqOpen} onOpenChange={setFaqOpen}>
-            <div className="rounded-card bg-washmen-light-red p-4">
+            <div className="rounded-card bg-washmen-light-red px-4 pt-[10px] pb-4">
               <CollapsibleTrigger className="flex w-full items-center justify-between gap-3 text-left">
                 <div className="flex items-center gap-3">
                   <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-washmen-primary text-white">
@@ -148,7 +148,7 @@ export default function WashAndFoldTerms() {
                   <ChevronRight className="h-5 w-5 text-washmen-primary shrink-0" />
                 )}
               </CollapsibleTrigger>
-              <CollapsibleContent className="mt-3 flex flex-col gap-3">
+              <CollapsibleContent className="mt-3 pb-2 flex flex-col gap-3">
                 <p className="text-sm text-washmen-secondary-700">
                   Our team will identify it during sorting and contact you. Unsuitable items can be returned unwashed or transferred to Clean & Press at standard pricing.
                 </p>
