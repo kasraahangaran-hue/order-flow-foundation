@@ -81,7 +81,7 @@ export function OrderLayout({
                   haptics.light();
                   onBack();
                 }}
-                className="flex w-12 h-[42px] shrink-0 items-center justify-center rounded-[8px] border border-primary bg-background text-primary transition-transform active:scale-95"
+          className="press-effect flex w-12 h-[42px] shrink-0 items-center justify-center rounded-[8px] border border-primary bg-background text-primary"
               >
                 <ArrowLeft className="h-5 w-5" />
               </button>
