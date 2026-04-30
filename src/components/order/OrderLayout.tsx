@@ -70,8 +70,7 @@ export function OrderLayout({
       {/* Footer */}
       {footerSlot !== undefined && (
         <footer
-          className="sticky bottom-0 z-10 bg-washmen-primary-light px-6 pt-3 pb-4"
-          style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 1rem)" }}
+          className="sticky bottom-0 z-10 bg-washmen-primary-light px-6 pt-3 pb-[max(env(safe-area-inset-bottom),1rem)]"
         >
           <div className="flex items-center gap-2">
             {onBack && (

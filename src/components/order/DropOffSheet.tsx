@@ -106,7 +106,7 @@ export function DropOffSheet({ open, onOpenChange }: DropOffSheetProps) {
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="flex max-h-[90vh] flex-col rounded-t-[24px] border-0 bg-background pb-[env(safe-area-inset-bottom)]">
+      <DrawerContent className="flex max-h-[90vh] flex-col rounded-t-[24px] border-0 bg-background pb-[max(env(safe-area-inset-bottom),1rem)]">
         <DrawerHeader className="mb-2 flex-shrink-0 px-4 pb-2 pt-2 text-left">
           <DrawerTitle className="text-left text-[20px] font-bold leading-[24px] tracking-[0.4px] text-washmen-primary">
             {title}

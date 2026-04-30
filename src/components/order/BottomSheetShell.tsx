@@ -47,8 +47,7 @@ export function BottomSheetShell({
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent
-        className="max-h-[92vh] rounded-t-[24px] border-0 bg-white"
-        style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+        className="max-h-[92vh] rounded-t-[24px] border-0 bg-white pb-[max(env(safe-area-inset-bottom),1rem)]"
       >
         <div className="flex flex-col max-h-[92vh]">
           <div className="px-6 pt-4">
@@ -65,7 +64,7 @@ export function BottomSheetShell({
           </div>
 
           {footer !== "none" && (
-          <div className="px-6 pt-3 pb-4">
+          <div className="px-6 pt-3 pb-0">
             {footer === "apply-only" && (
               <button
                 type="button"
