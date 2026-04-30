@@ -333,7 +333,7 @@ export const useOrderStore = create<OrderState>()(
           addresses: state.addresses,
           selectedAddressId: state.selectedAddressId,
           pendingAddressDraft: null,
-          pickup: getDefaultPickup(),
+          pickup: getDefaultPickup(state.flowType === "newUser"),
           dropoff: getDefaultDropoff(),
           driverInstructions: null,
           orderInstructions: null,
