@@ -592,8 +592,8 @@ export default function LastStep() {
     }
   };
 
-  const isApplePay = payment?.method === "Apple Pay";
-  const ctaLabel = isApplePay ? "Pay with Apple Pay" : "Place Order";
+  const ctaIsApplePay = payment?.method === "Apple Pay";
+  const ctaLabel = ctaIsApplePay ? "Pay with Apple Pay" : "Place Order";
 
   const onPay = () => {
     if (!payment) {
