@@ -89,7 +89,7 @@ export default function WashAndFoldTerms() {
           {/* Card 1 — Suitable */}
           <div className="rounded-card border border-washmen-secondary-100 bg-card p-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-washmen-light-green text-washmen-primary-green">
+              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-washmen-primary-green text-washmen-primary">
                 <Check className="h-4 w-4" strokeWidth={3} />
               </div>
               <p className="text-base font-semibold text-washmen-secondary-900">
@@ -106,7 +106,7 @@ export default function WashAndFoldTerms() {
           {/* Card 2 — Not Suitable */}
           <div className="rounded-card border border-washmen-secondary-100 bg-card p-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-washmen-light-red text-washmen-primary-red">
+              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-washmen-primary-red text-white">
                 <X className="h-4 w-4" strokeWidth={3} />
               </div>
               <p className="text-base font-semibold text-washmen-secondary-900">
@@ -135,7 +135,7 @@ export default function WashAndFoldTerms() {
             <div className="rounded-card bg-washmen-light-red p-4">
               <CollapsibleTrigger className="flex w-full items-center justify-between gap-3 text-left">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-card text-washmen-primary">
+                  <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-washmen-primary text-white">
                     <HelpCircle className="h-4 w-4" strokeWidth={2} />
                   </div>
                   <p className="text-sm font-medium text-washmen-secondary-900">
@@ -162,7 +162,7 @@ export default function WashAndFoldTerms() {
                     haptics.light();
                     setAutoApprovalsSheetOpen(true);
                   }}
-                  className="press-effect flex w-full items-center justify-between gap-3 rounded-card bg-card px-4 py-3 text-left"
+                  className="press-effect flex w-full items-center justify-between gap-3 rounded-card bg-card px-4 py-4 text-left"
                 >
                   <div className="flex items-center gap-3">
                     <CircleCheck className="h-5 w-5 text-washmen-primary" strokeWidth={2} />
