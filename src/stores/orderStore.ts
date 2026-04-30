@@ -334,14 +334,16 @@ export const useOrderStore = create<OrderState>()(
         }),
       reset: () =>
         set((state) => ({
-          flowType: "existingUser",
+          // Preserve current flowType so dev-panel mode toggles aren't clobbered
+          // and getDefaultPickup() picks the right mode for the active flow.
+          flowType: state.flowType,
           services: initialServices,
           addresses: state.addresses,
           selectedAddressId: state.selectedAddressId,
           pendingAddressDraft: null,
-          // reset() always returns to RU ("existingUser"), so pickup mode
-          // defaults to "door". NU defaults are applied via setFlowType.
-          pickup: getDefaultPickup(false),
+          // Re-derive pickup defaults under the preserved flowType so NU stays
+          // on "in_person" and RU on "door" after a reset.
+          pickup: getDefaultPickup(state.flowType === "newUser"),
           dropoff: getDefaultDropoff(),
           driverInstructions: null,
           orderInstructions: null,
