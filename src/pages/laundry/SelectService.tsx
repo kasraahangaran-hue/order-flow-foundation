@@ -4,10 +4,12 @@ import { ServiceSelector } from "@/components/order/ServiceSelector";
 import { Button } from "@/components/ui/button";
 import { useOrderStore } from "@/stores/orderStore";
 import { haptics } from "@/lib/haptics";
+import { useIsFirstOrder } from "@/lib/userType";
 
 export default function SelectService() {
   const navigate = useNavigate();
   const services = useOrderStore((s) => s.services);
+  const isFirstOrder = useIsFirstOrder();
 
   const hasSelection =
     services.washAndFold ||
@@ -15,6 +17,16 @@ export default function SelectService() {
     services.cleanAndPress ||
     services.bedAndBath ||
     services.pressOnly;
+
+  // NU rule: must select at least one service. CTA is always "Continue to
+  // Order" and disabled until selection is made — Skip is not allowed.
+  // RU rule (unchanged): can Skip without selecting anything.
+  const ctaLabel = isFirstOrder
+    ? "Continue to Order"
+    : hasSelection
+      ? "Continue to Order"
+      : "Skip";
+  const ctaDisabled = isFirstOrder && !hasSelection;
 
   return (
     <OrderLayout
@@ -25,12 +37,13 @@ export default function SelectService() {
       footerSlot={
         <Button
           className="flex-1 h-[42px] rounded-[8px] text-sm font-semibold"
+          disabled={ctaDisabled}
           onClick={() => {
             haptics.medium();
             navigate("/laundry/order-details");
           }}
         >
-          {hasSelection ? "Continue to Order" : "Skip"}
+          {ctaLabel}
         </Button>
       }
     >
