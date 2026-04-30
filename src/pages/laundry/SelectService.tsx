@@ -59,7 +59,7 @@ export default function SelectService() {
       {/* NU-only FAQ section. Scrolls with the service list per Figma. */}
       {isFirstOrder && (
         <section className="mt-6">
-          <h2 className="mb-3 text-base font-bold text-washmen-primary">
+          <h2 className="mb-3 text-base font-semibold text-washmen-primary">
             FAQ
           </h2>
           <div className="flex flex-col gap-2">
@@ -116,7 +116,7 @@ function FaqItem({ question, children }: FaqItemProps) {
         className="press-effect flex w-full items-center justify-between gap-3 px-4 py-[14px] text-left"
         aria-expanded={open}
       >
-        <span className="text-sm font-semibold text-washmen-primary">
+        <span className="text-sm font-normal text-washmen-primary">
           {question}
         </span>
         <ChevronDown
