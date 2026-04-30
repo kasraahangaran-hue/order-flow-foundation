@@ -616,6 +616,35 @@ export default function LastStep() {
       title="Last Step"
       step={4}
       onBack={() => navigate("/laundry/order-instructions")}
+      footerAboveSlot={
+        <div className="flex items-center gap-2">
+          <span className="text-[16px] font-semibold leading-[21px] tracking-[0.4px] text-washmen-primary">
+            Tip?
+          </span>
+          <div className="flex flex-1 gap-[10px]">
+            {TIP_OPTIONS.map((tip) => (
+              <button
+                key={tip.value}
+                type="button"
+                onClick={() => {
+                  setSelectedTip(tip.value);
+                  haptics.light();
+                }}
+                className={cn(
+                  "press-effect flex h-8 flex-1 items-center justify-center rounded-[5px] border text-[14px] font-normal text-washmen-primary transition-colors",
+                  selectedTip === tip.value
+                    ? tip.value === 0
+                      ? "border-washmen-red bg-washmen-secondary-red"
+                      : "border-washmen-primary bg-washmen-light-green"
+                    : "border-washmen-secondary-300 bg-white"
+                )}
+              >
+                {tip.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      }
       footerSlot={
         <Button
           className="flex-1 h-[42px] rounded-[8px] text-sm font-semibold"
@@ -772,34 +801,6 @@ export default function LastStep() {
           </div>
         </button>
 
-        {/* TIP SELECTOR */}
-        <div className="flex items-center gap-3 px-1 py-2">
-          <span className="w-12 shrink-0 text-center text-sm font-semibold text-foreground">
-            Tip?
-          </span>
-          <div className="flex flex-1 gap-[10px]">
-            {TIP_OPTIONS.map((tip) => (
-              <button
-                key={tip.value}
-                type="button"
-                onClick={() => {
-                  setSelectedTip(tip.value);
-                  haptics.light();
-                }}
-                className={cn(
-                  "press-effect flex h-8 w-[60px] items-center justify-center rounded-[5px] border text-[14px] font-normal text-washmen-primary transition-colors",
-                  selectedTip === tip.value
-                    ? tip.value === 0
-                      ? "border-washmen-red bg-washmen-secondary-red"
-                      : "border-washmen-primary bg-washmen-light-green"
-                    : "border-washmen-secondary-300 bg-white"
-                )}
-              >
-                {tip.label}
-              </button>
-            ))}
-          </div>
-        </div>
       </div>
       <PromoDetailsSheet
         open={!!detailsPromo}
