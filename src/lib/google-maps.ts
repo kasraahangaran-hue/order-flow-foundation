@@ -1,13 +1,22 @@
 /// <reference types="@types/google.maps" />
 import { setOptions, importLibrary } from "@googlemaps/js-api-loader";
 
-// Domain-restricted Google Maps JS API key — safe to ship client-side.
-// IMPORTANT: This key is restricted by HTTP referrer in the Google Cloud
-// Console. If the prototype is deployed to a domain not covered by the
-// existing restrictions, requests will fail and the map won't load. In
-// that case, generate a new key at https://console.cloud.google.com/ and
-// add the new domain to the referrer allow-list.
-export const GOOGLE_MAPS_API_KEY = "AIzaSyBsi97LkyVUSMz1si8g9aQ4ebQu2ZeTwsA";
+// HANDOFF: This Google Maps JS API key was created on a personal Google
+// Cloud account for prototyping. Before going live:
+//   1. Create a new API key on the Washmen-owned Google Cloud project.
+//   2. Restrict it by HTTP referrer to the production hostnames
+//      (e.g. *.washmen.com, app.washmen.com) and by API to:
+//        - Maps JavaScript API
+//        - Places API
+//        - Geocoding API
+//   3. Move the key to a build-time env var (e.g. VITE_GOOGLE_MAPS_API_KEY)
+//      and read it via `import.meta.env.VITE_GOOGLE_MAPS_API_KEY`.
+//   4. Set the env var in the production build pipeline / .env.production.
+// Until step 3 is done, anyone with the bundle has the key. Domain
+// restrictions on Google Cloud are the only safety net.
+export const GOOGLE_MAPS_API_KEY =
+  import.meta.env.VITE_GOOGLE_MAPS_API_KEY ??
+  "AIzaSyBsi97LkyVUSMz1si8g9aQ4ebQu2ZeTwsA";
 
 let initialized = false;
 

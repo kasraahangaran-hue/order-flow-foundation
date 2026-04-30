@@ -28,5 +28,8 @@ export function getDefaultDropoff(): DropoffState {
   };
 }
 
-// TODO: Replace with logic that picks the first free slot from API-returned
-// availability data when backend is wired up.
+// HANDOFF: Default pickup/drop-off slots are hardcoded. The intended
+// production behavior is: when the customer lands on Order Details, the
+// app pre-selects the first AVAILABLE pickup slot today (or the soonest
+// free slot tomorrow if today's are exhausted), and a drop-off slot ~48h
+// later. Wire this to the availability API once the slots data is dynamic.
