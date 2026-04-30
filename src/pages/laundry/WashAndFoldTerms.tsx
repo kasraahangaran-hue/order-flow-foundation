@@ -132,8 +132,8 @@ export default function WashAndFoldTerms() {
 
           {/* FAQ */}
           <Collapsible open={faqOpen} onOpenChange={setFaqOpen}>
-            <div className="rounded-card bg-washmen-light-red px-4">
-              <CollapsibleTrigger className="flex min-h-[52px] w-full items-center justify-between gap-3 text-left leading-none">
+            <div className="rounded-card bg-washmen-light-red px-4 py-3">
+              <CollapsibleTrigger className="flex w-full items-center justify-between gap-3 text-left leading-none">
                 <div className="flex items-center gap-3">
                   <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-washmen-primary text-white">
                     <HelpCircle className="h-4 w-4" strokeWidth={2} />
@@ -148,30 +148,32 @@ export default function WashAndFoldTerms() {
                   <ChevronRight className="h-5 w-5 text-washmen-primary shrink-0" />
                 )}
               </CollapsibleTrigger>
-              <CollapsibleContent className="mt-3 pb-2 flex flex-col gap-3">
-                <p className="text-sm text-washmen-secondary-700">
-                  Our team will identify it during sorting and contact you. Unsuitable items can be returned unwashed or transferred to Clean & Press at standard pricing.
-                </p>
-                <p className="text-sm text-washmen-secondary-700">
-                  You can also set automatic approvals on what we should do:
-                </p>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    haptics.light();
-                    setAutoApprovalsSheetOpen(true);
-                  }}
-                  className="press-effect flex w-full items-center justify-between gap-3 rounded-card bg-card px-4 py-4 text-left"
-                >
-                  <div className="flex items-center gap-3">
-                    <CircleCheck className="h-5 w-5 text-washmen-primary" strokeWidth={2} />
-                    <span className="text-sm font-medium text-washmen-secondary-900">
-                      Auto-Approvals
-                    </span>
-                  </div>
-                  <Plus className="h-5 w-5 text-washmen-secondary-700" />
-                </button>
+              <CollapsibleContent>
+                <div className="mt-3 pb-2 flex flex-col gap-3">
+                  <p className="text-sm text-washmen-secondary-700">
+                    Our team will identify it during sorting and contact you. Unsuitable items can be returned unwashed or transferred to Clean & Press at standard pricing.
+                  </p>
+                  <p className="text-sm text-washmen-secondary-700">
+                    You can also set automatic approvals on what we should do:
+                  </p>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      haptics.light();
+                      setAutoApprovalsSheetOpen(true);
+                    }}
+                    className="press-effect flex w-full items-center justify-between gap-3 rounded-card bg-card px-4 py-4 text-left"
+                  >
+                    <div className="flex items-center gap-3">
+                      <CircleCheck className="h-5 w-5 text-washmen-primary" strokeWidth={2} />
+                      <span className="text-sm font-medium text-washmen-secondary-900">
+                        Auto-Approvals
+                      </span>
+                    </div>
+                    <Plus className="h-5 w-5 text-washmen-secondary-700" />
+                  </button>
+                </div>
               </CollapsibleContent>
             </div>
           </Collapsible>
