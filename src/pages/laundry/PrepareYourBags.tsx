@@ -1,44 +1,17 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { haptics } from "@/lib/haptics";
-import { cn } from "@/lib/utils";
-
-// HANDOFF — Video assets:
-// Each card below is currently a colored placeholder. In production these
-// will be autoplay-muted-loop <video> elements. To wire:
-//   - Replace the <div> placeholder with <video autoPlay muted loop playsInline />
-//   - Set src to the marketing CDN URL for that card
-//   - Keep the absolute-positioned tooltip overlay
-// Expected aspect ratio per Figma: ~ 4/5 (portrait), full-width with
-// horizontal page padding.
-const CARDS: Array<{
-  id: string;
-  tooltip: string;
-  placeholderBg: string;
-}> = [
-  {
-    id: "any-bag",
-    tooltip: "Any bag can be laundry bag",
-    placeholderBg: "bg-washmen-secondary-100",
-  },
-  {
-    id: "driver-pickup",
-    tooltip: "Our driver will pick up",
-    placeholderBg: "bg-washmen-light-aqua",
-  },
-];
 
 const COUNTDOWN_SECONDS = 5;
 
 export default function PrepareYourBags() {
   const navigate = useNavigate();
-  const [activeCard, setActiveCard] = useState(0);
   const [secondsRemaining, setSecondsRemaining] = useState(COUNTDOWN_SECONDS);
-  const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Countdown — disables Got It for 5 seconds.
+  // 5-second countdown — disables Got It until the user has had time to
+  // watch the video.
   useEffect(() => {
     if (secondsRemaining <= 0) return;
     const t = window.setTimeout(() => {
@@ -59,14 +32,6 @@ export default function PrepareYourBags() {
     if (!ctaEnabled) return;
     haptics.medium();
     navigate("/laundry/select-service");
-  };
-
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const el = e.currentTarget;
-    const cardWidth = el.clientWidth;
-    if (cardWidth === 0) return;
-    const idx = Math.round(el.scrollLeft / cardWidth);
-    if (idx !== activeCard) setActiveCard(idx);
   };
 
   return (
@@ -90,60 +55,32 @@ export default function PrepareYourBags() {
           </p>
         </div>
 
-        {/* Video carousel */}
+        {/* HANDOFF — Video asset:
+            This is currently a colored placeholder. In production this is
+            an autoplay-muted-loop video that the user must watch for ~5s
+            before they can dismiss the screen via Got It. To wire:
+              - Replace the placeholder div with:
+                <video autoPlay muted loop playsInline className="h-full w-full object-cover" src={cdnUrl} />
+              - Get the asset URL from the marketing CDN.
+              - The "Any bag can be laundry bag" / "Our driver will pick up"
+                text overlays in the iOS reference are baked INTO the video
+                content — do NOT render them as separate UI elements. */}
         <div
-          ref={scrollRef}
-          onScroll={handleScroll}
-          className="no-scrollbar mt-4 -mx-6 flex snap-x snap-mandatory overflow-x-auto"
+          className="relative mt-4 w-full overflow-hidden rounded-[16px] bg-washmen-secondary-100"
+          style={{ aspectRatio: "4 / 5" }}
         >
-          {CARDS.map((card) => (
-            <div key={card.id} className="w-full shrink-0 snap-center px-6">
-              <div
-                className={cn(
-                  "relative w-full overflow-hidden rounded-[16px]",
-                  card.placeholderBg
-                )}
-                style={{ aspectRatio: "4 / 5" }}
-              >
-                {/* Placeholder play indicator */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/70">
-                    <Play className="h-6 w-6 text-washmen-primary" />
-                  </div>
-                </div>
-
-                {/* Tooltip overlay — bottom-left */}
-                <div className="absolute bottom-4 left-4 flex items-center gap-2 rounded-full bg-white/95 px-3 py-2 shadow-md">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-washmen-primary text-[11px] font-bold text-white">
-                    i
-                  </span>
-                  <span className="text-xs font-medium text-washmen-primary">
-                    {card.tooltip}
-                  </span>
-                </div>
-              </div>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/70">
+              <Play className="h-6 w-6 text-washmen-primary" />
             </div>
-          ))}
-        </div>
-
-        {/* Dot indicator */}
-        <div className="mt-4 flex items-center justify-center gap-2">
-          {CARDS.map((card, idx) => (
-            <span
-              key={card.id}
-              className={cn(
-                "h-2 rounded-full transition-all",
-                idx === activeCard
-                  ? "w-2 bg-washmen-primary"
-                  : "w-2 bg-washmen-secondary-300"
-              )}
-              aria-hidden
-            />
-          ))}
+          </div>
+          <div className="absolute bottom-4 left-4 right-4 text-center text-xs text-washmen-primary/60">
+            [Video placeholder — production video plays here]
+          </div>
         </div>
       </main>
 
-      {/* Footer */}
+      {/* Footer — matches the OrderLayout footer pattern */}
       <footer className="sticky bottom-0 z-10 bg-washmen-secondary-express pb-[max(env(safe-area-inset-bottom),1rem)] shadow-[0px_-1px_8px_rgba(0,0,0,0.06)]">
         <div className="flex items-center gap-2 px-6 pt-3 pb-4">
           <button
