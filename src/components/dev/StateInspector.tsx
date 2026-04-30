@@ -44,6 +44,10 @@ function StateInspectorInner() {
 
   const onPickFlow = (next: FlowType) => {
     applyFlowType(store, next);
+    // Re-initialize order defaults under the new flowType. Since reset()
+    // preserves flowType, the just-set value is honoured and getDefaultPickup()
+    // returns the right mode (in_person for NU, door for RU).
+    store.reset();
     if (next === "pricingPage") {
       navigate("/laundry/last-step");
     }
