@@ -6,15 +6,77 @@
 
 @layer base {
   :root {
-    /* Washmen brand */
-    --washmen-primary: 251 75% 30%;          /* #291482 */
-    --washmen-primary-light: 245 100% 97%;   /* #F0EEFF */
-    --washmen-orange: 14 100% 60%;           /* #FF6B35 */
-    --washmen-success: 142 71% 45%;          /* #22C55E */
-    --washmen-warning: 45 96% 64%;           /* #FCD34D */
-    --washmen-error: 0 84% 60%;              /* #EF4444 */
+    /*
+     * HANDOFF: All --washmen-* color tokens below MUST stay in sync with the
+     * Design Library / Customer App / Colours page in Figma:
+     *   https://www.figma.com/design/nnyLq2qzzraZszKvJ4zMlz/?node-id=30307-5016
+     * Updating a hex here without updating Figma (or vice versa) breaks the
+     * single source of truth. The "@/lib/colors.ts" file (if it exists) MUST
+     * also stay in sync.
+     *
+     * Format: HSL fractions (Tailwind-compatible). The trailing hex comment
+     * is informational — match the hex value to the design system.
+     */
 
-    /* Neutral scale */
+    /* Primary colors */
+    --washmen-primary: 245 65% 30%;             /* #251B7D — was #291482 */
+    --washmen-primary-aqua: 177 100% 50%;       /* #02FFF7 — NEW */
+    --washmen-primary-green: 75 100% 50%;       /* #A4FF00 — was #2FBD00 */
+    --washmen-primary-orange: 22 100% 55%;      /* #FF7D19 — was --washmen-orange / #FF6B35 */
+    --washmen-primary-pink: 302 100% 78%;       /* #FF8CF9 */
+    --washmen-primary-red: 359 56% 51%;         /* #C83C3E */
+    --washmen-primary-teal: 168 57% 42%;        /* #2EA692 — NEW */
+    --washmen-notification-red: 0 100% 50%;     /* #FF0000 — NEW */
+
+    /* Secondary colors (light variants) */
+    --washmen-light-blue: 245 86% 93%;          /* #E1DEFB — was --washmen-secondary-blue */
+    --washmen-light-aqua: 180 100% 95%;         /* #E5FFFF — was --washmen-secondary-aqua / #E5FFFE */
+    --washmen-light-green: 79 100% 93%;         /* #F3FFDD */
+    --washmen-light-orange: 35 96% 94%;         /* #FEF2DF — NEW */
+    --washmen-light-pink: 300 100% 95%;         /* #FFE8FE */
+    --washmen-light-red: 345 71% 95%;           /* #FBEEF2 — was --washmen-secondary-red */
+    --washmen-light-teal: 168 100% 92%;         /* #D8FFF8 — NEW */
+
+    /* Greys */
+    --washmen-slate-grey: 240 13% 40%;          /* #585871 — NEW */
+    --washmen-cloudy-blue: 224 21% 77%;         /* #B6BCD1 — NEW */
+    --washmen-light-grey: 240 11% 95%;          /* #EEEFF4 — was #EFEFF4 */
+    --washmen-pale-grey: 234 24% 96%;           /* #F2F3F8 — NEW */
+    --washmen-bg: 220 25% 98%;                  /* #FAFBFC — NEW */
+
+    /* Function colors */
+    --washmen-discount: 339 89% 58%;            /* #F13578 — NEW */
+    --washmen-info-toast: 192 99% 41%;          /* #01A8CD — NEW */
+    --washmen-express-delivery: 250 89% 72%;    /* #8D77F7 — was #9176FF */
+    --washmen-secondary-express: 248 88% 94%;   /* #E8E3FD — was #E9E3FF */
+
+    /*
+     * HANDOFF: Deprecated aliases — kept so existing usages don't break
+     * during Phase 2 of the color migration. Remove once all usages are
+     * migrated to the canonical names above.
+     */
+    --washmen-primary-light: 245 86% 93%;       /* deprecated alias → light-blue */
+    --washmen-orange: var(--washmen-primary-orange);
+    --washmen-pink: var(--washmen-primary-pink);
+    --washmen-red: var(--washmen-primary-red);
+    --washmen-secondary-blue: var(--washmen-light-blue);
+    --washmen-secondary-aqua: var(--washmen-light-aqua);
+    --washmen-secondary-red: var(--washmen-light-red);
+
+    /* Misc legacy tokens — still referenced; audit and migrate in Phase 2. */
+    --washmen-success: 142 71% 45%;             /* #22C55E */
+    --washmen-warning: 45 96% 64%;              /* #FCD34D */
+    --washmen-error: 0 84% 60%;                 /* #EF4444 */
+    --washmen-aqua-stroke: 178 100% 35%;        /* deep aqua/teal */
+
+    /*
+     * HANDOFF: This neutral ladder predates the design-system import. It
+     * does NOT correspond to design-system colors — they're a Lovable-era
+     * invention. Phase 2 of the color migration will replace each usage
+     * with the correct design-system grey (slate-grey, cloudy-blue,
+     * light-grey, pale-grey, bg). After that migration completes, delete
+     * these tokens.
+     */
     --washmen-secondary-50: 240 20% 98%;
     --washmen-secondary-100: 240 17% 95%;
     --washmen-secondary-200: 240 14% 89%;
@@ -25,19 +87,6 @@
     --washmen-secondary-700: 240 10% 24%;
     --washmen-secondary-800: 240 12% 16%;
     --washmen-secondary-900: 240 16% 10%;
-
-    /* Tinted accents */
-    --washmen-secondary-blue: 245 86% 93%;   /* #E1DEFB */
-    --washmen-secondary-aqua: 177 100% 95%;  /* #E5FFFE */
-    --washmen-secondary-express: 252 100% 95%; /* #E9E3FF */
-    --washmen-light-green: 79 100% 93%;      /* #F3FFDD */
-    --washmen-primary-green: 102 100% 37%;   /* #2FBD00 */
-    --washmen-light-pink: 300 100% 95%;      /* #FFE8FE */
-    --washmen-pink: 302 100% 78%;            /* #FF8CF9 */
-    --washmen-light-grey: 240 11% 95%;       /* #EFEFF4 */
-    --washmen-secondary-red: 345 71% 95%;    /* #FBEEF2 */
-    --washmen-red: 359 56% 51%;              /* #C83C3E */
-    --washmen-aqua-stroke: 178 100% 35%;     /* deep aqua/teal */
 
     --subtle-bg: 240 20% 97%;                /* #F7F7FA */
 
