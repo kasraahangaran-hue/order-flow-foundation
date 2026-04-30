@@ -672,7 +672,7 @@ export default function LastStep() {
                 </div>
               )}
               <div>
-                <div className="rounded-[6px] border border-[#F2F3F8] bg-white px-4 py-3">
+                <div className="rounded-[6px] border border-[#f2f3f8] bg-white px-4 py-3">
                   <input
                     type="text"
                     value={promoInput}

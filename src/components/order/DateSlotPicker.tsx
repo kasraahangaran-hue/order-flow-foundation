@@ -120,7 +120,7 @@ export function DateSlotPicker({
                   onClick={handleSelect}
                   className={cn(
                     "press-effect flex w-full shrink-0 flex-col overflow-hidden rounded-[6px] border text-left",
-                    isSel ? "border-washmen-primary" : "border-[#F2F3F8]"
+                    isSel ? "border-washmen-primary" : "border-[#f2f3f8]"
                   )}
                 >
                   {/* Purple badge — no border, the outer wrapper carries it. Stays purple regardless of selection. */}
@@ -161,7 +161,7 @@ export function DateSlotPicker({
                   "press-effect flex w-full shrink-0 flex-col gap-px rounded-[6px] border px-3 py-2 text-left text-washmen-primary",
                   isSel
                     ? "border-washmen-primary bg-washmen-light-green"
-                    : "border-[#F2F3F8] bg-white"
+                    : "border-[#f2f3f8] bg-white"
                 )}
               >
                 <p className="text-[14px] font-normal leading-[20px] tracking-[0.1px]">
@@ -201,7 +201,7 @@ export function DateSlotPicker({
                     "press-effect flex w-full shrink-0 flex-col items-start gap-0.5 rounded-[6px] border px-3 py-2 text-left",
                     isSel
                       ? "border-washmen-primary bg-washmen-light-green"
-                      : "border-[#F2F3F8] bg-white"
+                      : "border-[#f2f3f8] bg-white"
                   )}
                 >
                   {prefix ? (
@@ -227,7 +227,7 @@ export function DateSlotPicker({
                   "press-effect flex w-full shrink-0 flex-col items-start gap-0.5 rounded-[6px] border px-3 py-2 text-left",
                   isSel
                     ? "border-washmen-primary bg-washmen-light-green"
-                    : "border-[#F2F3F8] bg-white"
+                    : "border-[#f2f3f8] bg-white"
                 )}
               >
                 <p className="text-[12px] font-light leading-[18px] tracking-[0.1px] text-washmen-primary">
