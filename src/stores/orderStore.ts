@@ -333,7 +333,9 @@ export const useOrderStore = create<OrderState>()(
           addresses: state.addresses,
           selectedAddressId: state.selectedAddressId,
           pendingAddressDraft: null,
-          pickup: getDefaultPickup(state.flowType === "newUser"),
+          // reset() always returns to RU ("existingUser"), so pickup mode
+          // defaults to "door". NU defaults are applied via setFlowType.
+          pickup: getDefaultPickup(false),
           dropoff: getDefaultDropoff(),
           driverInstructions: null,
           orderInstructions: null,
