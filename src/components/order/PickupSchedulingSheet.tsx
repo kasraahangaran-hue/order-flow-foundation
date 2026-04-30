@@ -7,6 +7,7 @@ import { haptics } from "@/lib/haptics";
 import { cn } from "@/lib/utils";
 import { DateSlotPicker, type SlotOption } from "./DateSlotPicker";
 import { buildPickupMockDays } from "@/data/slots";
+import { useIsFirstOrder } from "@/lib/userType";
 import doorImg from "@/assets/pickup-at-door.jpg";
 import driverImg from "@/assets/pickup-meet-driver.jpg";
 
