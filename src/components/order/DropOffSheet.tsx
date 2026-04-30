@@ -152,6 +152,7 @@ export function DropOffSheet({ open, onOpenChange }: DropOffSheetProps) {
           <button
             type="button"
             onClick={() => {
+              haptics.light();
               if (step === 2) setStep(1);
               else onOpenChange(false);
             }}

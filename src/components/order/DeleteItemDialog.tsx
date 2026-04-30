@@ -1,4 +1,5 @@
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { haptics } from "@/lib/haptics";
 
 interface DeleteItemDialogProps {
   open: boolean;
@@ -24,6 +25,7 @@ export function DeleteItemDialog({
           <button
             type="button"
             onClick={() => {
+              haptics.warning();
               onConfirm();
               onOpenChange(false);
             }}
@@ -33,7 +35,10 @@ export function DeleteItemDialog({
           </button>
           <button
             type="button"
-            onClick={() => onOpenChange(false)}
+            onClick={() => {
+              haptics.light();
+              onOpenChange(false);
+            }}
             className="press-effect text-[14px] font-medium leading-[20px] text-washmen-slate-grey"
           >
             Cancel

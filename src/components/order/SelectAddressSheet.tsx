@@ -157,6 +157,7 @@ function AddressRow({
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
+                haptics.warning();
                 onDelete();
               }}
               aria-label="Delete address"
