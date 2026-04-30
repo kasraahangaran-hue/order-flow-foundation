@@ -33,6 +33,8 @@ interface CarouselCard {
 //       : <img src={card.assetUrl} alt={card.title} className="..." />}
 //   - Add an `assetUrl` field to each entry in CARDS below pointing at
 //     the matching CDN asset.
+// Image tile is a fixed 154px tall × 256px (steps) / 265px (intro) wide
+// box with object-cover; source video is 1920x1080 (16:9).
 const CARDS: CarouselCard[] = [
   {
     id: "intro",
@@ -62,7 +64,7 @@ const CARDS: CarouselCard[] = [
     id: "step-3",
     eyebrow: "STEP 3",
     title: "Cleaned at Our Facility",
-    body: "Your items are cared for at our global-award winning facility.",
+    body: "Your items are cared for at our global-award winning facility",
     assetType: "image",
     placeholderBg: "bg-washmen-secondary-100",
   },
@@ -70,7 +72,7 @@ const CARDS: CarouselCard[] = [
     id: "step-4",
     eyebrow: "STEP 4",
     title: "Delivery",
-    body: "Your clean clothes are delivered back to you. Laundry Bags will be included for your next order",
+    body: "Your clean clothes are delivered back to you.\n\nLaundry Bags will be included for your next order",
     assetType: "image",
     placeholderBg: "bg-washmen-light-red",
   },
@@ -106,21 +108,21 @@ export default function HowItWorks() {
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const el = e.currentTarget;
-    // Cards are 88% of the viewport width with snap-start. Each card's
-    // scroll offset = cardWidth * idx. Use clientWidth * 0.88 as the step.
-    const step = el.clientWidth * 0.88;
-    if (step <= 0) return;
-    const idx = Math.round(el.scrollLeft / step);
+    // Each card stride: 256 (width) + 8 (gap) = 264.
+    // Intro card is 9px wider but using the steps stride is close enough
+    // for active-dot tracking.
+    const stride = 264;
+    const idx = Math.round(el.scrollLeft / stride);
     if (idx !== activeCard && idx >= 0 && idx < CARDS.length) {
       setActiveCard(idx);
     }
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-screen flex-col bg-washmen-bg">
       {/* Header */}
-      <header className="sticky top-0 z-10 bg-background">
-        <div className="flex h-14 items-center gap-3 px-4">
+      <header className="sticky top-0 z-10 bg-washmen-bg">
+        <div className="flex h-14 items-center gap-6 px-4">
           <button
             type="button"
             onClick={handleBack}
@@ -129,7 +131,7 @@ export default function HowItWorks() {
           >
             <ArrowLeft className="h-5 w-5 text-washmen-primary" />
           </button>
-          <h1 className="text-lg font-semibold text-washmen-primary">
+          <h1 className="text-[20px] font-bold leading-[24px] tracking-[0.4px] text-washmen-primary">
             How It Works
           </h1>
         </div>
@@ -137,28 +139,27 @@ export default function HowItWorks() {
 
       {/* Body */}
       <main className="flex-1 pb-8">
-        {/* Video carousel */}
+        {/* Carousel — fixed-pixel cards (256/265px wide), 8px gap */}
         <div
           ref={scrollRef}
           onScroll={handleScroll}
-          className="no-scrollbar flex snap-x snap-mandatory overflow-x-auto"
+          className="no-scrollbar flex snap-x snap-mandatory gap-2 overflow-x-auto px-4"
         >
           {CARDS.map((card, idx) => (
             <div
               key={card.id}
               className={cn(
-                "flex w-[88%] shrink-0 snap-start flex-col",
-                idx === 0 ? "pl-4 pr-2" : "pr-2",
-                idx === CARDS.length - 1 && "pr-4",
+                "flex shrink-0 snap-start flex-col",
+                idx === 0 ? "w-[265px]" : "w-[256px]",
               )}
             >
-              {/* Video placeholder */}
+              {/* Image/video tile — 154px tall; intro radius 10px, steps 8px */}
               <div
                 className={cn(
-                  "relative w-full overflow-hidden rounded-[16px]",
+                  "relative h-[154px] w-full overflow-hidden",
+                  idx === 0 ? "rounded-[10px]" : "rounded-[8px]",
                   card.placeholderBg,
                 )}
-                style={{ aspectRatio: "16 / 9" }}
               >
                 {card.assetType === "video" && (
                   <div className="absolute inset-0 flex items-center justify-center">
@@ -170,14 +171,14 @@ export default function HowItWorks() {
               </div>
 
               {/* Caption */}
-              <div className="mt-4 flex flex-col gap-1">
-                <p className="text-xs font-semibold uppercase tracking-wide text-washmen-primary">
+              <div className="mt-3 flex flex-col">
+                <p className="text-[10px] font-bold uppercase leading-[12px] tracking-[0.3px] text-washmen-primary">
                   {card.eyebrow}
                 </p>
-                <h2 className="text-lg font-semibold text-washmen-primary">
+                <h2 className="text-[16px] font-bold leading-[34px] tracking-[0.4px] text-washmen-primary">
                   {card.title}
                 </h2>
-                <p className="text-sm leading-relaxed text-washmen-slate-grey">
+                <p className="whitespace-pre-line text-[16px] font-light leading-[21px] tracking-[0.4px] text-washmen-slate-grey">
                   {card.body}
                 </p>
               </div>
@@ -202,7 +203,7 @@ export default function HowItWorks() {
 
         {/* Ready? section */}
         <section className="mt-8 px-4">
-          <h2 className="mb-3 text-base font-semibold text-washmen-primary">
+          <h2 className="mb-3 text-[20px] font-bold leading-[24px] tracking-[0.4px] text-washmen-primary">
             Ready?
           </h2>
           <div className="flex flex-col gap-3">
@@ -210,12 +211,13 @@ export default function HowItWorks() {
             <button
               type="button"
               onClick={handlePlaceOrder}
-              className="press-effect flex h-[60px] w-full items-center justify-between rounded-[16px] bg-washmen-secondary-100 px-4 text-left"
+              className="press-effect flex h-12 w-full items-center justify-between rounded-[6px] bg-washmen-light-blue pl-4 pr-2 text-left"
             >
               <span className="text-base font-semibold text-washmen-primary">
                 Place a Washmen Order
               </span>
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-background">
+              {/* Figma uses a small grey rounded-square tile (#F2F3F8), not a circle. */}
+              <span className="flex h-8 w-8 items-center justify-center rounded-[4px] bg-washmen-pale-grey">
                 <ArrowRight className="h-4 w-4 text-washmen-primary" />
               </span>
             </button>
@@ -224,35 +226,30 @@ export default function HowItWorks() {
             <button
               type="button"
               onClick={handleViewPricing}
-              className="press-effect flex h-[60px] w-full items-center justify-between rounded-[16px] bg-washmen-secondary-100 px-4 text-left"
+              className="press-effect flex h-12 w-full items-center justify-between rounded-[6px] bg-washmen-light-blue pl-4 pr-2 text-left"
             >
               <span className="text-base font-semibold text-washmen-primary">
                 View Pricing
               </span>
-              {/* HANDOFF: Figma uses a custom shopping-bag-with-$ icon.
-                  Lucide ShoppingBag is the closest stand-in. Swap for the
-                  custom asset when available. */}
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-background">
-                <ShoppingBag className="h-4 w-4 text-washmen-primary" />
-              </span>
+              {/* HANDOFF: Figma uses a custom shopping-bag-with-tag icon
+                  (the "nav pricing" component). Lucide ShoppingBag is a
+                  stand-in. Swap for the custom asset when available. */}
+              <ShoppingBag className="mr-2 h-5 w-5 text-washmen-primary" />
             </button>
 
             {/* Contact Customer Service */}
             <button
               type="button"
               onClick={handleContactCs}
-              className="press-effect flex h-[60px] w-full items-center justify-between rounded-[16px] bg-washmen-secondary-100 px-4 text-left"
+              className="press-effect flex h-12 w-full items-center justify-between rounded-[6px] bg-washmen-light-blue pl-4 pr-2 text-left"
             >
               <span className="text-base font-semibold text-washmen-primary">
                 Contact Customer Service
               </span>
-              {/* HANDOFF: Figma uses the WhatsApp brand logo. Using
-                  Lucide MessageCircle on a brand-green background as a
-                  stand-in — swap for the official WhatsApp SVG when
-                  available. */}
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-washmen-primary-green">
-                <MessageCircle className="h-4 w-4 fill-white text-white" />
-              </span>
+              {/* HANDOFF: Figma uses an outline WhatsApp glyph (no fill,
+                  primary blue). Lucide MessageCircle is a stand-in. Swap
+                  for the official WhatsApp outline SVG. */}
+              <MessageCircle className="mr-2 h-5 w-5 text-washmen-primary" />
             </button>
           </div>
         </section>
