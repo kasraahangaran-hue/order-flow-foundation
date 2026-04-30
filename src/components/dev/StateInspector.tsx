@@ -165,6 +165,16 @@ function StateInspectorInner() {
                 type="button"
                 onClick={() => {
                   setOpen(false);
+                  navigate("/laundry/how-it-works");
+                }}
+                className="press-effect h-[36px] w-full rounded-md border border-border bg-background text-sm font-medium text-foreground hover:border-primary/40"
+              >
+                How It Works
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setOpen(false);
                   navigate("/laundry/prepare-your-bags");
                 }}
                 className="press-effect h-[36px] w-full rounded-md border border-border bg-background text-sm font-medium text-foreground hover:border-primary/40"
