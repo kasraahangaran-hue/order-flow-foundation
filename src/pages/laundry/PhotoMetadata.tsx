@@ -29,12 +29,13 @@ export default function PhotoMetadata() {
 
   const orderInstructions = useOrderStore((s) => s.orderInstructions);
   const setOrderInstructions = useOrderStore((s) => s.setOrderInstructions);
-  const delicateItems = orderInstructions?.delicateItems ?? [];
 
   const item = useMemo(
-    () => delicateItems.find((d) => d.id === id) ?? null,
-    [delicateItems, id],
+    () => orderInstructions?.delicateItems?.find((d) => d.id === id) ?? null,
+    [orderInstructions?.delicateItems, id],
   );
+
+  const delicateItems = orderInstructions?.delicateItems ?? [];
 
   const [brand, setBrand] = useState(item?.brand ?? "");
   const [stains, setStains] = useState<StainType[]>(item?.stains ?? []);

@@ -7,7 +7,12 @@ export interface PromoData {
   discountPct?: number;
 }
 
-// Mock list of available promos. Replace with backend fetch when available.
+// HANDOFF: AVAILABLE_PROMOS is a hardcoded sample list for the customer-app
+// prototype. Before going live, fetch this list from the backend (or wire
+// to the existing /promos endpoint if one exists). Each promo's terms
+// (PromoData.terms) currently uses the same generic copy — those should
+// be promo-specific T&Cs from the backend. See PromoDetailsSheet for the
+// rendering of these terms.
 export const AVAILABLE_PROMOS: PromoData[] = [
   { code: "MYLAUNDRY25", subtitle: "AED 50 off on 3 laundry orders!", used: 1, total: 11, discountAed: 50 },
   { code: "FIRSTORDER10", subtitle: "10% off your first order", used: 0, total: 1, discountPct: 10 },

@@ -45,8 +45,15 @@ export const ALL_PICKUP_SLOT_RANGES: Array<{ startHour: number; endHour: number 
   { startHour: 22, endHour: 24 },
 ];
 
-// TODO: Wire to real availability API. The minStartHour cutoff should use the
-// zone-specific business rules, not local browser time.
+// HANDOFF: Pickup/drop-off time slot availability is hardcoded here for the
+// prototype. Wire to the real availability API before shipping. Specifically:
+//   1. The list of available slots per day must come from the backend
+//      (today's availability changes throughout the day; future days have
+//      different staffing).
+//   2. The `minStartHour` cutoff (current rule: don't show slots starting
+//      less than ~2 hours from now) should use the SERVER's clock, not the
+//      browser's, to avoid timezone-skew edge cases.
+//   3. Confirm with ops the maximum lookahead window — currently ~7 days.
 export function buildPickupSlotsForDay(offset: number): SlotOption[] {
   const now = new Date();
   const currentHour = now.getHours();

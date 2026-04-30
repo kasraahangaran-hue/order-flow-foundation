@@ -1,10 +1,17 @@
-/**
- * Native Bridge stub.
- *
- * Placeholder interface — Fawad will define the real one. For now, all calls
- * are logged and results are never delivered. When the iOS side exposes
- * `window.WashmenBridge`, swap implementations here.
- */
+// HANDOFF: This is a STUB. Every method here must be wired to the native
+// iOS/Android bridge before shipping. The web layer calls these to:
+//   - openSheet(name, value)  → request the native app to display a native
+//                                bottom sheet (payment_method, schedule_picker,
+//                                etc.) with the given current value.
+//   - onSheetResult(name, cb) → subscribe to the user's selection from a
+//                                native sheet. Returns an unsubscribe function.
+// The expected native side is a `window.WashmenBridge` global injected by
+// the iOS/Android WebView on app load with matching method signatures.
+// Confirm the contract with the iOS/Android team before wiring.
+// Until wired, openSheet is a no-op (logs to console) and onSheetResult
+// never fires — so any flow that requires native-sheet interaction
+// (currently: Payment Method selection on Last Step) won't work end-to-end
+// in a real app build.
 
 export type NativeSheetName =
   | "address"        // -> { address, apartment }
@@ -27,7 +34,6 @@ const listeners = new Map<NativeSheetName, Set<Listener>>();
 export const nativeBridge = {
   openSheet(sheetName: NativeSheetName, currentValue?: unknown) {
     console.log("[NativeBridge stub] openSheet", sheetName, currentValue);
-    // TODO: replace with window.WashmenBridge.openSheet when native side is ready
     if (typeof window !== "undefined" && window.WashmenBridge?.openSheet) {
       window.WashmenBridge.openSheet(sheetName, currentValue);
     }
@@ -37,7 +43,6 @@ export const nativeBridge = {
     console.log("[NativeBridge stub] onSheetResult listener for", sheetName);
     if (!listeners.has(sheetName)) listeners.set(sheetName, new Set());
     listeners.get(sheetName)!.add(callback);
-    // TODO: wire to native callback. Returns an unsubscribe.
     return () => listeners.get(sheetName)?.delete(callback);
   },
 

@@ -129,9 +129,14 @@ function StateInspectorInner() {
   );
 }
 
-// TODO: Tighten this gate before shipping. Currently shows in all non-production
-// environments (Lovable preview, localhost). Production hostnames are the
-// allowlist — update washmen.com check when we deploy to a real domain.
+// HANDOFF: The State Inspector is a developer tool that allows switching
+// between flow types (New User / Existing User / Pricing Page) in non-prod
+// environments. It must NOT render in production. The current allow-list
+// blocks washmen.com and any *.washmen.com subdomain. If production runs
+// on a different hostname (e.g. an ngrok tunnel, an internal CI domain,
+// or a non-washmen.com vanity URL), update the allow-list before shipping.
+// A safer pattern would be to gate via an env var like
+// import.meta.env.MODE === "production".
 export function StateInspector() {
   if (typeof window !== "undefined") {
     const host = window.location.hostname;

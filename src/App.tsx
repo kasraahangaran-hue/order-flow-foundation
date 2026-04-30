@@ -15,7 +15,6 @@ import AddressDetailsScreen from "./pages/laundry/AddressDetailsScreen";
 import LastStep from "./pages/laundry/LastStep";
 import QuickCheckout from "./pages/quick-checkout/QuickCheckout";
 import OrderConfirmation from "./pages/OrderConfirmation";
-import ComponentsPreview from "./pages/_dev/ComponentsPreview";
 import { StateInspector } from "./components/dev/StateInspector";
 
 const queryClient = new QueryClient();
@@ -39,7 +38,6 @@ const App = () => (
           <Route path="/laundry/last-step" element={<LastStep />} />
           <Route path="/order-confirmation" element={<OrderConfirmation />} />
           <Route path="/quick-checkout" element={<QuickCheckout />} />
-          <Route path="/_dev/components" element={<ComponentsPreview />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
