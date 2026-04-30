@@ -7,6 +7,7 @@ import { haptics } from "@/lib/haptics";
 export default function OrderConfirmation() {
   const navigate = useNavigate();
   const reset = useOrderStore((s) => s.reset);
+  const setFlowType = useOrderStore((s) => s.setFlowType);
 
   useEffect(() => {
     haptics.success();
@@ -22,6 +23,9 @@ export default function OrderConfirmation() {
         className="h-[42px] px-6 rounded-[8px] text-sm font-semibold"
         onClick={() => {
           haptics.light();
+          // Graduate NU → RU after a successful order. In production this
+          // mirrors order_count > 0 on the customer profile.
+          setFlowType("existingUser");
           reset();
           navigate("/");
         }}
