@@ -19,7 +19,7 @@ export default function OrderConfirmation() {
         Your order has been received. We'll be in touch shortly.
       </p>
       <Button
-        className="h-12 px-6 text-sm font-semibold"
+        className="h-[42px] px-6 text-sm font-semibold"
         onClick={() => {
           haptics.light();
           reset();
