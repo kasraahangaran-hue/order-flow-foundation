@@ -1,4 +1,3 @@
-import type { PickupState, DropoffState } from "@/stores/orderStore";
 import { todayIso, buildPickupSlotsForDay, buildDropoffSlotsForDay } from "@/data/slots";
 
 // HANDOFF — NU/RU schedule defaulting:
@@ -18,10 +17,19 @@ import { todayIso, buildPickupSlotsForDay, buildDropoffSlotsForDay } from "@/dat
 // Drop-off rule:
 //   Both NU and RU default to +2 days (the earliest FREE day). +1 Tomorrow
 //   has a +50% delivery surcharge.
-import { getIsFirstOrder } from "@/lib/userType";
+// NOTE: We intentionally do NOT import from "@/lib/userType" or
+// "@/stores/orderStore" at module scope — that creates a circular dependency
+// (orderStore → scheduleDefaults → userType → orderStore) which leaves
+// `useOrderStore` undefined during initial state evaluation and crashes the
+// app to a white screen.
+//
+// Instead, callers that need NU-aware defaults pass `isFirstOrder` in
+// explicitly. Initial store creation defaults to RU ("door"), which matches
+// the store's initial flowType of "existingUser".
+import type { PickupState, DropoffState } from "@/stores/orderStore";
 
-export function getDefaultPickup(): PickupState {
-  const mode: PickupState["mode"] = getIsFirstOrder() ? "in_person" : "door";
+export function getDefaultPickup(isFirstOrder = false): PickupState {
+  const mode: PickupState["mode"] = isFirstOrder ? "in_person" : "door";
   const todaySlots = buildPickupSlotsForDay(0);
   const firstToday = todaySlots[0];
   if (firstToday) {

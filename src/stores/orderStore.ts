@@ -271,7 +271,13 @@ export const useOrderStore = create<OrderState>()(
       // TODO: When washAndFold is false on submit, exclude Press & Hang from the
       // priced order regardless of addPressing flag — needs to be handled in
       // cart/checkout logic.
-      setFlowType: (flowType) => set({ flowType }),
+      setFlowType: (flowType) =>
+        set(() => ({
+          flowType,
+          // Re-derive the pickup default so NU lands on "in_person" and RU
+          // on "door" when the flow type changes via the State Inspector.
+          pickup: getDefaultPickup(flowType === "newUser"),
+        })),
       setServices: (patch) =>
         set((s) => ({ services: { ...s.services, ...patch } })),
       setPressingPrefs: (prefs) =>
@@ -333,7 +339,9 @@ export const useOrderStore = create<OrderState>()(
           addresses: state.addresses,
           selectedAddressId: state.selectedAddressId,
           pendingAddressDraft: null,
-          pickup: getDefaultPickup(),
+          // reset() always returns to RU ("existingUser"), so pickup mode
+          // defaults to "door". NU defaults are applied via setFlowType.
+          pickup: getDefaultPickup(false),
           dropoff: getDefaultDropoff(),
           driverInstructions: null,
           orderInstructions: null,
