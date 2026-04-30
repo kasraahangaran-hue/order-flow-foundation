@@ -9,22 +9,37 @@ interface CarouselCard {
   eyebrow: string;
   title: string;
   body: string;
+  /**
+   * Asset type for this card. The Intro card is the only video — the
+   * Steps are static images. Engineering wires `assetUrl` to either a
+   * <video> element (when assetType === "video") or an <img> element
+   * (when assetType === "image"). For now both render as colored
+   * placeholders distinguished by `placeholderBg`.
+   */
+  assetType: "video" | "image";
   // Placeholder bg color so testers can see swiping works.
   placeholderBg: string;
 }
 
-// HANDOFF — Video assets:
-// Each card is currently a colored placeholder. In production each is an
-// autoplay-muted-loop <video> from the marketing CDN. To wire:
-//   - Replace the placeholder div in the card with:
-//     <video src={card.videoUrl} autoPlay muted loop playsInline className="h-full w-full object-cover" />
-//   - Add a `videoUrl` field to each entry in CARDS below.
+// HANDOFF — Carousel assets:
+// All cards currently render as colored placeholders. In production the
+// Intro card plays a <video> (autoplay muted loop) and Steps 1-4 are
+// static <img> elements, all sourced from the marketing CDN.
+//
+// To wire:
+//   - Replace the placeholder div with a conditional render:
+//     {card.assetType === "video"
+//       ? <video autoPlay muted playsInline loop src={card.assetUrl} className="..." />
+//       : <img src={card.assetUrl} alt={card.title} className="..." />}
+//   - Add an `assetUrl` field to each entry in CARDS below pointing at
+//     the matching CDN asset.
 const CARDS: CarouselCard[] = [
   {
     id: "intro",
     eyebrow: "INTRO",
     title: "Ordering on Washmen",
     body: "Discover how easy it is to do your laundry with Washmen",
+    assetType: "video",
     placeholderBg: "bg-washmen-light-aqua",
   },
   {
@@ -32,6 +47,7 @@ const CARDS: CarouselCard[] = [
     eyebrow: "STEP 1",
     title: "Prepare Your Laundry",
     body: "Put your laundry in separate bags. You can use any bag you have at home",
+    assetType: "image",
     placeholderBg: "bg-washmen-light-green",
   },
   {
@@ -39,6 +55,7 @@ const CARDS: CarouselCard[] = [
     eyebrow: "STEP 2",
     title: "Leave Bags Outside",
     body: "Leave your laundry at your doorstep or hand them to the driver",
+    assetType: "image",
     placeholderBg: "bg-washmen-light-pink",
   },
   {
@@ -46,6 +63,7 @@ const CARDS: CarouselCard[] = [
     eyebrow: "STEP 3",
     title: "Cleaned at Our Facility",
     body: "Your items are cared for at our global-award winning facility.",
+    assetType: "image",
     placeholderBg: "bg-washmen-secondary-100",
   },
   {
@@ -53,6 +71,7 @@ const CARDS: CarouselCard[] = [
     eyebrow: "STEP 4",
     title: "Delivery",
     body: "Your clean clothes are delivered back to you. Laundry Bags will be included for your next order",
+    assetType: "image",
     placeholderBg: "bg-washmen-light-red",
   },
 ];
@@ -141,11 +160,13 @@ export default function HowItWorks() {
                 )}
                 style={{ aspectRatio: "16 / 9" }}
               >
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-washmen-primary">
-                    <Play className="h-5 w-5 fill-white text-white" />
+                {card.assetType === "video" && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-washmen-primary">
+                      <Play className="h-5 w-5 fill-white text-white" />
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
 
               {/* Caption */}
@@ -156,7 +177,7 @@ export default function HowItWorks() {
                 <h2 className="text-lg font-semibold text-washmen-primary">
                   {card.title}
                 </h2>
-                <p className="text-sm leading-relaxed text-washmen-primary">
+                <p className="text-sm leading-relaxed text-washmen-slate-grey">
                   {card.body}
                 </p>
               </div>
@@ -189,7 +210,7 @@ export default function HowItWorks() {
             <button
               type="button"
               onClick={handlePlaceOrder}
-              className="press-effect flex h-[60px] w-full items-center justify-between rounded-[14px] bg-washmen-secondary-100 px-4 text-left"
+              className="press-effect flex h-[60px] w-full items-center justify-between rounded-[16px] bg-washmen-secondary-100 px-4 text-left"
             >
               <span className="text-base font-semibold text-washmen-primary">
                 Place a Washmen Order
@@ -203,7 +224,7 @@ export default function HowItWorks() {
             <button
               type="button"
               onClick={handleViewPricing}
-              className="press-effect flex h-[60px] w-full items-center justify-between rounded-[14px] bg-washmen-secondary-100 px-4 text-left"
+              className="press-effect flex h-[60px] w-full items-center justify-between rounded-[16px] bg-washmen-secondary-100 px-4 text-left"
             >
               <span className="text-base font-semibold text-washmen-primary">
                 View Pricing
@@ -220,7 +241,7 @@ export default function HowItWorks() {
             <button
               type="button"
               onClick={handleContactCs}
-              className="press-effect flex h-[60px] w-full items-center justify-between rounded-[14px] bg-washmen-secondary-100 px-4 text-left"
+              className="press-effect flex h-[60px] w-full items-center justify-between rounded-[16px] bg-washmen-secondary-100 px-4 text-left"
             >
               <span className="text-base font-semibold text-washmen-primary">
                 Contact Customer Service
