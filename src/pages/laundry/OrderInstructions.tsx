@@ -14,6 +14,7 @@ import { OrderLayout } from "@/components/order/OrderLayout";
 import { InstructionsCard } from "@/components/order/InstructionsCard";
 import { Button } from "@/components/ui/button";
 import { useOrderStore } from "@/stores/orderStore";
+import { useIsFirstOrder } from "@/lib/userType";
 import { haptics } from "@/lib/haptics";
 import { CreasesSheet } from "@/components/order/CreasesSheet";
 import { StarchSheet } from "@/components/order/StarchSheet";
@@ -58,6 +59,7 @@ export default function OrderInstructions() {
 
   const userPrefsFolding = useUserPrefsStore((s) => s.folding);
   const setUserPrefsFolding = useUserPrefsStore((s) => s.setFolding);
+  const isFirstOrder = useIsFirstOrder();
 
   const hasAnyInstruction =
     Boolean(specialRequests.trim()) ||
@@ -248,16 +250,20 @@ export default function OrderInstructions() {
           }}
         />
 
-        {/* 6. Auto-Approvals */}
-        <InstructionsCard
-          title="Auto-Approvals"
-          icon={BadgeCheck}
-          value={autoApprovals ? summarizeAutoApprovals(autoApprovals) : null}
-          onPress={() => {
-            haptics.light();
-            setAutoApprovalsSheetOpen(true);
-          }}
-        />
+        {/* 6. Auto-Approvals — hidden for new users per the NU spec.
+            Auto-Approvals is configured on the Wash & Fold pricing page
+            (native, out of scope for the web flow) for first-time users. */}
+        {!isFirstOrder && (
+          <InstructionsCard
+            title="Auto-Approvals"
+            icon={BadgeCheck}
+            value={autoApprovals ? summarizeAutoApprovals(autoApprovals) : null}
+            onPress={() => {
+              haptics.light();
+              setAutoApprovalsSheetOpen(true);
+            }}
+          />
+        )}
       </div>
       <CreasesSheet
         open={creasesSheetOpen}
