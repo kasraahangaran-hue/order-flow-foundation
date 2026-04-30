@@ -1,10 +1,13 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ChevronDown } from "lucide-react";
 import { OrderLayout } from "@/components/order/OrderLayout";
 import { ServiceSelector } from "@/components/order/ServiceSelector";
 import { Button } from "@/components/ui/button";
 import { useOrderStore } from "@/stores/orderStore";
 import { haptics } from "@/lib/haptics";
 import { useIsFirstOrder } from "@/lib/userType";
+import { cn } from "@/lib/utils";
 
 export default function SelectService() {
   const navigate = useNavigate();
@@ -52,6 +55,78 @@ export default function SelectService() {
         entryPoint="laundry"
         onLearnMoreWashAndFold={() => navigate("/laundry/wash-and-fold-info")}
       />
+
+      {/* NU-only FAQ section. Scrolls with the service list per Figma. */}
+      {isFirstOrder && (
+        <section className="mt-6">
+          <h2 className="mb-3 text-base font-bold text-washmen-primary">
+            FAQ
+          </h2>
+          <div className="flex flex-col gap-2">
+            <FaqItem question="How much will it cost?">
+              <p className="text-sm leading-relaxed text-washmen-primary">
+                The final bill is calculated once we count your items at our
+                facility. To estimate your bill, visit the{" "}
+                <button
+                  type="button"
+                  onClick={() => {
+                    haptics.light();
+                    // Pricing page is native — placeholder for now. Wire to
+                    // the native bridge once the pricing page integration
+                    // lands.
+                  }}
+                  className="press-effect inline underline underline-offset-2 font-medium"
+                >
+                  pricing section.
+                </button>
+              </p>
+            </FaqItem>
+            <FaqItem question="Do I need to wait for the driver?">
+              <div className="flex flex-col gap-2 text-sm leading-relaxed text-washmen-primary">
+                <p>Not necessarily.</p>
+                <p>
+                  For each service selected, put your laundry in separate bags
+                  and leave them outside your door.
+                </p>
+                <p>You can use any bag you have at home.</p>
+              </div>
+            </FaqItem>
+          </div>
+        </section>
+      )}
     </OrderLayout>
+  );
+}
+
+interface FaqItemProps {
+  question: string;
+  children: React.ReactNode;
+}
+
+function FaqItem({ question, children }: FaqItemProps) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="overflow-hidden rounded-[12px] bg-white">
+      <button
+        type="button"
+        onClick={() => {
+          haptics.light();
+          setOpen((o) => !o);
+        }}
+        className="press-effect flex w-full items-center justify-between gap-3 px-4 py-[14px] text-left"
+        aria-expanded={open}
+      >
+        <span className="text-sm font-semibold text-washmen-primary">
+          {question}
+        </span>
+        <ChevronDown
+          className={cn(
+            "h-4 w-4 shrink-0 text-washmen-primary transition-transform duration-200",
+            open && "rotate-180"
+          )}
+        />
+      </button>
+      {open && <div className="px-4 pb-4 pt-0">{children}</div>}
+    </div>
   );
 }
