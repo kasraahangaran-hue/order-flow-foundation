@@ -87,9 +87,11 @@ export default function HowItWorks() {
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const el = e.currentTarget;
-    const cardWidth = el.clientWidth;
-    if (cardWidth <= 0) return;
-    const idx = Math.round(el.scrollLeft / cardWidth);
+    // Cards are 88% of the viewport width with snap-start. Each card's
+    // scroll offset = cardWidth * idx. Use clientWidth * 0.88 as the step.
+    const step = el.clientWidth * 0.88;
+    if (step <= 0) return;
+    const idx = Math.round(el.scrollLeft / step);
     if (idx !== activeCard && idx >= 0 && idx < CARDS.length) {
       setActiveCard(idx);
     }
@@ -122,10 +124,14 @@ export default function HowItWorks() {
           onScroll={handleScroll}
           className="no-scrollbar flex snap-x snap-mandatory overflow-x-auto"
         >
-          {CARDS.map((card) => (
+          {CARDS.map((card, idx) => (
             <div
               key={card.id}
-              className="flex w-full shrink-0 snap-center flex-col px-4"
+              className={cn(
+                "flex w-[88%] shrink-0 snap-start flex-col",
+                idx === 0 ? "pl-4 pr-2" : "pr-2",
+                idx === CARDS.length - 1 && "pr-4",
+              )}
             >
               {/* Video placeholder */}
               <div
@@ -133,7 +139,7 @@ export default function HowItWorks() {
                   "relative w-full overflow-hidden rounded-[16px]",
                   card.placeholderBg,
                 )}
-                style={{ aspectRatio: "4 / 5" }}
+                style={{ aspectRatio: "16 / 9" }}
               >
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="flex h-12 w-12 items-center justify-center rounded-full bg-washmen-primary">
@@ -144,13 +150,13 @@ export default function HowItWorks() {
 
               {/* Caption */}
               <div className="mt-4 flex flex-col gap-1">
-                <p className="text-xs font-semibold uppercase tracking-wide text-washmen-primary/60">
+                <p className="text-xs font-semibold uppercase tracking-wide text-washmen-primary">
                   {card.eyebrow}
                 </p>
                 <h2 className="text-lg font-semibold text-washmen-primary">
                   {card.title}
                 </h2>
-                <p className="text-sm text-washmen-primary/70">
+                <p className="text-sm leading-relaxed text-washmen-primary">
                   {card.body}
                 </p>
               </div>
