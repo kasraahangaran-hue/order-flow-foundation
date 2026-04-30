@@ -34,7 +34,7 @@ function FreeDeliveryTag({ isSelected }: { isSelected: boolean }) {
     <div
       className={cn(
         "mt-1 inline-flex w-fit rounded-[2px] px-[3px] py-px",
-        isSelected ? "bg-[#A4FF00]" : "bg-washmen-light-green"
+        isSelected ? "bg-washmen-primary-green" : "bg-washmen-light-green"
       )}
     >
       <span className="text-[10px] font-medium leading-[14px] tracking-[0.3px] text-washmen-primary">
@@ -120,11 +120,11 @@ export function DateSlotPicker({
                   onClick={handleSelect}
                   className={cn(
                     "press-effect flex w-full shrink-0 flex-col overflow-hidden rounded-[6px] border text-left",
-                    isSel ? "border-washmen-primary" : "border-[#f2f3f8]"
+                    isSel ? "border-washmen-primary" : "border-washmen-pale-grey"
                   )}
                 >
                   {/* Purple badge — no border, the outer wrapper carries it. Stays purple regardless of selection. */}
-                  <div className="flex h-[19px] flex-shrink-0 items-center justify-center gap-[2px] bg-[#9176FF] px-1">
+                  <div className="flex h-[19px] flex-shrink-0 items-center justify-center gap-[2px] bg-washmen-express-delivery px-1">
                     <Clock className="h-[10px] w-[10px] text-white" strokeWidth={2.5} />
                     <span className="whitespace-nowrap text-[9px] font-bold italic leading-[7px] tracking-[0.4px] text-white">
                       NEXT-DAY DELIVERY
@@ -161,7 +161,7 @@ export function DateSlotPicker({
                   "press-effect flex w-full shrink-0 flex-col gap-px rounded-[6px] border px-3 py-2 text-left text-washmen-primary",
                   isSel
                     ? "border-washmen-primary bg-washmen-light-green"
-                    : "border-[#f2f3f8] bg-white"
+                    : "border-washmen-pale-grey bg-white"
                 )}
               >
                 <p className="text-[14px] font-normal leading-[20px] tracking-[0.1px]">
@@ -201,7 +201,7 @@ export function DateSlotPicker({
                     "press-effect flex w-full shrink-0 flex-col items-start gap-0.5 rounded-[6px] border px-3 py-2 text-left",
                     isSel
                       ? "border-washmen-primary bg-washmen-light-green"
-                      : "border-[#f2f3f8] bg-white"
+                      : "border-washmen-pale-grey bg-white"
                   )}
                 >
                   {prefix ? (
@@ -227,7 +227,7 @@ export function DateSlotPicker({
                   "press-effect flex w-full shrink-0 flex-col items-start gap-0.5 rounded-[6px] border px-3 py-2 text-left",
                   isSel
                     ? "border-washmen-primary bg-washmen-light-green"
-                    : "border-[#f2f3f8] bg-white"
+                    : "border-washmen-pale-grey bg-white"
                 )}
               >
                 <p className="text-[12px] font-light leading-[18px] tracking-[0.1px] text-washmen-primary">

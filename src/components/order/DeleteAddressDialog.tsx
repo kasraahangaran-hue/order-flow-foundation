@@ -18,7 +18,7 @@ export function DeleteAddressDialog({
           <h2 className="text-[16px] font-semibold leading-[22px] text-washmen-primary">
             Delete Address
           </h2>
-          <p className="text-[13px] font-light leading-[18px] text-[#585871]">
+          <p className="text-[13px] font-light leading-[18px] text-washmen-slate-grey">
             Are you sure you want to delete this address?
           </p>
           <button
@@ -34,7 +34,7 @@ export function DeleteAddressDialog({
           <button
             type="button"
             onClick={() => onOpenChange(false)}
-            className="press-effect text-[14px] font-medium leading-[20px] text-[#585871]"
+            className="press-effect text-[14px] font-medium leading-[20px] text-washmen-slate-grey"
           >
             Cancel
           </button>

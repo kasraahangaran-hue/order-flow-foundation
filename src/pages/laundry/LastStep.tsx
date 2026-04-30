@@ -97,7 +97,7 @@ function PromoProgressDots({ used, total }: PromoProgressDotsProps) {
             <div
               className={cn(
                 "h-[2px] w-[4px] shrink-0",
-                i < used - 1 ? "bg-washmen-primary" : "bg-[#EFEFF4]"
+                i < used - 1 ? "bg-washmen-primary" : "bg-washmen-light-grey"
               )}
             />
           )}
@@ -220,10 +220,10 @@ const SERVICE_META: Record<
   CartItem["service"],
   { label: string; bagColor: string }
 > = {
-  washAndFold: { label: "Wash & Fold", bagColor: "text-[#02FFF7]" },
-  cleanAndPress: { label: "Clean & Press", bagColor: "text-[#A4FF00]" },
-  bedAndBath: { label: "Bed & Bath", bagColor: "text-[#FF8CF9]" },
-  pressOnly: { label: "Press Only", bagColor: "text-[#E7E7E7]" },
+  washAndFold: { label: "Wash & Fold", bagColor: "text-washmen-primary-aqua" },
+  cleanAndPress: { label: "Clean & Press", bagColor: "text-washmen-primary-green" },
+  bedAndBath: { label: "Bed & Bath", bagColor: "text-washmen-primary-pink" },
+  pressOnly: { label: "Press Only", bagColor: "text-washmen-cloudy-blue" },
 };
 
 interface PaymentSummaryFlatProps {
@@ -409,7 +409,7 @@ function PaymentSummaryItemized({
                           <p className="text-[13px] leading-[18px] tracking-[0.4px]">
                             {item.discountedPrice !== undefined ? (
                               <>
-                                <span className="text-[#F13578]">
+                                <span className="text-washmen-discount">
                                   AED {item.discountedPrice.toFixed(2)}
                                 </span>{" "}
                                 <span className="text-washmen-secondary-300 line-through">
@@ -440,7 +440,7 @@ function PaymentSummaryItemized({
                   </div>
                   {service === "washAndFold" && (hasPressing || hasFolding) && (
                     // TODO: Make copy dynamic based on which sub-services are actually selected (only Press & Hang vs only Folding vs both)
-                    <div className="mt-2 rounded-[8px] bg-[#E5FFFE] p-2">
+                    <div className="mt-2 rounded-[8px] bg-washmen-light-aqua p-2">
                       <p className="text-[12px] font-light leading-[18px] tracking-[0.1px] text-washmen-primary">
                         <span className="font-medium">Press & Hang </span>
                         <span>and </span>
@@ -657,7 +657,7 @@ export default function LastStep() {
             )}
           </button>
           {promosExpanded && (
-            <div className="flex flex-col gap-3 border-t border-[#efeff4] px-4 pt-1 pb-4">
+            <div className="flex flex-col gap-3 border-t border-washmen-light-grey px-4 pt-1 pb-4">
               {hasAvailablePromos && (
                 <div className="no-scrollbar -mx-4 flex items-center gap-4 overflow-x-auto px-4 pt-3">
                   {AVAILABLE_PROMOS.map((promo) => (
@@ -672,7 +672,7 @@ export default function LastStep() {
                 </div>
               )}
               <div>
-                <div className="rounded-[6px] border border-[#f2f3f8] bg-white px-4 py-3">
+                <div className="rounded-[6px] border border-washmen-pale-grey bg-white px-4 py-3">
                   <input
                     type="text"
                     value={promoInput}
@@ -687,7 +687,7 @@ export default function LastStep() {
                       if (promoInput.trim()) tryApplyTypedCode();
                     }}
                     placeholder="Type your promocode here"
-                    className="w-full bg-transparent text-left text-[14px] text-washmen-primary placeholder:text-[#C3C8DB] focus:outline-none"
+                    className="w-full bg-transparent text-left text-[14px] text-washmen-primary placeholder:text-washmen-cloudy-blue focus:outline-none"
                   />
                 </div>
                 <div className="mt-1 h-4 text-left text-[11px]">
@@ -704,7 +704,7 @@ export default function LastStep() {
                   )}
                 </div>
               </div>
-              <div className="flex items-center gap-8 border-t border-[#EFEFF4] pt-4">
+              <div className="flex items-center gap-8 border-t border-washmen-light-grey pt-4">
                 <div className="flex flex-1 items-center gap-3">
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary">
                     <Coins className="h-4 w-4 text-washmen-primary" />

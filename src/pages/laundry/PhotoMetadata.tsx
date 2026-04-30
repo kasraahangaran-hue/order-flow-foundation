@@ -111,7 +111,7 @@ export default function PhotoMetadata() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#FAFBFC]">
+    <div className="flex min-h-screen flex-col bg-washmen-bg">
       <div className="flex-1 overflow-y-auto px-5 pt-6 pb-32">
         {/* Photo with retake overlay */}
         <div className="flex justify-center">
@@ -128,7 +128,7 @@ export default function PhotoMetadata() {
                 setRetakeCameraOpen(true);
               }}
               aria-label="Retake photo"
-              className="press-effect absolute -bottom-3 -right-3 flex h-10 w-10 items-center justify-center rounded-full bg-[#585871] text-white shadow-md"
+              className="press-effect absolute -bottom-3 -right-3 flex h-10 w-10 items-center justify-center rounded-full bg-washmen-slate-grey text-white shadow-md"
             >
               <Camera className="h-5 w-5" />
             </button>
@@ -146,11 +146,11 @@ export default function PhotoMetadata() {
             onChange={(e) => setBrand(e.target.value.slice(0, 15))}
             maxLength={15}
             placeholder="Enter brand (max 15 characters)"
-            className="mt-2 h-12 w-full rounded-[6px] border border-[#f2f3f8] bg-white px-3 text-[14px] font-light leading-[20px] tracking-[0.1px] text-washmen-primary placeholder:text-[#c3c8db] focus:border-washmen-primary focus:outline-none focus:ring-2 focus:ring-washmen-primary/20"
+            className="mt-2 h-12 w-full rounded-[6px] border border-washmen-pale-grey bg-white px-3 text-[14px] font-light leading-[20px] tracking-[0.1px] text-washmen-primary placeholder:text-washmen-cloudy-blue focus:border-washmen-primary focus:outline-none focus:ring-2 focus:ring-washmen-primary/20"
           />
         </div>
 
-        <p className="mt-6 text-[12px] font-light leading-[18px] tracking-[0.1px] text-[#585871]">
+        <p className="mt-6 text-[12px] font-light leading-[18px] tracking-[0.1px] text-washmen-slate-grey">
           Let us know which items are delicate or have stains
         </p>
 
@@ -187,7 +187,7 @@ export default function PhotoMetadata() {
 
       {/* Footer */}
       <div
-        className="fixed inset-x-0 bottom-0 border-t border-[#f2f3f8] bg-white px-5 pt-3 pb-4"
+        className="fixed inset-x-0 bottom-0 border-t border-washmen-pale-grey bg-white px-5 pt-3 pb-4"
         style={{ paddingBottom: "max(env(safe-area-inset-bottom), 16px)" }}
       >
         <div className="flex items-center gap-2">
@@ -249,16 +249,16 @@ function CategoryCard({ icon: Icon, title, configured, onTap }: CategoryCardProp
     <button
       type="button"
       onClick={onTap}
-      className="press-effect flex items-center gap-3 rounded-[8px] border border-[#f2f3f8] bg-white px-4 py-3 text-left"
+      className="press-effect flex items-center gap-3 rounded-[8px] border border-washmen-pale-grey bg-white px-4 py-3 text-left"
     >
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] bg-[#e1defb]">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] bg-washmen-light-blue">
         <Icon className="h-5 w-5 text-washmen-primary" />
       </div>
       <span className="flex-1 text-[14px] font-normal leading-[20px] tracking-[0.1px] text-washmen-primary">
         {title}
       </span>
       {configured ? (
-        <span className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-[#A4FF00]">
+        <span className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-washmen-primary-green">
           <Check className="h-3 w-3 text-washmen-primary" strokeWidth={3} />
         </span>
       ) : (

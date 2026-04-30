@@ -22,7 +22,7 @@ export function PromoDetailsSheet({ open, onOpenChange, promo }: PromoDetailsShe
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent
-        className="max-h-[90vh] rounded-t-[24px] border-0 bg-[#FAFBFC]"
+        className="max-h-[90vh] rounded-t-[24px] border-0 bg-washmen-bg"
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
         <div className="px-6 pt-4 pb-8">

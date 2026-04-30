@@ -64,7 +64,7 @@ export function OthersSheet({
             Any additional information?
           </p>
         </div>
-        <div className="flex flex-col divide-y divide-[#f2f3f8]">
+        <div className="flex flex-col divide-y divide-washmen-pale-grey">
           {OTHER_FLAG_OPTIONS.map((opt) => (
             <CheckboxRow
               key={opt.value}
