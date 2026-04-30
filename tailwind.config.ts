@@ -24,12 +24,51 @@ export default {
         foreground: "hsl(var(--foreground))",
         "subtle-bg": "hsl(var(--subtle-bg))",
         washmen: {
+          // Primary
           primary: "hsl(var(--washmen-primary))",
-          "primary-light": "hsl(var(--washmen-primary-light))",
-          orange: "hsl(var(--washmen-orange))",
-          success: "hsl(var(--washmen-success))",
-          warning: "hsl(var(--washmen-warning))",
-          error: "hsl(var(--washmen-error))",
+          "primary-aqua": "hsl(var(--washmen-primary-aqua))",
+          "primary-green": "hsl(var(--washmen-primary-green))",
+          "primary-orange": "hsl(var(--washmen-primary-orange))",
+          "primary-pink": "hsl(var(--washmen-primary-pink))",
+          "primary-red": "hsl(var(--washmen-primary-red))",
+          "primary-teal": "hsl(var(--washmen-primary-teal))",
+          "notification-red": "hsl(var(--washmen-notification-red))",
+
+          // Light / secondary variants
+          "light-blue": "hsl(var(--washmen-light-blue))",
+          "light-aqua": "hsl(var(--washmen-light-aqua))",
+          "light-green": "hsl(var(--washmen-light-green))",
+          "light-orange": "hsl(var(--washmen-light-orange))",
+          "light-pink": "hsl(var(--washmen-light-pink))",
+          "light-red": "hsl(var(--washmen-light-red))",
+          "light-teal": "hsl(var(--washmen-light-teal))",
+
+          // Greys
+          "slate-grey": "hsl(var(--washmen-slate-grey))",
+          "cloudy-blue": "hsl(var(--washmen-cloudy-blue))",
+          "light-grey": "hsl(var(--washmen-light-grey))",
+          "pale-grey": "hsl(var(--washmen-pale-grey))",
+          bg: "hsl(var(--washmen-bg))",
+
+          // Function colors
+          discount: "hsl(var(--washmen-discount))",
+          "info-toast": "hsl(var(--washmen-info-toast))",
+          "express-delivery": "hsl(var(--washmen-express-delivery))",
+          "secondary-express": "hsl(var(--washmen-secondary-express))",
+
+          // === Deprecated aliases ===
+          // HANDOFF: kept so existing usages don't break during Phase 2 of
+          // the color migration. Remove once all usages are migrated to the
+          // canonical names above.
+          "primary-light": "hsl(var(--washmen-primary-light))", // deprecated → light-blue
+          orange: "hsl(var(--washmen-primary-orange))",         // deprecated → primary-orange
+          pink: "hsl(var(--washmen-primary-pink))",             // deprecated → primary-pink
+          red: "hsl(var(--washmen-primary-red))",               // deprecated → primary-red
+          "secondary-blue": "hsl(var(--washmen-light-blue))",   // deprecated → light-blue
+          "secondary-aqua": "hsl(var(--washmen-light-aqua))",   // deprecated → light-aqua
+          "secondary-red": "hsl(var(--washmen-light-red))",     // deprecated → light-red
+
+          // === Pre-design-system neutral ladder (deprecated, kept for compat) ===
           "secondary-50": "hsl(var(--washmen-secondary-50))",
           "secondary-100": "hsl(var(--washmen-secondary-100))",
           "secondary-200": "hsl(var(--washmen-secondary-200))",
@@ -40,16 +79,11 @@ export default {
           "secondary-700": "hsl(var(--washmen-secondary-700))",
           "secondary-800": "hsl(var(--washmen-secondary-800))",
           "secondary-900": "hsl(var(--washmen-secondary-900))",
-          "secondary-blue": "hsl(var(--washmen-secondary-blue))",
-          "secondary-aqua": "hsl(var(--washmen-secondary-aqua))",
-          "secondary-express": "hsl(var(--washmen-secondary-express))",
-          "light-green": "hsl(var(--washmen-light-green))",
-          "primary-green": "hsl(var(--washmen-primary-green))",
-          "light-pink": "hsl(var(--washmen-light-pink))",
-          "pink": "hsl(var(--washmen-pink))",
-          "light-grey": "hsl(var(--washmen-light-grey))",
-          "secondary-red": "hsl(var(--washmen-secondary-red))",
-          "red": "hsl(var(--washmen-red))",
+
+          // Misc remaining (audit usage and migrate if possible)
+          success: "hsl(var(--washmen-success))",
+          warning: "hsl(var(--washmen-warning))",
+          error: "hsl(var(--washmen-error))",
           "aqua-stroke": "hsl(var(--washmen-aqua-stroke))",
         },
         primary: {
