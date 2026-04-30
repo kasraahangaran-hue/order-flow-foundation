@@ -6,6 +6,7 @@ import { haptics } from "@/lib/haptics";
 import { ServiceCard } from "./ServiceCard";
 import { PricingLink } from "./PricingLink";
 import { useOrderStore, ServicesState } from "@/stores/orderStore";
+import { PRESSING_CATEGORIES } from "@/data/pressingCategories";
 
 export type SelectedServicesSnapshot = ServicesState;
 
@@ -16,12 +17,6 @@ interface ServiceSelectorProps {
   onSkip?: () => void;
   onLearnMoreWashAndFold?: () => void;
 }
-
-const PLACEHOLDER_PRESSING_ITEMS: { name: string; price: string }[] = [
-  { name: "All T-Shirts / Polos", price: "+ AED 9 /item" },
-  { name: "All Tank / Crop Tops", price: "+ AED 9 /item" },
-  { name: "All Shirts / Blouses", price: "+ AED 10 /item" },
-];
 
 function HangerIcon({ className }: { className?: string }) {
   return (
