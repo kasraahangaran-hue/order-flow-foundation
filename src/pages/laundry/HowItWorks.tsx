@@ -1,4 +1,3 @@
-import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Play, ShoppingBag, MessageCircle } from "lucide-react";
 import { haptics } from "@/lib/haptics";
@@ -27,10 +26,8 @@ interface CarouselCard {
 // static <img> elements, all sourced from the marketing CDN.
 //
 // To wire:
-//   - Replace the placeholder div with a conditional render:
-//     {card.assetType === "video"
-//       ? <video autoPlay muted playsInline loop src={card.assetUrl} className="..." />
-//       : <img src={card.assetUrl} alt={card.title} className="..." />}
+//   - Replace the placeholder div with a conditional render based on
+//     card.assetType (<video> for "video", <img> for "image").
 //   - Add an `assetUrl` field to each entry in CARDS below pointing at
 //     the matching CDN asset.
 // Image tile is a fixed 154px tall × 256px (steps) / 265px (intro) wide
@@ -80,8 +77,6 @@ const CARDS: CarouselCard[] = [
 
 export default function HowItWorks() {
   const navigate = useNavigate();
-  const [activeCard, setActiveCard] = useState(0);
-  const scrollRef = useRef<HTMLDivElement>(null);
 
   const handleBack = () => {
     haptics.light();
@@ -106,45 +101,33 @@ export default function HowItWorks() {
     // For now this is a no-op.
   };
 
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const el = e.currentTarget;
-    // Each card stride: 256 (width) + 8 (gap) = 264.
-    // Intro card is 9px wider but using the steps stride is close enough
-    // for active-dot tracking.
-    const stride = 264;
-    const idx = Math.round(el.scrollLeft / stride);
-    if (idx !== activeCard && idx >= 0 && idx < CARDS.length) {
-      setActiveCard(idx);
-    }
-  };
-
   return (
-    <div className="flex min-h-screen flex-col bg-washmen-bg">
-      {/* Header */}
-      <header className="sticky top-0 z-10 bg-washmen-bg">
-        <div className="flex h-14 items-center gap-6 px-4">
+    <div className="flex h-full min-h-screen flex-col bg-subtle-bg">
+      {/* Header — matches OrderLayout (px-6 pt-6 pb-0) but with a back
+          chevron before the title since this is a sub-screen of the NU
+          homepage flow rather than a numbered step. */}
+      <header className="sticky top-0 z-10 bg-subtle-bg px-6 pt-6 pb-0">
+        <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={handleBack}
-            className="press-effect -ml-2 flex h-10 w-10 items-center justify-center rounded-full"
+            className="press-effect -ml-1 flex h-6 w-6 items-center justify-center"
             aria-label="Back"
           >
             <ArrowLeft className="h-5 w-5 text-washmen-primary" />
           </button>
-          <h1 className="text-[20px] font-bold leading-[24px] tracking-[0.4px] text-washmen-primary">
+          <h1 className="text-lg font-bold text-washmen-primary">
             How It Works
           </h1>
         </div>
       </header>
 
-      {/* Body */}
-      <main className="flex-1 pb-8">
-        {/* Carousel — fixed-pixel cards (256/265px wide), 8px gap */}
-        <div
-          ref={scrollRef}
-          onScroll={handleScroll}
-          className="no-scrollbar flex snap-x snap-mandatory gap-2 overflow-x-auto px-6"
-        >
+      {/* Body — main has no horizontal padding so the carousel can extend
+          edge-to-edge; the carousel applies its own px-6 gutter. The
+          Ready? section below uses px-6 to match. */}
+      <main className="flex-1 pb-8 pt-6">
+        {/* Carousel — fixed-pixel cards (256/265px wide), 8px gap. */}
+        <div className="no-scrollbar flex snap-x snap-mandatory gap-2 overflow-x-auto px-6">
           {CARDS.map((card, idx) => (
             <div
               key={card.id}
@@ -175,10 +158,10 @@ export default function HowItWorks() {
                 <p className="text-[10px] font-bold uppercase leading-[12px] tracking-[0.3px] text-washmen-primary">
                   {card.eyebrow}
                 </p>
-                <h2 className="text-[16px] font-bold leading-[34px] tracking-[0.4px] text-washmen-primary">
+                <p className="mt-1 text-[16px] font-bold leading-[24px] tracking-[0.4px] text-washmen-primary">
                   {card.title}
-                </h2>
-                <p className="whitespace-pre-line text-[16px] font-light leading-[21px] tracking-[0.4px] text-washmen-slate-grey">
+                </p>
+                <p className="mt-1 whitespace-pre-line text-sm font-light leading-[20px] tracking-[0.1px] text-washmen-slate-grey">
                   {card.body}
                 </p>
               </div>
@@ -186,24 +169,9 @@ export default function HowItWorks() {
           ))}
         </div>
 
-        {/* Dots */}
-        <div className="mt-4 flex justify-center gap-1.5">
-          {CARDS.map((card, i) => (
-            <span
-              key={card.id}
-              className={cn(
-                "h-1.5 rounded-full transition-all",
-                i === activeCard
-                  ? "w-4 bg-washmen-primary"
-                  : "w-1.5 bg-washmen-primary/25",
-              )}
-            />
-          ))}
-        </div>
-
-        {/* Ready? section */}
-        <section className="mt-8 px-4">
-          <h2 className="mb-3 text-[20px] font-bold leading-[24px] tracking-[0.4px] text-washmen-primary">
+        {/* Ready? section — same px-6 gutter as the rest of the app */}
+        <section className="mt-8 px-6">
+          <h2 className="mb-3 text-lg font-bold text-washmen-primary">
             Ready?
           </h2>
           <div className="flex flex-col gap-3">
@@ -216,8 +184,8 @@ export default function HowItWorks() {
               <span className="text-sm font-semibold text-washmen-primary">
                 Place a Washmen Order
               </span>
-              {/* Figma uses a small grey rounded-square tile (#F2F3F8), not a circle. */}
-              <span className="flex h-8 w-8 items-center justify-center rounded-[4px] bg-washmen-pale-grey">
+              {/* Figma uses a small grey rounded-square tile (#F2F3F8). */}
+              <span className="flex h-8 w-7 items-center justify-center rounded-[4px] bg-washmen-pale-grey">
                 <ArrowRight className="h-4 w-4 text-washmen-primary" />
               </span>
             </button>
@@ -226,7 +194,7 @@ export default function HowItWorks() {
             <button
               type="button"
               onClick={handleViewPricing}
-              className="press-effect flex h-[42px] w-full items-center justify-between rounded-[8px] bg-washmen-light-blue pl-4 pr-2 text-left"
+              className="press-effect flex h-[42px] w-full items-center justify-between rounded-[8px] bg-washmen-light-blue pl-4 pr-4 text-left"
             >
               <span className="text-sm font-semibold text-washmen-primary">
                 View Pricing
@@ -234,14 +202,14 @@ export default function HowItWorks() {
               {/* HANDOFF: Figma uses a custom shopping-bag-with-tag icon
                   (the "nav pricing" component). Lucide ShoppingBag is a
                   stand-in. Swap for the custom asset when available. */}
-              <ShoppingBag className="mr-2 h-5 w-5 text-washmen-primary" />
+              <ShoppingBag className="h-5 w-5 text-washmen-primary" />
             </button>
 
             {/* Contact Customer Service */}
             <button
               type="button"
               onClick={handleContactCs}
-              className="press-effect flex h-[42px] w-full items-center justify-between rounded-[8px] bg-washmen-light-blue pl-4 pr-2 text-left"
+              className="press-effect flex h-[42px] w-full items-center justify-between rounded-[8px] bg-washmen-light-blue pl-4 pr-4 text-left"
             >
               <span className="text-sm font-semibold text-washmen-primary">
                 Contact Customer Service
@@ -249,7 +217,7 @@ export default function HowItWorks() {
               {/* HANDOFF: Figma uses an outline WhatsApp glyph (no fill,
                   primary blue). Lucide MessageCircle is a stand-in. Swap
                   for the official WhatsApp outline SVG. */}
-              <MessageCircle className="mr-2 h-5 w-5 text-washmen-primary" />
+              <MessageCircle className="h-5 w-5 text-washmen-primary" />
             </button>
           </div>
         </section>
