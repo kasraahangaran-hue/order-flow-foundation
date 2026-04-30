@@ -7,6 +7,12 @@ export interface UserPrefsState {
   // When set, this preference is applied to new orders unless overridden per-order.
   folding: FoldingSelection | null;
 
+  // HANDOFF: In production this flag is account-level server-side state.
+  // The web layer reads it and writes it via the same API used by iOS.
+  // Persisted to localStorage here only for prototype purposes.
+  wfPlusTermsAccepted: boolean;
+  setWfPlusTermsAccepted: (accepted: boolean) => void;
+
   setFolding: (folding: FoldingSelection | null) => void;
   reset: () => void;
 }
@@ -15,8 +21,10 @@ export const useUserPrefsStore = create<UserPrefsState>()(
   persist(
     (set) => ({
       folding: null,
+      wfPlusTermsAccepted: false,
+      setWfPlusTermsAccepted: (accepted) => set({ wfPlusTermsAccepted: accepted }),
       setFolding: (folding) => set({ folding }),
-      reset: () => set({ folding: null }),
+      reset: () => set({ folding: null, wfPlusTermsAccepted: false }),
     }),
     {
       name: "washmen.user-prefs.v1",
