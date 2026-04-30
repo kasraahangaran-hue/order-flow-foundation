@@ -246,7 +246,7 @@ export default function AddressDetailsScreen() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <div className="flex items-center gap-2 px-4 py-3">
+      <div className="flex items-center gap-2 px-6 py-3">
         <button
           onClick={onBack}
           className="flex h-10 w-10 items-center justify-center rounded-full"
@@ -256,13 +256,13 @@ export default function AddressDetailsScreen() {
         </button>
       </div>
 
-      <div className="flex-1 space-y-4 px-4 pb-4">
+      <div className="flex-1 space-y-4 px-6 pb-4">
         <h1 className="text-[20px] font-semibold text-washmen-primary">
           {titleVerb} {TYPE_TITLE[type]}
         </h1>
 
         {/* Type chips */}
-        <div className="-mx-4 overflow-x-auto px-4">
+        <div className="-mx-6 overflow-x-auto px-6">
           <div className="flex gap-2">
             {TYPES.map((t) => (
               <AddressTypeTile
@@ -379,9 +379,9 @@ export default function AddressDetailsScreen() {
         ) : null}
       </div>
 
-      <div className="border-t border-border bg-card p-4">
+      <div className="border-t border-border bg-card px-6 pt-3 pb-4">
         <Button
-          className="h-12 w-full text-sm font-semibold"
+          className="h-[42px] w-full text-sm font-semibold"
           onClick={onContinue}
           disabled={!canContinue}
         >

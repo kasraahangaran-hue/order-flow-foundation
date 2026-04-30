@@ -621,7 +621,7 @@ export default function LastStep() {
       onBack={() => navigate("/laundry/order-instructions")}
       footerSlot={
         <Button
-          className="flex-1 h-12 text-sm font-semibold"
+          className="flex-1 h-[42px] text-sm font-semibold"
           disabled={!ctaEnabled}
           onClick={onPay}
         >

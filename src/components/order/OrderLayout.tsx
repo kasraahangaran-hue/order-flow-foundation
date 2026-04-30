@@ -27,7 +27,7 @@ export function OrderLayout({
   return (
     <div className="flex h-full min-h-screen flex-col bg-subtle-bg">
       {/* Header */}
-      <header className="sticky top-0 z-10 bg-subtle-bg px-4 pt-6 pb-0">
+      <header className="sticky top-0 z-10 bg-subtle-bg px-6 pt-6 pb-0">
         <div className="flex items-start justify-between gap-3">
           <h1 className="text-lg font-bold text-washmen-primary">
             {title}
@@ -65,15 +65,15 @@ export function OrderLayout({
       </header>
 
       {/* Scrollable content */}
-      <main className="no-scrollbar flex-1 overflow-y-auto px-4 pb-4 pt-[26px]">{children}</main>
+      <main className="no-scrollbar flex-1 overflow-y-auto px-6 pb-4 pt-[26px]">{children}</main>
 
       {/* Footer */}
       {footerSlot !== undefined && (
         <footer
-          className="sticky bottom-0 z-10 bg-washmen-primary-light px-4 py-4"
+          className="sticky bottom-0 z-10 bg-washmen-primary-light px-6 pt-3 pb-4"
           style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 1rem)" }}
         >
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             {onBack && (
               <button
                 type="button"
@@ -82,7 +82,7 @@ export function OrderLayout({
                   haptics.light();
                   onBack();
                 }}
-                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-primary bg-background text-primary transition-transform active:scale-95"
+                className="flex w-12 h-[42px] shrink-0 items-center justify-center rounded-md border border-primary bg-background text-primary transition-transform active:scale-95"
               >
                 <ArrowLeft className="h-5 w-5" />
               </button>
