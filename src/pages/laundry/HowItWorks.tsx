@@ -143,7 +143,7 @@ export default function HowItWorks() {
         <div
           ref={scrollRef}
           onScroll={handleScroll}
-          className="no-scrollbar flex snap-x snap-mandatory gap-2 overflow-x-auto px-4"
+          className="no-scrollbar flex snap-x snap-mandatory gap-2 overflow-x-auto px-6"
         >
           {CARDS.map((card, idx) => (
             <div
@@ -211,9 +211,9 @@ export default function HowItWorks() {
             <button
               type="button"
               onClick={handlePlaceOrder}
-              className="press-effect flex h-12 w-full items-center justify-between rounded-[6px] bg-washmen-light-blue pl-4 pr-2 text-left"
+              className="press-effect flex h-[42px] w-full items-center justify-between rounded-[8px] bg-washmen-light-blue pl-4 pr-2 text-left"
             >
-              <span className="text-base font-semibold text-washmen-primary">
+              <span className="text-sm font-semibold text-washmen-primary">
                 Place a Washmen Order
               </span>
               {/* Figma uses a small grey rounded-square tile (#F2F3F8), not a circle. */}
@@ -226,9 +226,9 @@ export default function HowItWorks() {
             <button
               type="button"
               onClick={handleViewPricing}
-              className="press-effect flex h-12 w-full items-center justify-between rounded-[6px] bg-washmen-light-blue pl-4 pr-2 text-left"
+              className="press-effect flex h-[42px] w-full items-center justify-between rounded-[8px] bg-washmen-light-blue pl-4 pr-2 text-left"
             >
-              <span className="text-base font-semibold text-washmen-primary">
+              <span className="text-sm font-semibold text-washmen-primary">
                 View Pricing
               </span>
               {/* HANDOFF: Figma uses a custom shopping-bag-with-tag icon
@@ -241,9 +241,9 @@ export default function HowItWorks() {
             <button
               type="button"
               onClick={handleContactCs}
-              className="press-effect flex h-12 w-full items-center justify-between rounded-[6px] bg-washmen-light-blue pl-4 pr-2 text-left"
+              className="press-effect flex h-[42px] w-full items-center justify-between rounded-[8px] bg-washmen-light-blue pl-4 pr-2 text-left"
             >
-              <span className="text-base font-semibold text-washmen-primary">
+              <span className="text-sm font-semibold text-washmen-primary">
                 Contact Customer Service
               </span>
               {/* HANDOFF: Figma uses an outline WhatsApp glyph (no fill,
