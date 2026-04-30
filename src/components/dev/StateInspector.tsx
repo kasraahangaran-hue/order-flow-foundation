@@ -153,6 +153,25 @@ function StateInspectorInner() {
                 Reset Flow
               </button>
             </div>
+
+            <div className="border-t border-border px-4 py-4">
+              <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                Quick Nav
+              </p>
+              <p className="mb-3 text-[11px] text-muted-foreground">
+                Jump to specific screens for testing without walking the whole flow.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  navigate("/laundry/prepare-your-bags");
+                }}
+                className="press-effect h-[36px] w-full rounded-md border border-border bg-background text-sm font-medium text-foreground hover:border-primary/40"
+              >
+                Prepare Your Bags
+              </button>
+            </div>
           </div>
         </SheetContent>
       </Sheet>
