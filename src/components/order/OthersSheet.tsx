@@ -41,7 +41,10 @@ export function OthersSheet({
       titleSlot={
         <button
           type="button"
-          onClick={() => onOpenChange(false)}
+          onClick={() => {
+            haptics.light();
+            onOpenChange(false);
+          }}
           aria-label="Close"
           className="press-effect flex h-6 w-6 items-center justify-center"
         >

@@ -318,7 +318,7 @@ export default function AddressMapScreen() {
         <div className="flex items-center gap-2 rounded-full bg-white px-3 py-2 shadow-md">
           <button
             onClick={onBack}
-            className="flex h-8 w-8 items-center justify-center rounded-full"
+            className="press-effect flex h-8 w-8 items-center justify-center rounded-full"
             aria-label="Back"
           >
             <ArrowLeft className="h-5 w-5 text-washmen-primary" />
@@ -342,9 +342,12 @@ export default function AddressMapScreen() {
           {search ? (
             <button
               onMouseDown={(e) => e.preventDefault()}
-              onClick={() => setSearch("")}
+              onClick={() => {
+                haptics.light();
+                setSearch("");
+              }}
               aria-label="Clear search"
-              className="flex h-6 w-6 items-center justify-center"
+              className="press-effect flex h-6 w-6 items-center justify-center"
             >
               <X className="h-4 w-4 text-washmen-slate-grey" />
             </button>
@@ -358,7 +361,7 @@ export default function AddressMapScreen() {
                 key={m.placeId}
                 onClick={() => onPickSuggestion(m)}
                 className={
-                  "flex w-full items-start gap-3 px-4 py-3 text-left " +
+                  "press-effect flex w-full items-start gap-3 px-4 py-3 text-left " +
                   (i < suggestions.length - 1
                     ? "border-b border-washmen-pale-grey"
                     : "")
@@ -387,7 +390,7 @@ export default function AddressMapScreen() {
       <button
         onClick={onLocateMe}
         aria-label="Locate me"
-        className="absolute bottom-44 right-4 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-lg"
+        className="press-effect absolute bottom-44 right-4 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-lg"
       >
         {locating ? (
           <Loader2 className="h-5 w-5 animate-spin text-washmen-primary" />

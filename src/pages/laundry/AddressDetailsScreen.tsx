@@ -249,7 +249,7 @@ export default function AddressDetailsScreen() {
       <div className="flex items-center gap-2 px-6 py-3">
         <button
           onClick={onBack}
-          className="flex h-10 w-10 items-center justify-center rounded-full"
+          className="press-effect flex h-10 w-10 items-center justify-center rounded-full"
           aria-label="Back"
         >
           <ArrowLeft className="h-5 w-5 text-washmen-primary" />

@@ -41,7 +41,7 @@ export function BottomSheetShell({
   };
 
   const primaryBtnClass = cn(
-    "h-[42px] w-full rounded-[8px] bg-washmen-primary text-white text-[14px] font-medium hover:bg-washmen-primary/90 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+    "press-effect h-[42px] w-full rounded-[8px] bg-washmen-primary text-white text-[14px] font-medium hover:bg-washmen-primary/90 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
   );
 
   return (
@@ -81,7 +81,7 @@ export function BottomSheetShell({
                 <button
                   type="button"
                   onClick={() => fire(onBack ?? (() => onOpenChange(false)))}
-                  className="w-12 h-[42px] rounded-[8px] bg-white border border-washmen-primary flex items-center justify-center"
+                  className="press-effect w-12 h-[42px] rounded-[8px] bg-white border border-washmen-primary flex items-center justify-center"
                 >
                   <ArrowLeft className="w-4 h-4 text-washmen-primary" />
                 </button>

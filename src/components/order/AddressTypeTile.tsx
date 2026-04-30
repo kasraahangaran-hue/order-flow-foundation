@@ -42,7 +42,7 @@ export function AddressTypeTile({
         type="button"
         onClick={onSelect}
         className={cn(
-          "flex shrink-0 items-center gap-2 rounded-full border px-3 py-2 transition-colors",
+          "press-effect flex shrink-0 items-center gap-2 rounded-full border px-3 py-2 transition-colors",
           selected
             ? "border-washmen-primary bg-washmen-primary text-white"
             : "border-washmen-pale-grey bg-white text-washmen-primary",
@@ -61,7 +61,7 @@ export function AddressTypeTile({
       type="button"
       onClick={onSelect}
       className={cn(
-        "flex aspect-square w-full flex-col items-center justify-center gap-3 rounded-2xl border-2 bg-white p-4 transition-all",
+        "press-effect flex aspect-square w-full flex-col items-center justify-center gap-3 rounded-2xl border-2 bg-white p-4 transition-all",
         selected
           ? "border-washmen-primary shadow-md"
           : "border-washmen-pale-grey hover:border-washmen-cloudy-blue",

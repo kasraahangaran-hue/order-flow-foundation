@@ -199,7 +199,10 @@ export default function OrderInstructions() {
                     </button>
                     <button
                       type="button"
-                      onClick={() => setPendingDeleteId(item.id)}
+                      onClick={() => {
+                        haptics.warning();
+                        setPendingDeleteId(item.id);
+                      }}
                       aria-label="Delete item"
                       className="press-effect absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-black/60 text-white"
                     >

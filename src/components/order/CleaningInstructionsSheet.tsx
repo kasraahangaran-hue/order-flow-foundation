@@ -3,6 +3,7 @@ import { Sparkles, X } from "lucide-react";
 import { BottomSheetShell } from "./BottomSheetShell";
 import { RadioRow } from "./RadioRow";
 import { CLEANING_INSTRUCTION_OPTIONS } from "@/lib/orderInstructionsLabels";
+import { haptics } from "@/lib/haptics";
 import type { CleaningInstruction } from "@/stores/orderStore";
 
 interface CleaningInstructionsSheetProps {
@@ -33,7 +34,10 @@ export function CleaningInstructionsSheet({
       titleSlot={
         <button
           type="button"
-          onClick={() => onOpenChange(false)}
+          onClick={() => {
+            haptics.light();
+            onOpenChange(false);
+          }}
           aria-label="Close"
           className="press-effect flex h-6 w-6 items-center justify-center"
         >

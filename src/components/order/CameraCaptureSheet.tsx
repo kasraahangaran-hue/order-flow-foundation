@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
+import { haptics } from "@/lib/haptics";
 
 interface CameraCaptureSheetProps {
   open: boolean;
@@ -106,7 +107,10 @@ export function CameraCaptureSheet({ open, onClose, onCapture }: CameraCaptureSh
       <div className="flex h-14 items-center justify-between px-4">
         <button
           type="button"
-          onClick={onClose}
+          onClick={() => {
+            haptics.light();
+            onClose();
+          }}
           aria-label="Close camera"
           className="press-effect flex h-10 w-10 items-center justify-center rounded-full bg-white/10"
         >
@@ -140,7 +144,10 @@ export function CameraCaptureSheet({ open, onClose, onCapture }: CameraCaptureSh
                 <p className="text-sm">{error}</p>
                 <button
                   type="button"
-                  onClick={() => fileInputRef.current?.click()}
+                  onClick={() => {
+                    haptics.light();
+                    fileInputRef.current?.click();
+                  }}
                   className="press-effect inline-flex h-10 items-center justify-center rounded-full bg-white px-5 text-sm font-semibold text-foreground"
                 >
                   Choose from Files
@@ -164,14 +171,20 @@ export function CameraCaptureSheet({ open, onClose, onCapture }: CameraCaptureSh
           <div className="flex w-full items-center justify-between">
             <button
               type="button"
-              onClick={retake}
+              onClick={() => {
+                haptics.light();
+                retake();
+              }}
               className="press-effect h-11 rounded-full px-5 text-sm font-semibold text-white"
             >
               Retake
             </button>
             <button
               type="button"
-              onClick={confirm}
+              onClick={() => {
+                haptics.medium();
+                confirm();
+              }}
               className="press-effect h-11 rounded-full bg-white px-6 text-sm font-semibold text-foreground"
             >
               Use Photo
@@ -180,7 +193,10 @@ export function CameraCaptureSheet({ open, onClose, onCapture }: CameraCaptureSh
         ) : (
           <button
             type="button"
-            onClick={capture}
+            onClick={() => {
+              haptics.medium();
+              capture();
+            }}
             disabled={!ready}
             aria-label="Capture"
             className="press-effect flex h-16 w-16 items-center justify-center rounded-full border-4 border-white disabled:opacity-50"

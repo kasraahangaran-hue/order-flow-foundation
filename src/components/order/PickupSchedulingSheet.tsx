@@ -150,6 +150,7 @@ export function PickupSchedulingSheet({ open, onOpenChange }: PickupSchedulingSh
           <button
             type="button"
             onClick={() => {
+              haptics.light();
               if (step === 2) setStep(1);
               else onOpenChange(false);
             }}
