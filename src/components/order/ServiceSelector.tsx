@@ -71,8 +71,6 @@ export function ServiceSelector({
   const services = useOrderStore((s) => s.services);
   const setServices = useOrderStore((s) => s.setServices);
 
-  const padding = variant === "screen" ? "px-0" : "px-0";
-
   const goToWashAndFoldInfo = () => navigate("/laundry/wash-and-fold-info");
   const learnMoreWF = onLearnMoreWashAndFold ?? goToWashAndFoldInfo;
 
@@ -80,7 +78,7 @@ export function ServiceSelector({
   const pressActive = services.addPressing && services.washAndFold;
 
   return (
-    <div className={cn("flex flex-col gap-2", padding)}>
+    <div className={cn("flex flex-col gap-2")}>
       {/* Wash & Fold + Add Pressing combo card */}
       <div className="rounded-card bg-card shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
         <ComboRow
