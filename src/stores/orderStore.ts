@@ -272,7 +272,7 @@ export const useOrderStore = create<OrderState>()(
       // priced order regardless of addPressing flag — needs to be handled in
       // cart/checkout logic.
       setFlowType: (flowType) =>
-        set((s) => ({
+        set(() => ({
           flowType,
           // Re-derive the pickup default so NU lands on "in_person" and RU
           // on "door" when the flow type changes via the State Inspector.
