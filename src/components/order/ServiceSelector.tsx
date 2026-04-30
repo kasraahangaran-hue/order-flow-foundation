@@ -78,7 +78,7 @@ export function ServiceSelector({
       <div className="rounded-card bg-card shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
         <ComboRow
           icon={WashingMachine}
-          iconBgClass="bg-washmen-secondary-aqua"
+          iconBgClass="bg-washmen-light-aqua"
           iconFgClass="text-washmen-primary"
           title="Wash & Fold"
           priceLabel="AED 75 per bag"
@@ -126,7 +126,7 @@ export function ServiceSelector({
               <div
                 className={cn(
                   "flex h-12 w-12 shrink-0 items-center justify-center rounded-full transition-colors",
-                  pressActive ? "bg-washmen-secondary-aqua" : "bg-washmen-secondary-100"
+                  pressActive ? "bg-washmen-light-aqua" : "bg-washmen-secondary-100"
                 )}
               >
                 <Shirt
@@ -230,7 +230,7 @@ export function ServiceSelector({
           <ComboRow
             icon={Shirt}
             iconBgClass={
-                  services.washAndFold ? "bg-washmen-secondary-aqua" : "bg-washmen-secondary-100"
+                  services.washAndFold ? "bg-washmen-light-aqua" : "bg-washmen-secondary-100"
             }
             iconFgClass={
               services.washAndFold
@@ -432,7 +432,7 @@ function ComboRow({
             </span>
           )}
           {priceLabel && (
-            <span className="rounded-md bg-washmen-secondary-aqua px-2 py-0.5 text-[12px] font-medium text-washmen-primary">
+            <span className="rounded-md bg-washmen-light-aqua px-2 py-0.5 text-[12px] font-medium text-washmen-primary">
               {priceLabel}
             </span>
           )}
