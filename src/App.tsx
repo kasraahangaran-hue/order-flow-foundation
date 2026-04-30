@@ -15,6 +15,7 @@ import AddressTypeScreen from "./pages/laundry/AddressTypeScreen";
 import AddressDetailsScreen from "./pages/laundry/AddressDetailsScreen";
 import LastStep from "./pages/laundry/LastStep";
 import PrepareYourBags from "./pages/laundry/PrepareYourBags";
+import HowItWorks from "./pages/laundry/HowItWorks";
 import QuickCheckout from "./pages/quick-checkout/QuickCheckout";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import { StateInspector } from "./components/dev/StateInspector";
@@ -39,6 +40,7 @@ const App = () => (
           <Route path="/laundry/order-details/address/type" element={<AddressTypeScreen />} />
           <Route path="/laundry/order-details/address/details" element={<AddressDetailsScreen />} />
           <Route path="/laundry/last-step" element={<LastStep />} />
+          <Route path="/laundry/how-it-works" element={<HowItWorks />} />
           <Route path="/laundry/prepare-your-bags" element={<PrepareYourBags />} />
           <Route path="/order-confirmation" element={<OrderConfirmation />} />
           <Route path="/quick-checkout" element={<QuickCheckout />} />
