@@ -69,16 +69,18 @@ export function PickupSchedulingSheet({ open, onOpenChange }: PickupSchedulingSh
 
   const days = useMemo(() => buildPickupMockDays(), []);
 
-  const [step, setStep] = useState<1 | 2>(1);
-  const [pickupMode, setPickupMode] = useState<PickupMode>("door");
+  const isFirstOrder = useIsFirstOrder();
+  const [step, setStep] = useState<1 | 2>(isFirstOrder ? 2 : 1);
+  const [pickupMode, setPickupMode] = useState<PickupMode>(
+    isFirstOrder ? "in_person" : "door"
+  );
   const [selectedDate, setSelectedDate] = useState<string>(days[0].date);
   const [selectedSlot, setSelectedSlot] = useState<SlotOption | null>(null);
-  const isFirstOrder = useIsFirstOrder();
 
   useEffect(() => {
     if (open) {
-      setStep(1);
-      setPickupMode(storedPickup?.mode ?? "door");
+      setStep(isFirstOrder ? 2 : 1);
+      setPickupMode(isFirstOrder ? "in_person" : (storedPickup?.mode ?? "door"));
       const seedDate = storedPickup?.date ?? days[0].date;
       setSelectedDate(seedDate);
       const day = days.find((d) => d.date === seedDate) ?? days[0];
@@ -88,7 +90,7 @@ export function PickupSchedulingSheet({ open, onOpenChange }: PickupSchedulingSh
       const earliestFree = day.slots.find((s) => s.freeDelivery) ?? day.slots[0];
       setSelectedSlot(stored ?? earliestFree ?? null);
     }
-  }, [open, storedPickup, days]);
+  }, [open, storedPickup, days, isFirstOrder]);
 
   const onDone = () => {
     if (!selectedSlot) return;
@@ -151,7 +153,8 @@ export function PickupSchedulingSheet({ open, onOpenChange }: PickupSchedulingSh
             type="button"
             onClick={() => {
               haptics.light();
-              if (step === 2) setStep(1);
+              // For NU, step 1 doesn't exist — back closes the sheet outright.
+              if (step === 2 && !isFirstOrder) setStep(1);
               else onOpenChange(false);
             }}
             className="press-effect flex h-[42px] w-12 items-center justify-center rounded-[8px] border border-border bg-background"
