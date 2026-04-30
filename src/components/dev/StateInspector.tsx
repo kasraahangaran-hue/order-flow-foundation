@@ -53,6 +53,17 @@ function StateInspectorInner() {
     }
   };
 
+  const onResetFlow = () => {
+    store.reset();
+    setOpen(false);
+    // Send the user to the start of the flow so they see the reset state
+    // immediately. Don't override pricingPage flowType — that's not its
+    // start.
+    if (store.flowType !== "pricingPage") {
+      navigate("/laundry/select-service");
+    }
+  };
+
   return (
     <>
       <button
@@ -125,6 +136,22 @@ function StateInspectorInner() {
                   );
                 })}
               </div>
+            </div>
+
+            <div className="border-t border-border px-4 py-4">
+              <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                Reset Flow
+              </p>
+              <p className="mb-3 text-[11px] text-muted-foreground">
+                Clears cart, services, schedule, payment, promo, tip, instructions. Preserves your saved address and the current flow type.
+              </p>
+              <button
+                type="button"
+                onClick={onResetFlow}
+                className="press-effect h-[36px] w-full rounded-md border border-border bg-background text-sm font-medium text-foreground hover:border-primary/40"
+              >
+                Reset Flow
+              </button>
             </div>
           </div>
         </SheetContent>
