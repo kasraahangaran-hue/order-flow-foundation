@@ -6,6 +6,7 @@ import { haptics } from "@/lib/haptics";
 import { ServiceCard } from "./ServiceCard";
 import { PricingLink } from "./PricingLink";
 import { useOrderStore, ServicesState } from "@/stores/orderStore";
+import { PRESSING_CATEGORIES } from "@/data/pressingCategories";
 
 export type SelectedServicesSnapshot = ServicesState;
 
@@ -16,12 +17,6 @@ interface ServiceSelectorProps {
   onSkip?: () => void;
   onLearnMoreWashAndFold?: () => void;
 }
-
-const PLACEHOLDER_PRESSING_ITEMS: { name: string; price: string }[] = [
-  { name: "All T-Shirts / Polos", price: "+ AED 9 /item" },
-  { name: "All Tank / Crop Tops", price: "+ AED 9 /item" },
-  { name: "All Shirts / Blouses", price: "+ AED 10 /item" },
-];
 
 function HangerIcon({ className }: { className?: string }) {
   return (
@@ -83,7 +78,7 @@ export function ServiceSelector({
       <div className="rounded-card bg-card shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
         <ComboRow
           icon={WashingMachine}
-          iconBgClass="bg-washmen-secondary-aqua"
+          iconBgClass="bg-washmen-light-aqua"
           iconFgClass="text-washmen-primary"
           title="Wash & Fold"
           priceLabel="AED 75 per bag"
@@ -131,7 +126,7 @@ export function ServiceSelector({
               <div
                 className={cn(
                   "flex h-12 w-12 shrink-0 items-center justify-center rounded-full transition-colors",
-                  pressActive ? "bg-washmen-secondary-aqua" : "bg-washmen-secondary-100"
+                  pressActive ? "bg-washmen-light-aqua" : "bg-washmen-secondary-100"
                 )}
               >
                 <Shirt
@@ -182,46 +177,60 @@ export function ServiceSelector({
             </div>
             <div className="px-4 pb-4 pl-[76px]">
               <div className="flex flex-col gap-1">
-                {PLACEHOLDER_PRESSING_ITEMS.map((item) => (
-                  <div key={item.name} className="flex items-center gap-3">
-                    <span
-                      className={cn(
-                        "flex-1 text-[12px] font-light leading-[18px] transition-colors",
-                        pressActive ? "text-washmen-secondary-700" : "text-washmen-secondary-400"
-                      )}
-                    >
-                      {item.name}
-                    </span>
-                    <span
-                      className={cn(
-                        "shrink-0 rounded-md px-1.5 py-0.5 text-[12px] font-normal leading-[18px] transition-colors",
-                        pressActive
-                          ? "bg-washmen-secondary-aqua text-washmen-primary"
-                          : "bg-washmen-secondary-100 text-washmen-secondary-400"
-                      )}
-                    >
-                      {item.price}
-                    </span>
-                  </div>
-                ))}
+                {(() => {
+                  const selectedIds = services.pressingPrefs?.items ?? [];
+                  const displayCats = selectedIds.length > 0
+                    ? PRESSING_CATEGORIES.filter((c) => selectedIds.includes(c.id))
+                    : PRESSING_CATEGORIES.slice(0, 3);
+                  return displayCats.map((cat) => (
+                    <div key={cat.id} className="flex items-center gap-3">
+                      <span
+                        className={cn(
+                          "flex-1 text-[12px] font-light leading-[18px] transition-colors",
+                          pressActive ? "text-washmen-secondary-700" : "text-washmen-secondary-400"
+                        )}
+                      >
+                        {cat.label}
+                      </span>
+                      <span
+                        className={cn(
+                          "shrink-0 rounded-md px-1.5 py-0.5 text-[12px] font-normal leading-[18px] transition-colors",
+                          pressActive
+                            ? "bg-washmen-light-aqua text-washmen-primary"
+                            : "bg-washmen-secondary-100 text-washmen-secondary-400"
+                        )}
+                      >
+                        + AED {cat.ratePlus} /item
+                      </span>
+                    </div>
+                  ));
+                })()}
               </div>
-              <button
-                type="button"
-                onClick={(e) => e.stopPropagation()}
-                className={cn(
-                  "press-effect mt-2 inline-flex text-xs font-normal underline underline-offset-2 transition-colors",
-                  pressActive ? "text-washmen-primary" : "text-washmen-secondary-400"
-                )}
-              >
-                View Terms & Conditions
-              </button>
+              {services.pressingPrefs && services.pressingPrefs.items.length > 0 && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    haptics.light();
+                    navigate("/laundry/wash-and-fold-info/terms", {
+                      state: { mode: "view" },
+                    });
+                  }}
+                  className={cn(
+                    "press-effect mt-2 inline-flex text-xs font-normal underline underline-offset-2 transition-colors",
+                    pressActive ? "text-washmen-primary" : "text-washmen-secondary-400"
+                  )}
+                >
+                  View Terms & Conditions
+                </button>
+              )}
             </div>
           </div>
         ) : (
           <ComboRow
             icon={Shirt}
             iconBgClass={
-                  services.washAndFold ? "bg-washmen-secondary-aqua" : "bg-washmen-secondary-100"
+                  services.washAndFold ? "bg-washmen-light-aqua" : "bg-washmen-secondary-100"
             }
             iconFgClass={
               services.washAndFold
@@ -423,7 +432,7 @@ function ComboRow({
             </span>
           )}
           {priceLabel && (
-            <span className="rounded-md bg-washmen-secondary-aqua px-2 py-0.5 text-[12px] font-medium text-washmen-primary">
+            <span className="rounded-md bg-washmen-light-aqua px-2 py-0.5 text-[12px] font-medium text-washmen-primary">
               {priceLabel}
             </span>
           )}

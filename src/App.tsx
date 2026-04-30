@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "./pages/NotFound.tsx";
 import SelectService from "./pages/laundry/SelectService";
 import WashAndFoldInfo from "./pages/laundry/WashAndFoldInfo";
+import WashAndFoldTerms from "./pages/laundry/WashAndFoldTerms";
 import OrderDetails from "./pages/laundry/OrderDetails";
 import OrderInstructions from "./pages/laundry/OrderInstructions";
 import PhotoMetadata from "./pages/laundry/PhotoMetadata";
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/" element={<Navigate to="/laundry/select-service" replace />} />
           <Route path="/laundry/select-service" element={<SelectService />} />
           <Route path="/laundry/wash-and-fold-info" element={<WashAndFoldInfo />} />
+          <Route path="/laundry/wash-and-fold-info/terms" element={<WashAndFoldTerms />} />
           <Route path="/laundry/order-details" element={<OrderDetails />} />
           <Route path="/laundry/order-instructions" element={<OrderInstructions />} />
           <Route path="/laundry/order-instructions/photo" element={<PhotoMetadata />} />
