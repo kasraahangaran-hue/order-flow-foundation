@@ -1,4 +1,4 @@
-import { ArrowLeft, Check, X, HelpCircle, ChevronDown, ChevronRight } from "lucide-react";
+import { ArrowLeft, Check, X, HelpCircle, ChevronDown, ChevronRight, CheckCircle2, Plus } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,9 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { useUserPrefsStore } from "@/stores/userPrefsStore";
+import { useOrderStore } from "@/stores/orderStore";
+import { AutoApprovalsSheet } from "@/components/order/AutoApprovalsSheet";
+import { DEFAULT_AUTO_APPROVALS } from "@/lib/orderInstructionsLabels";
 import { haptics } from "@/lib/haptics";
 import { cn } from "@/lib/utils";
 
@@ -41,6 +44,10 @@ export default function WashAndFoldTerms() {
 
   const setWfPlusTermsAccepted = useUserPrefsStore((s) => s.setWfPlusTermsAccepted);
   const [faqOpen, setFaqOpen] = useState(false);
+  const [autoApprovalsSheetOpen, setAutoApprovalsSheetOpen] = useState(false);
+  const orderInstructions = useOrderStore((s) => s.orderInstructions);
+  const setOrderInstructions = useOrderStore((s) => s.setOrderInstructions);
+  const autoApprovals = orderInstructions?.autoApprovals ?? null;
 
   const handleAcknowledge = () => {
     haptics.medium();
@@ -110,10 +117,12 @@ export default function WashAndFoldTerms() {
             <ul className="mt-3 list-disc pl-5 text-sm text-washmen-secondary-700 flex flex-col gap-2">
               {NOT_SUITABLE_BULLETS.map((b) => (
                 <li key={b}>
-                  {b}
-                  <p className="ml-4 mt-1 text-sm font-bold text-washmen-secondary-900">
-                    use Clean & Press instead
-                  </p>
+                  {b},
+                  <ul className="mt-1 list-disc pl-5 marker:text-washmen-secondary-900">
+                    <li className="text-sm font-bold text-washmen-secondary-900">
+                      use Clean & Press instead
+                    </li>
+                  </ul>
                 </li>
               ))}
             </ul>
@@ -141,8 +150,30 @@ export default function WashAndFoldTerms() {
                   <ChevronRight className="h-5 w-5 text-washmen-secondary-700 shrink-0" />
                 )}
               </CollapsibleTrigger>
-              <CollapsibleContent className="mt-3 text-sm text-washmen-secondary-700">
-                Our team will identify it during sorting and contact you. Unsuitable items can be returned unwashed or transferred to Clean & Press at standard pricing.
+              <CollapsibleContent className="mt-3 flex flex-col gap-3">
+                <p className="text-sm text-washmen-secondary-700">
+                  Our team will identify it during sorting and contact you. Unsuitable items can be returned unwashed or transferred to Clean & Press at standard pricing.
+                </p>
+                <p className="text-sm text-washmen-secondary-700">
+                  You can also set automatic approvals on what we should do:
+                </p>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    haptics.light();
+                    setAutoApprovalsSheetOpen(true);
+                  }}
+                  className="press-effect flex w-full items-center justify-between gap-3 rounded-card bg-card px-4 py-3 text-left"
+                >
+                  <div className="flex items-center gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-washmen-primary-purple" />
+                    <span className="text-sm font-medium text-washmen-secondary-900">
+                      Auto-Approvals
+                    </span>
+                  </div>
+                  <Plus className="h-5 w-5 text-washmen-secondary-700" />
+                </button>
               </CollapsibleContent>
             </div>
           </Collapsible>
@@ -170,6 +201,12 @@ export default function WashAndFoldTerms() {
           </Button>
         </div>
       </footer>
+      <AutoApprovalsSheet
+        open={autoApprovalsSheetOpen}
+        onOpenChange={setAutoApprovalsSheetOpen}
+        initialValue={autoApprovals ?? DEFAULT_AUTO_APPROVALS}
+        onApply={(value) => setOrderInstructions({ autoApprovals: value })}
+      />
     </div>
   );
 }
