@@ -158,7 +158,7 @@ export default function OrderDetails() {
       onBack={() => navigate("/laundry/select-service")}
       footerSlot={
         <Button
-          className="flex-1 h-[42px] text-sm font-semibold"
+          className="flex-1 h-[42px] rounded-[8px] text-sm font-semibold"
           disabled={!ctaEnabled}
           onClick={() => {
             haptics.medium();

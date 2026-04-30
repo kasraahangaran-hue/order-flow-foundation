@@ -379,14 +379,16 @@ export default function AddressDetailsScreen() {
         ) : null}
       </div>
 
-      <div className="border-t border-border bg-card px-6 pt-3 pb-4">
-        <Button
-          className="h-[42px] w-full text-sm font-semibold"
-          onClick={onContinue}
-          disabled={!canContinue}
-        >
-          Continue
-        </Button>
+      <div className="border-t border-border bg-card pb-[max(env(safe-area-inset-bottom),1rem)]">
+        <div className="px-6 pt-3 pb-4">
+          <Button
+            className="h-[42px] w-full rounded-[8px] text-sm font-semibold"
+            onClick={onContinue}
+            disabled={!canContinue}
+          >
+            Continue
+          </Button>
+        </div>
       </div>
     </div>
   );
