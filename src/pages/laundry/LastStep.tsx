@@ -12,7 +12,6 @@ import {
   Info,
   Coins,
   Minus,
-  ShoppingBag,
 } from "lucide-react";
 import { OrderLayout } from "@/components/order/OrderLayout";
 import { Button } from "@/components/ui/button";
@@ -31,6 +30,24 @@ import {
   type PromoData,
 } from "@/data/promos";
 import { PromoDetailsSheet } from "@/components/order/PromoDetailsSheet";
+
+// Service-specific bag icons used in the cart row indicator. Each
+// service has its own colored bag — visually distinct so users can
+// scan their order at a glance. Files live in src/assets/icons/.
+import bagWashFoldUrl from "@/assets/icons/bag-wash-fold.svg";
+import bagCleanPressUrl from "@/assets/icons/bag-clean-press.svg";
+import bagBedBathUrl from "@/assets/icons/bag-bed-bath.svg";
+import bagPressOnlyUrl from "@/assets/icons/bag-press-only.svg";
+import bagShoeBagUrl from "@/assets/icons/bag-shoe-bag.svg";
+
+const BAG_ICON_BY_SERVICE: Record<CartItem["service"], string> = {
+  washAndFold: bagWashFoldUrl,
+  cleanAndPress: bagCleanPressUrl,
+  bedAndBath: bagBedBathUrl,
+  pressOnly: bagPressOnlyUrl,
+};
+// Reserved for future shoe & bag care service.
+void bagShoeBagUrl;
 
 /**
  * PROMO CODE LOGIC — checkout-stage only ("Available/Selected" state per spec).
@@ -218,12 +235,12 @@ function QuantityStepper({ value, onChange, min = 0, max = 10 }: QuantityStepper
 
 const SERVICE_META: Record<
   CartItem["service"],
-  { label: string; bagColor: string }
+  { label: string }
 > = {
-  washAndFold: { label: "Wash & Fold", bagColor: "text-washmen-primary-aqua" },
-  cleanAndPress: { label: "Clean & Press", bagColor: "text-washmen-primary-green" },
-  bedAndBath: { label: "Bed & Bath", bagColor: "text-washmen-primary-pink" },
-  pressOnly: { label: "Press Only", bagColor: "text-washmen-cloudy-blue" },
+  washAndFold: { label: "Wash & Fold" },
+  cleanAndPress: { label: "Clean & Press" },
+  bedAndBath: { label: "Bed & Bath" },
+  pressOnly: { label: "Press Only" },
 };
 
 interface PaymentSummaryFlatProps {
@@ -390,9 +407,11 @@ function PaymentSummaryItemized({
               return (
                 <div key={service} className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <ShoppingBag
-                      className={cn("h-4 w-4", meta.bagColor)}
-                      strokeWidth={2}
+                    <img
+                      src={BAG_ICON_BY_SERVICE[service]}
+                      alt=""
+                      className="h-5 w-5 select-none shrink-0"
+                      draggable={false}
                     />
                     <span className="text-sm font-semibold text-washmen-primary">
                       {meta.label}

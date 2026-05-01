@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { ShoppingBag, CircleCheck } from "lucide-react";
+import { CircleCheck } from "lucide-react";
 import { BottomSheetShell } from "./BottomSheetShell";
 import { RadioRow } from "./RadioRow";
 import { Switch } from "@/components/ui/switch";
 import type { AutoApprovalsState, WashAndFoldApprovalChoice } from "@/stores/orderStore";
+import bagCleanPressUrl from "@/assets/icons/bag-clean-press.svg";
+import bagWashFoldUrl from "@/assets/icons/bag-wash-fold.svg";
 
 interface AutoApprovalsSheetProps {
   open: boolean;
@@ -71,7 +73,7 @@ export function AutoApprovalsSheet({
         <div className="flex flex-col gap-4 pb-6 mb-6 border-b border-washmen-pale-grey">
           <div className="flex items-center gap-2">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center">
-              <ShoppingBag className="h-6 w-6 text-washmen-primary-green" strokeWidth={2} />
+              <img src={bagCleanPressUrl} alt="" className="h-6 w-6 select-none" draggable={false} />
             </div>
             <p className="text-[14px] font-medium leading-[20px] text-washmen-primary">
               Stain and Damage Approval
@@ -101,7 +103,7 @@ export function AutoApprovalsSheet({
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-2">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center">
-              <ShoppingBag className="h-6 w-6 text-washmen-primary-aqua" strokeWidth={2} />
+              <img src={bagWashFoldUrl} alt="" className="h-6 w-6 select-none" draggable={false} />
             </div>
             <p className="text-[14px] font-medium leading-[20px] text-washmen-primary">
               Wash and Fold Approval
