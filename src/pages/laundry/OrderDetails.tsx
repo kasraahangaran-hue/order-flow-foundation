@@ -95,9 +95,7 @@ function ValueRow({
 }) {
   return (
     <div className="flex items-center gap-2">
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center">
-        <Icon className="h-8 w-8 text-washmen-primary" />
-      </div>
+      <Icon className="h-8 w-8 shrink-0 text-washmen-primary" />
       <p
         className={cn(
           "min-w-0 flex-1 text-sm leading-[20px] tracking-[0.1px]",
@@ -119,9 +117,7 @@ function EmptyRow({ text }: { text: string }) {
 function TimeRow({ day, time }: { day: string; time: string }) {
   return (
     <div className="flex items-center gap-2">
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center">
-        <ClockIcon className="h-8 w-8" />
-      </div>
+      <ClockIcon className="h-8 w-8 shrink-0" />
       <div className="min-w-0 flex-1">
         <p className="text-sm font-normal leading-[20px] tracking-[0.1px] text-washmen-slate-grey">{day}</p>
         <p className="text-sm font-normal leading-[20px] tracking-[0.1px] text-washmen-slate-grey">{time}</p>
@@ -265,14 +261,13 @@ export default function OrderDetails() {
               const summary = summarizeDriverInstructions(driverInstructions);
               return (
                 <div className="flex items-start gap-2">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center">
-                    <img
-                      src={driverInstructionsIconUrl}
-                      alt=""
-                      aria-hidden="true"
-                      className="h-8 w-8"
-                    />
-                  </div>
+                  <img
+                    src={driverInstructionsIconUrl}
+                    alt=""
+                    aria-hidden="true"
+                    className="h-8 w-8 shrink-0 select-none"
+                    draggable={false}
+                  />
                   <div className="min-w-0 flex-1 space-y-0.5">
                     <p className="text-sm leading-tight text-washmen-slate-grey">
                       <span className="font-semibold">Pick up:</span> <span className="font-normal">{summary.pickupSuffix}</span>
