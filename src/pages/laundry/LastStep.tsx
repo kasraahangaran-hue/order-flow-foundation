@@ -3,14 +3,11 @@ import { useNavigate } from "react-router-dom";
 import {
   ChevronDown,
   ChevronUp,
-  CreditCard,
   Pencil,
-  Tag,
   Apple,
   Check,
   Plus,
   Info,
-  Coins,
   Minus,
 } from "lucide-react";
 import { OrderLayout } from "@/components/order/OrderLayout";
@@ -42,6 +39,10 @@ import bagShoeBagUrl from "@/assets/icons/bag-shoe-bag.svg";
 // Used inside the Wash & Fold section when Press & Hang has items —
 // shown as a sub-header above the "priced per item" alert.
 import addPressingActiveUrl from "@/assets/icons/add-pressing-active.svg";
+import paymentSummaryUrl from "@/assets/icons/payment-summary.svg";
+import paymentMethodUrl from "@/assets/icons/payment-method.svg";
+import promocodeUrl from "@/assets/icons/promocode.svg";
+import creditUrl from "@/assets/icons/credit.svg";
 
 const BAG_ICON_BY_SERVICE: Record<CartItem["service"], string> = {
   washAndFold: bagWashFoldUrl,
@@ -288,7 +289,12 @@ function PaymentSummaryFlat({
         className="press-effect flex h-[52px] w-full items-center gap-3 px-3 py-0 text-left"
       >
         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
-          <CreditCard className="h-4 w-4 text-washmen-primary" />
+          <img
+            src={paymentSummaryUrl}
+            alt=""
+            className="h-5 w-5 shrink-0 select-none"
+            draggable={false}
+          />
         </div>
         <p className="flex-1 text-sm font-semibold leading-tight text-washmen-primary">
           Payment Summary
@@ -401,7 +407,12 @@ function PaymentSummaryItemized({
         className="press-effect flex h-[52px] w-full items-center gap-3 px-3 py-0 text-left"
       >
         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
-          <CreditCard className="h-4 w-4 text-washmen-primary" />
+          <img
+            src={paymentSummaryUrl}
+            alt=""
+            className="h-5 w-5 shrink-0 select-none"
+            draggable={false}
+          />
         </div>
         <p className="flex-1 text-sm font-semibold leading-tight text-washmen-primary">
           Payment Summary
@@ -596,7 +607,9 @@ export default function LastStep() {
       ? `Card **** ${payment.last4}`
       : payment?.method ?? "Apple Pay";
   const isApplePay = (payment?.method ?? "Apple Pay") === "Apple Pay";
-  const PaymentIcon = isApplePay ? Apple : CreditCard;
+  const PaymentIcon = Apple;
+  void PaymentIcon;
+  void isApplePay;
 
   const availableCount = AVAILABLE_PROMOS.length;
   const hasAvailablePromos = availableCount > 0;
@@ -718,7 +731,12 @@ export default function LastStep() {
             className="press-effect flex h-[52px] w-full items-center gap-3 px-3 py-0 text-left"
           >
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary">
-              <Tag className="h-4 w-4 text-washmen-primary" />
+              <img
+                src={promocodeUrl}
+                alt=""
+                className="h-5 w-5 shrink-0 select-none"
+                draggable={false}
+              />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold leading-tight text-washmen-primary">
@@ -787,7 +805,12 @@ export default function LastStep() {
               <div className="flex items-center gap-8 border-t border-washmen-light-grey pt-4">
                 <div className="flex flex-1 items-center gap-3">
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary">
-                    <Coins className="h-4 w-4 text-washmen-primary" />
+                    <img
+                      src={creditUrl}
+                      alt=""
+                      className="h-5 w-5 shrink-0 select-none"
+                      draggable={false}
+                    />
                   </div>
                   <span className="text-sm text-washmen-primary">Credits</span>
                 </div>
@@ -836,7 +859,12 @@ export default function LastStep() {
         >
           <div className="flex items-start gap-3">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
-              <PaymentIcon className="h-4 w-4 text-washmen-primary" />
+              <img
+                src={paymentMethodUrl}
+                alt=""
+                className="h-5 w-5 shrink-0 select-none"
+                draggable={false}
+              />
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-sm font-semibold leading-tight text-washmen-primary">
