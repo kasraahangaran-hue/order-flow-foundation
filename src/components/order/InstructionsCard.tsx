@@ -52,9 +52,7 @@ export function InstructionsCard({
       className="press-effect w-full rounded-card bg-white border border-washmen-pale-grey px-4 py-[10px] text-left"
     >
       <div className={`flex gap-2 ${subtitleWraps && hasValue ? "items-start" : "items-center"}`}>
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center">
-          <Icon className="h-6 w-6 text-washmen-primary" />
-        </div>
+        <Icon className="h-8 w-8 shrink-0 text-washmen-primary" />
         <div className="min-w-0 flex-1">
           <p className="text-[14px] font-normal leading-[20px] tracking-[0.1px] text-washmen-primary">
             {title}
