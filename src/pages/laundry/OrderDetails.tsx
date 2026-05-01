@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Clock, Pencil, Plus } from "lucide-react";
+import { Pencil, Plus } from "lucide-react";
 
 // Custom illustrative icons for Order Details rows. Multi-color washmen-
 // themed SVGs at 32×32. Clock stays Lucide (per Kasra's design preference).
@@ -8,6 +8,7 @@ import addressIconUrl from "@/assets/icons/order-address.svg";
 import pickupIconUrl from "@/assets/icons/order-pickup.svg";
 import dropoffIconUrl from "@/assets/icons/order-dropoff.svg";
 import driverInstructionsIconUrl from "@/assets/icons/order-driver-instructions.svg";
+import clockIconUrl from "@/assets/icons/order-clock.svg";
 import { OrderLayout } from "@/components/order/OrderLayout";
 import { Button } from "@/components/ui/button";
 import { useOrderStore } from "@/stores/orderStore";
@@ -81,6 +82,7 @@ function makeImageIcon(src: string): React.ComponentType<{ className?: string }>
 const AddressIcon = makeImageIcon(addressIconUrl);
 const PickupIcon = makeImageIcon(pickupIconUrl);
 const DropoffIcon = makeImageIcon(dropoffIconUrl);
+const ClockIcon = makeImageIcon(clockIconUrl);
 
 function ValueRow({
   icon: Icon,
@@ -93,8 +95,8 @@ function ValueRow({
 }) {
   return (
     <div className="flex items-center gap-2">
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center">
-        <Icon className="h-7 w-7 text-washmen-primary" />
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center">
+        <Icon className="h-8 w-8 text-washmen-primary" />
       </div>
       <p
         className={cn(
@@ -117,8 +119,8 @@ function EmptyRow({ text }: { text: string }) {
 function TimeRow({ day, time }: { day: string; time: string }) {
   return (
     <div className="flex items-center gap-2">
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center">
-        <Clock className="h-7 w-7 text-washmen-primary" />
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center">
+        <ClockIcon className="h-8 w-8" />
       </div>
       <div className="min-w-0 flex-1">
         <p className="text-sm font-normal leading-[20px] tracking-[0.1px] text-washmen-slate-grey">{day}</p>
@@ -263,12 +265,12 @@ export default function OrderDetails() {
               const summary = summarizeDriverInstructions(driverInstructions);
               return (
                 <div className="flex items-start gap-2">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center">
                     <img
                       src={driverInstructionsIconUrl}
                       alt=""
                       aria-hidden="true"
-                      className="h-7 w-7"
+                      className="h-8 w-8"
                     />
                   </div>
                   <div className="min-w-0 flex-1 space-y-0.5">
