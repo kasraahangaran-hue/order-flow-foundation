@@ -99,7 +99,7 @@ export function ServiceSelector({
             <div className="flex h-4 w-12 shrink-0 items-center justify-center">
               <Plus
                 className="h-4 w-4 text-washmen-primary"
-                strokeWidth={1.5}
+                strokeWidth={3}
               />
             </div>
           </div>
