@@ -484,22 +484,22 @@ function ComboRow({
         <Icon className={cn("h-8 w-8 transition-colors", iconFgClass)} />
       </div>
       <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2">
+        <div className="flex min-w-0 items-center gap-2">
           <p
             className={cn(
-              "truncate text-base font-semibold leading-tight transition-colors",
+              "min-w-0 truncate text-base font-semibold leading-tight transition-colors",
               titleClass ?? "text-washmen-secondary-900"
             )}
           >
             {title}
           </p>
           {badge && (
-            <span className="rounded-md bg-washmen-warning/30 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-washmen-secondary-800">
+            <span className="shrink-0 rounded-md bg-washmen-warning/30 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-washmen-secondary-800">
               {badge}
             </span>
           )}
           {priceLabel && (
-            <span className="rounded-md bg-washmen-light-aqua px-2 py-0.5 text-[12px] font-medium text-washmen-primary">
+            <span className="shrink-0 rounded-md bg-washmen-light-aqua px-2 py-0.5 text-[12px] font-medium text-washmen-primary">
               {priceLabel}
             </span>
           )}
