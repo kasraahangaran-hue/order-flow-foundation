@@ -606,11 +606,6 @@ export default function LastStep() {
     payment?.method === "Card" && payment.last4
       ? `Card **** ${payment.last4}`
       : payment?.method ?? "Apple Pay";
-  const isApplePay = (payment?.method ?? "Apple Pay") === "Apple Pay";
-  const PaymentIcon = Apple;
-  void PaymentIcon;
-  void isApplePay;
-
   const availableCount = AVAILABLE_PROMOS.length;
   const hasAvailablePromos = availableCount > 0;
 
