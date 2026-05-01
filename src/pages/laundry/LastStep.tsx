@@ -405,8 +405,6 @@ function PaymentSummaryItemized({
                 service === "washAndFold" &&
                 services.addPressing &&
                 !!services.pressingPrefs?.items?.length;
-              // No dedicated Folding sub-row exists yet in the cart model.
-              const hasFolding = false;
               return (
                 <div key={service} className="space-y-2">
                   <div className="flex items-center gap-2">
