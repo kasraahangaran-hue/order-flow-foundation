@@ -52,6 +52,8 @@ export default function AddressDetailsScreen() {
   const addAddress = useOrderStore((s) => s.addAddress);
   const updateAddress = useOrderStore((s) => s.updateAddress);
   const selectAddress = useOrderStore((s) => s.selectAddress);
+  const flowType = useOrderStore((s) => s.flowType);
+  const addressCountBeforeSave = useOrderStore((s) => s.addresses.length);
 
   useEffect(() => {
     if (!pendingDraft) {
@@ -221,7 +223,19 @@ export default function AddressDetailsScreen() {
       addAddress(address);
     }
     setPendingAddressDraft(null);
-    navigate("/laundry/order-details");
+    // NU users who just saved their FIRST address get the welcome flow:
+    // How It Works → Prepare Your Bags → Select Service. Subsequent
+    // address adds (multi-home users) and all RU/edit cases skip
+    // straight to Order Details.
+    const isFirstNuAddressAdd =
+      !isEditMode &&
+      flowType === "newUser" &&
+      addressCountBeforeSave === 0;
+    if (isFirstNuAddressAdd) {
+      navigate("/laundry/how-it-works");
+    } else {
+      navigate("/laundry/order-details");
+    }
   };
 
   const titleVerb = isEditMode ? "Edit" : "Add";
