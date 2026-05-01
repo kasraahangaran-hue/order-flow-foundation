@@ -60,6 +60,23 @@ const CleanPressIcon = () => <ImageIcon src={cleanPressIconUrl} />;
 const BedBathIcon = () => <ImageIcon src={bedBathIconUrl} />;
 const PressOnlyIcon = () => <ImageIcon src={pressOnlyIconUrl} />;
 
+/**
+ * Stable identity for ComboRow/ServiceCard's `icon` prop. The icon
+ * itself is always the inactive variant — when Press & Hang is added
+ * (pressActive), it's rendered via the expanded inline state instead,
+ * so this component is only used in the collapsed Add Pressing row.
+ */
+function AddPressingInactiveIcon() {
+  return (
+    <img
+      src={addPressingInactiveUrl}
+      alt=""
+      className="h-8 w-8 select-none"
+      draggable={false}
+    />
+  );
+}
+
 export function ServiceSelector({
   variant,
   entryPoint,
@@ -231,18 +248,7 @@ export function ServiceSelector({
           </div>
         ) : (
           <ComboRow
-            icon={() => (
-              <img
-                src={
-                  services.washAndFold
-                    ? addPressingActiveUrl
-                    : addPressingInactiveUrl
-                }
-                alt=""
-                className="h-8 w-8 select-none"
-                draggable={false}
-              />
-            )}
+            icon={AddPressingInactiveIcon}
             iconBgClass={
                   services.washAndFold ? "bg-washmen-light-aqua" : "bg-washmen-secondary-100"
             }
