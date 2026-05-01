@@ -404,7 +404,7 @@ function ComboRow({
         }
       }}
       className={cn(
-        "press-effect flex w-full items-start gap-3 text-left",
+        "press-effect flex w-full items-center gap-3 text-left",
         paddingClass ?? "p-4"
       )}
     >
