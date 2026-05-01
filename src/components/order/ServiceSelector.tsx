@@ -73,7 +73,7 @@ export function ServiceSelector({
       {/* Wash & Fold + Add Pressing combo card */}
       <div className="rounded-card bg-card shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
         <ComboRow
-          icon={WashingMachine}
+          icon={WashFoldIcon}
           iconBgClass="bg-washmen-light-aqua"
           iconFgClass="text-washmen-primary"
           title="Wash & Fold"
@@ -125,11 +125,10 @@ export function ServiceSelector({
                   pressActive ? "bg-washmen-light-aqua" : "bg-washmen-secondary-100"
                 )}
               >
-                <Shirt
-                  className={cn(
-                    "h-6 w-6 transition-colors",
-                    pressActive ? "text-washmen-primary" : "text-washmen-secondary-400"
-                  )}
+                <img
+                  src={pressActive ? addPressingActiveUrl : addPressingInactiveUrl}
+                  alt=""
+                  className="h-6 w-6"
                 />
               </div>
               <div className="min-w-0 flex-1">
@@ -224,7 +223,17 @@ export function ServiceSelector({
           </div>
         ) : (
           <ComboRow
-            icon={Shirt}
+            icon={() => (
+              <img
+                src={
+                  services.washAndFold
+                    ? addPressingActiveUrl
+                    : addPressingInactiveUrl
+                }
+                alt=""
+                className="h-6 w-6"
+              />
+            )}
             iconBgClass={
                   services.washAndFold ? "bg-washmen-light-aqua" : "bg-washmen-secondary-100"
             }
@@ -274,7 +283,7 @@ export function ServiceSelector({
       </div>
 
       <ServiceCard
-        icon={HangerIcon}
+        icon={CleanPressIcon}
         iconBgClass="bg-washmen-light-green"
         iconFgClass="text-washmen-primary-green"
         title="Clean & Press"
@@ -284,7 +293,7 @@ export function ServiceSelector({
       />
 
       <ServiceCard
-        icon={BedDouble}
+        icon={BedBathIcon}
         iconBgClass="bg-washmen-light-pink"
         iconFgClass="text-washmen-pink"
         title="Bed & Bath"
@@ -294,7 +303,7 @@ export function ServiceSelector({
       />
 
       <ServiceCard
-        icon={IronIcon}
+        icon={PressOnlyIcon}
         iconBgClass="bg-washmen-light-grey"
         iconFgClass="text-washmen-primary"
         title="Press Only"
