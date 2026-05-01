@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { Package, Truck } from "lucide-react";
+// Custom illustrative pickup/dropoff icons (match OrderDetails screen).
+// Multi-color washmen-themed SVGs at 32×32. Rendered as <img> elements
+// since they have brand fills baked in, not currentColor outlines.
+import pickupIconUrl from "@/assets/icons/order-pickup.svg";
+import dropoffIconUrl from "@/assets/icons/order-dropoff.svg";
 import { BottomSheetShell } from "./BottomSheetShell";
 import { RadioRow } from "./RadioRow";
 import type {
@@ -98,9 +102,13 @@ export function DriverInstructionsSheet({
         {/* PICK UP SECTION */}
         <div className="flex flex-col gap-4 pb-4 border-b border-washmen-secondary-300/50">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center">
-              <Package className="h-6 w-6 text-washmen-primary" />
-            </div>
+            <img
+              src={pickupIconUrl}
+              alt=""
+              aria-hidden="true"
+              className="h-8 w-8 shrink-0 select-none"
+              draggable={false}
+            />
             <div className="flex flex-col">
               <p className="text-[14px] font-medium leading-[20px] text-washmen-primary">
                 Pick Up
@@ -126,9 +134,13 @@ export function DriverInstructionsSheet({
         {/* DROP OFF SECTION */}
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center">
-              <Truck className="h-6 w-6 text-washmen-primary" />
-            </div>
+            <img
+              src={dropoffIconUrl}
+              alt=""
+              aria-hidden="true"
+              className="h-8 w-8 shrink-0 select-none"
+              draggable={false}
+            />
             <div className="flex flex-col">
               <p className="text-[14px] font-medium leading-[20px] text-washmen-primary">
                 Drop Off
