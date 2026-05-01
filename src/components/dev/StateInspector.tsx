@@ -56,12 +56,28 @@ function StateInspectorInner() {
   const onResetFlow = () => {
     store.reset();
     setOpen(false);
-    // Send the user to the start of the flow so they see the reset state
-    // immediately. Don't override pricingPage flowType — that's not its
-    // start.
-    if (store.flowType !== "pricingPage") {
-      navigate("/laundry/select-service");
+    // Route to the appropriate flow start screen for the current mode.
+    // - NU + no saved address: address map (NU enters address-add flow)
+    // - NU + has saved address: How It Works (educational gate before order)
+    // - RU: Select Service (skips the NU intro screens)
+    // - pricingPage: stays where it is — caller (onPickFlow) handles routing
+    const after = useOrderStore.getState();
+    if (after.flowType === "pricingPage") return;
+    if (after.flowType === "newUser") {
+      if (after.addresses.length === 0) {
+        navigate("/laundry/order-details/address/map");
+      } else {
+        navigate("/laundry/how-it-works");
+      }
+      return;
     }
+    // RU
+    navigate("/laundry/select-service");
+  };
+
+  const hasSavedAddress = store.addresses.length > 0;
+  const onToggleSavedAddress = () => {
+    store.devSetHasSavedAddress(!hasSavedAddress);
   };
 
   return (
@@ -156,31 +172,73 @@ function StateInspectorInner() {
 
             <div className="border-t border-border px-4 py-4">
               <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                Saved Address
+              </p>
+              <p className="mb-3 text-[11px] text-muted-foreground">
+                Simulate whether the user has a saved address. Affects the NU Reset Flow start screen (map vs. How It Works).
+              </p>
+              <button
+                type="button"
+                onClick={onToggleSavedAddress}
+                className={cn(
+                  "press-effect flex h-[36px] w-full items-center justify-between rounded-md border bg-background px-3 text-sm font-medium transition-colors",
+                  hasSavedAddress
+                    ? "border-primary text-foreground"
+                    : "border-border text-foreground hover:border-primary/40",
+                )}
+                aria-pressed={hasSavedAddress}
+              >
+                <span>
+                  {hasSavedAddress
+                    ? "Has saved address"
+                    : "No saved address"}
+                </span>
+                <span
+                  className={cn(
+                    "flex h-5 w-9 items-center rounded-full transition-colors",
+                    hasSavedAddress ? "bg-primary" : "bg-muted",
+                  )}
+                  aria-hidden
+                >
+                  <span
+                    className={cn(
+                      "h-4 w-4 rounded-full bg-background shadow transition-transform",
+                      hasSavedAddress ? "translate-x-[18px]" : "translate-x-[2px]",
+                    )}
+                  />
+                </span>
+              </button>
+            </div>
+
+            <div className="border-t border-border px-4 py-4">
+              <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                 Quick Nav
               </p>
               <p className="mb-3 text-[11px] text-muted-foreground">
                 Jump to specific screens for testing without walking the whole flow.
               </p>
-              <button
-                type="button"
-                onClick={() => {
-                  setOpen(false);
-                  navigate("/laundry/how-it-works");
-                }}
-                className="press-effect h-[36px] w-full rounded-md border border-border bg-background text-sm font-medium text-foreground hover:border-primary/40"
-              >
-                How It Works
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setOpen(false);
-                  navigate("/laundry/prepare-your-bags");
-                }}
-                className="press-effect h-[36px] w-full rounded-md border border-border bg-background text-sm font-medium text-foreground hover:border-primary/40"
-              >
-                Prepare Your Bags
-              </button>
+              <div className="flex flex-col gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpen(false);
+                    navigate("/laundry/how-it-works");
+                  }}
+                  className="press-effect h-[36px] w-full rounded-md border border-border bg-background text-sm font-medium text-foreground hover:border-primary/40"
+                >
+                  How It Works
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpen(false);
+                    navigate("/laundry/prepare-your-bags");
+                  }}
+                  className="press-effect h-[36px] w-full rounded-md border border-border bg-background text-sm font-medium text-foreground hover:border-primary/40"
+                >
+                  Prepare Your Bags
+                </button>
+              </div>
             </div>
           </div>
         </SheetContent>
