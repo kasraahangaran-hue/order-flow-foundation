@@ -93,8 +93,8 @@ function ValueRow({
 }) {
   return (
     <div className="flex items-center gap-2">
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center">
-        <Icon className="h-6 w-6 text-washmen-primary" />
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center">
+        <Icon className="h-7 w-7 text-washmen-primary" />
       </div>
       <p
         className={cn(
@@ -117,8 +117,8 @@ function EmptyRow({ text }: { text: string }) {
 function TimeRow({ day, time }: { day: string; time: string }) {
   return (
     <div className="flex items-center gap-2">
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center">
-        <Clock className="h-6 w-6 text-washmen-primary" />
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center">
+        <Clock className="h-7 w-7 text-washmen-primary" />
       </div>
       <div className="min-w-0 flex-1">
         <p className="text-sm font-normal leading-[20px] tracking-[0.1px] text-washmen-slate-grey">{day}</p>
@@ -263,12 +263,12 @@ export default function OrderDetails() {
               const summary = summarizeDriverInstructions(driverInstructions);
               return (
                 <div className="flex items-start gap-2">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center">
                     <img
                       src={driverInstructionsIconUrl}
                       alt=""
                       aria-hidden="true"
-                      className="h-6 w-6"
+                      className="h-7 w-7"
                     />
                   </div>
                   <div className="min-w-0 flex-1 space-y-0.5">
