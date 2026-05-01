@@ -70,6 +70,20 @@ interface LineItem {
   amount: number;
 }
 
+/**
+ * Formats an AED price for display. Drops the decimal portion entirely
+ * for whole-dirham values. Used for line-item prices, promo discounts,
+ * tip amounts. NOT used for the Delivery Fee or the Estimated Total —
+ * those keep .00 to read as "official receipt" totals.
+ *
+ * 75    -> "75"
+ * 7.5   -> "7.50"
+ * 7.55  -> "7.55"
+ */
+function formatPrice(amount: number): string {
+  return Number.isInteger(amount) ? String(amount) : amount.toFixed(2);
+}
+
 function buildLineItems(services: ServicesState): LineItem[] {
   const items: LineItem[] = [];
   if (services.washAndFold) items.push({ label: "Wash & Fold", amount: 75 });
@@ -292,13 +306,13 @@ function PaymentSummaryFlat({
               lineItems.map((item) => (
                 <div key={item.label} className="flex justify-between text-sm">
                   <span className="text-muted-foreground">{item.label}</span>
-                  <span className="text-foreground">AED {item.amount.toFixed(2)}</span>
+                  <span className="text-foreground">AED {formatPrice(item.amount)}</span>
                 </div>
               ))}
             {selectedPromoCode && promoDiscount > 0 && (
               <div className="flex justify-between text-sm">
                 <span className="text-emerald-700">Promo Discount ({selectedPromoCode})</span>
-                <span className="text-emerald-700">- AED {promoDiscount.toFixed(2)}</span>
+                <span className="text-emerald-700">- AED {formatPrice(promoDiscount)}</span>
               </div>
             )}
             <div className="flex justify-between text-sm">
@@ -307,7 +321,7 @@ function PaymentSummaryFlat({
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Driver Tip</span>
-              <span className="text-foreground">AED {selectedTip.toFixed(2)}</span>
+              <span className="text-foreground">AED {formatPrice(selectedTip)}</span>
             </div>
             <div className="mt-2 flex items-center justify-between border-t border-dashed border-border pt-3">
               <span className="text-sm font-bold text-washmen-primary">Estimated Total</span>
@@ -432,15 +446,15 @@ function PaymentSummaryItemized({
                             {item.discountedPrice !== undefined ? (
                               <>
                                 <span className="text-washmen-discount">
-                                  AED {item.discountedPrice.toFixed(2)}
+                                  AED {formatPrice(item.discountedPrice)}
                                 </span>{" "}
                                 <span className="text-washmen-secondary-300 line-through">
-                                  AED {item.unitPrice.toFixed(2)}
+                                  AED {formatPrice(item.unitPrice)}
                                 </span>
                               </>
                             ) : (
                               <span className="text-washmen-secondary-500">
-                                AED {item.unitPrice.toFixed(2)}
+                                AED {formatPrice(item.unitPrice)}
                               </span>
                             )}
                           </p>
@@ -503,7 +517,7 @@ function PaymentSummaryItemized({
                     </button>
                   </span>
                   <span className="text-washmen-primary">
-                    -AED {promoDiscount.toFixed(2)}
+                    -AED {formatPrice(promoDiscount)}
                   </span>
                 </div>
               )}
@@ -513,7 +527,7 @@ function PaymentSummaryItemized({
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Driver Tip</span>
-                <span className="text-foreground">AED {selectedTip.toFixed(2)}</span>
+                <span className="text-foreground">AED {formatPrice(selectedTip)}</span>
               </div>
               <div className="flex items-center justify-between border-t border-dashed border-border pt-3">
                 <span className="text-sm font-bold text-washmen-primary">Estimated Total</span>
