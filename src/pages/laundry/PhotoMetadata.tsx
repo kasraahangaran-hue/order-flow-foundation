@@ -112,7 +112,7 @@ export default function PhotoMetadata() {
 
   return (
     <div className="flex min-h-screen flex-col bg-washmen-bg">
-      <div className="flex-1 overflow-y-auto px-6 pt-6 pb-32">
+      <div className="no-scrollbar flex-1 overflow-y-auto px-6 pt-6 pb-32">
         {/* Photo with retake overlay */}
         <div className="flex justify-center">
           <div className="relative">
