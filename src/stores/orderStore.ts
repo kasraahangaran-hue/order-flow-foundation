@@ -370,14 +370,12 @@ export const useOrderStore = create<OrderState>()(
           // and getDefaultPickup() picks the right mode for the active flow.
           flowType: state.flowType,
           services: initialServices,
-          // Preserve existing addresses across reset. If somehow empty,
-          // restore the seed for dev convenience. This applies to both NU
-          // and RU — production behaviour comes from the customer profile
-          // API, not the web layer.
-          addresses: state.addresses.length > 0 ? state.addresses : [SEED_ADDRESS],
-          selectedAddressId:
-            state.selectedAddressId ??
-            (state.addresses.length > 0 ? state.addresses[0].id : SEED_ADDRESS.id),
+          // Preserve addresses verbatim. The dev panel uses
+          // devSetHasSavedAddress to explicitly empty the array — reset()
+          // must not silently restore the seed, otherwise the dev "no
+          // saved address" toggle is undone on every reset.
+          addresses: state.addresses,
+          selectedAddressId: state.selectedAddressId,
           pendingAddressDraft: null,
           pickup: getDefaultPickup(state.flowType === "newUser"),
           dropoff: getDefaultDropoff(),
