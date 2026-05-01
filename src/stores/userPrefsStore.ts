@@ -10,6 +10,11 @@ export interface UserPrefsState {
   // HANDOFF: In production this flag is account-level server-side state.
   // The web layer reads it and writes it via the same API used by iOS.
   // Persisted to localStorage here only for prototype purposes.
+  //
+  // The dev panel's Reset Flow ONLY clears this in NU mode (since NU
+  // simulates a brand-new user with no prior preferences). For RU and
+  // pricingPage, userPrefs persists across resets — those flows assume
+  // a returning user with existing accepted terms.
   wfPlusTermsAccepted: boolean;
   setWfPlusTermsAccepted: (accepted: boolean) => void;
 
