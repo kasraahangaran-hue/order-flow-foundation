@@ -278,6 +278,20 @@ export default function AddressMapScreen() {
     );
   }, [center.lat, center.lng]);
 
+  /**
+   * True when the map center is within ~30m of the user's GPS location.
+   * Drives the locate-me button's active (filled) state.
+   */
+  const isAtUserLocation = useMemo(() => {
+    if (!userGpsRef.current) return false;
+    return (
+      distanceMeters(
+        { lat: center.lat, lng: center.lng },
+        userGpsRef.current,
+      ) < 30
+    );
+  }, [center.lat, center.lng]);
+
   const onBack = () => {
     haptics.light();
     setPendingAddressDraft(null);
