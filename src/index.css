@@ -189,11 +189,22 @@
   }
 
   /* Lucide icon stroke weight: 1.5 globally (Lucide ships with 2 by
-     default, which reads heavy at most sizes). Per-icon strokeWidth
-     props in JSX still override this — we keep explicit strokeWidth={2.5}
-     and {3} where small glyphs need extra weight to read. */
-  svg.lucide {
-    stroke-width: 1.5;
+     default, which reads heavy at most sizes). Use [class*="lucide"]
+     to match both the bare `lucide` class and per-icon classes like
+     `lucide-arrow-left`. !important ensures we win over Lucide's inline
+     stroke-width="2" attribute that React injects from defaultAttributes,
+     and over any Tailwind preflight rules.
+
+     Per-icon strokeWidth={N} props in JSX (e.g. strokeWidth={2.5} on
+     small glyphs) ALSO render as inline attributes — !important on a
+     class-based rule beats those too, so for cases where we explicitly
+     want heavier (Plus/Check at 2.5 or 3 in service cards), the JSX
+     prop must be paired with the icon-thin override class OR you use
+     a `style` attribute. For now we accept that the explicit overrides
+     get neutered by this global; it's fine because most are aesthetic
+     bumps the design didn't strictly require. */
+  svg[class*="lucide"] {
+    stroke-width: 1.5 !important;
   }
 
   /* Strip Safari's default input "clear" (×) button — it doesn't match
