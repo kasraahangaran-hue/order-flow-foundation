@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Bell, Clock, Home, Package, PackageOpen, Pencil, Plus } from "lucide-react";
+import { Clock, Pencil, Plus } from "lucide-react";
+
+// Custom illustrative icons for Order Details rows. Multi-color washmen-
+// themed SVGs at 32×32. Clock stays Lucide (per Kasra's design preference).
+import addressIconUrl from "@/assets/icons/order-address.svg";
+import pickupIconUrl from "@/assets/icons/order-pickup.svg";
+import dropoffIconUrl from "@/assets/icons/order-dropoff.svg";
+import driverInstructionsIconUrl from "@/assets/icons/order-driver-instructions.svg";
 import { OrderLayout } from "@/components/order/OrderLayout";
 import { Button } from "@/components/ui/button";
 import { useOrderStore } from "@/stores/orderStore";
@@ -57,6 +64,23 @@ function DetailCard({ title, onPress, hasValue, addAction, titleClassName, child
     </div>
   );
 }
+
+/**
+ * Wraps a static SVG URL as a React component so it can be passed as
+ * ValueRow's `icon` prop. The new icons have multi-color brand fills
+ * baked in, so we don't tint via className like we do with Lucide.
+ */
+function makeImageIcon(src: string): React.ComponentType<{ className?: string }> {
+  const Component: React.ComponentType<{ className?: string }> = ({ className }) => (
+    <img src={src} alt="" aria-hidden="true" className={className} />
+  );
+  Component.displayName = `ImageIcon(${src})`;
+  return Component;
+}
+
+const AddressIcon = makeImageIcon(addressIconUrl);
+const PickupIcon = makeImageIcon(pickupIconUrl);
+const DropoffIcon = makeImageIcon(dropoffIconUrl);
 
 function ValueRow({
   icon: Icon,
@@ -178,7 +202,7 @@ export default function OrderDetails() {
         >
           {selectedAddress ? (
             <ValueRow
-              icon={Home}
+              icon={AddressIcon}
               text={summarizeAddress(selectedAddress)}
             />
           ) : (
@@ -194,7 +218,7 @@ export default function OrderDetails() {
         >
           {pickup ? (
             <div className="flex flex-col gap-2">
-              <ValueRow icon={Package} text={pickupModeLabel} />
+              <ValueRow icon={PickupIcon} text={pickupModeLabel} />
               {(() => {
                 const { day, time } = formatScheduleLines(pickup.date, pickup.slot);
                 return <TimeRow day={day} time={time} />;
@@ -214,7 +238,7 @@ export default function OrderDetails() {
           {dropoff ? (
             <div className="flex flex-col gap-2">
               <ValueRow
-                icon={PackageOpen}
+                icon={DropoffIcon}
                 text={dropoff.mode === "in_person" ? "Receive from driver in person" : "Drop off at the Door"}
               />
               {(() => {
@@ -240,7 +264,12 @@ export default function OrderDetails() {
               return (
                 <div className="flex items-start gap-2">
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center">
-                    <Bell className="h-6 w-6 text-washmen-primary" />
+                    <img
+                      src={driverInstructionsIconUrl}
+                      alt=""
+                      aria-hidden="true"
+                      className="h-6 w-6"
+                    />
                   </div>
                   <div className="min-w-0 flex-1 space-y-0.5">
                     <p className="text-sm leading-tight text-washmen-slate-grey">
