@@ -43,6 +43,21 @@ import instructionApproveUrl from "@/assets/icons/instruction-approve.svg";
 // Map pin
 import locationPinUrl from "@/assets/icons/location-pin.svg";
 
+// Address type illustrations
+import addressOfficeUrl from "@/assets/icons/address-office.svg";
+import addressHotelUrl from "@/assets/icons/address-hotel.svg";
+import addressVillaUrl from "@/assets/icons/address-villa.svg";
+import addressApartmentUrl from "@/assets/icons/address-apartment.svg";
+
+// Payment / Last Step / How It Works
+import applePayWordmarkUrl from "@/assets/icons/apple-pay-wordmark.svg";
+import viewPricingUrl from "@/assets/icons/view-pricing.svg";
+import contactServiceUrl from "@/assets/icons/contact-customer-service.svg";
+import paymentSummaryUrl from "@/assets/icons/payment-summary.svg";
+import paymentMethodUrl from "@/assets/icons/payment-method.svg";
+import promocodeUrl from "@/assets/icons/promocode.svg";
+import creditUrl from "@/assets/icons/credit.svg";
+
 const ALL_ICON_URLS = [
   washFoldIconUrl,
   cleanPressIconUrl,
@@ -67,6 +82,17 @@ const ALL_ICON_URLS = [
   instructionStarchUrl,
   instructionApproveUrl,
   locationPinUrl,
+  addressOfficeUrl,
+  addressHotelUrl,
+  addressVillaUrl,
+  addressApartmentUrl,
+  applePayWordmarkUrl,
+  viewPricingUrl,
+  contactServiceUrl,
+  paymentSummaryUrl,
+  paymentMethodUrl,
+  promocodeUrl,
+  creditUrl,
 ];
 
 export function IconPreloader() {
