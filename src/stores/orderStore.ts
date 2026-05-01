@@ -166,6 +166,13 @@ export interface OrderInstructionsState {
   creases: CreasesState | null;
   starch: StarchChoice | null;
   autoApprovals: AutoApprovalsState | null;
+  /**
+   * Once true, the per-order "delicate photo" education modal won't show
+   * again. Reset to false at the start of each new order so users see the
+   * brief explanation the first time they tap "Take a photo" in the
+   * Send-a-Photo section.
+   */
+  delicatePhotoEducationShown: boolean;
 }
 
 export interface PaymentState {
@@ -241,6 +248,7 @@ const initialOrderInstructions: OrderInstructionsState = {
   creases: null,
   starch: null,
   autoApprovals: null,
+  delicatePhotoEducationShown: false,
 };
 
 // HANDOFF — Seed address for dev/preview environments.
