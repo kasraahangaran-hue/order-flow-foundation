@@ -31,12 +31,18 @@ const DrawerContent = React.forwardRef<
     <DrawerPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background",
+        // Base: positioning + flex layout. No defaults for background,
+        // border, or radius — consumers (e.g. BottomSheetShell) own those.
+        "fixed inset-x-0 bottom-0 z-50 flex h-auto flex-col",
         className,
       )}
       {...props}
     >
-      <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted" />
+      {/* iOS-style drag handle (a.k.a. "grabber"). 36×5px in a translucent
+          grey, centered with comfortable top/bottom padding. The handle
+          is purely visual — vaul handles drag affordance for the entire
+          sheet, not just this element. */}
+      <div className="mx-auto mt-2 mb-1 h-[5px] w-9 rounded-full bg-washmen-secondary-200" />
       {children}
     </DrawerPrimitive.Content>
   </DrawerPortal>
