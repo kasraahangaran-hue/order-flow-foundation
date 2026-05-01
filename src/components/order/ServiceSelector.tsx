@@ -359,7 +359,7 @@ export function ServiceSelector({
         iconBgClass="bg-washmen-light-pink"
         iconFgClass="text-washmen-pink"
         title="Bed & Bath"
-        pricingLink={{ label: "View Pricing", onPress: () => {} }}
+        priceLabel="AED 85 per bag"
         selected={services.bedAndBath}
         onPress={() => setServices({ bedAndBath: !services.bedAndBath })}
       />

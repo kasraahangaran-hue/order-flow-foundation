@@ -287,15 +287,15 @@ const PRICING_PAGE_MOCK_CART: CartItem[] = [
     quantity: 2,
   },
   {
-    service: "pressOnly",
-    itemLabel: "Dress",
-    unitPrice: 18,
+    service: "cleanAndPress",
+    itemLabel: "Suit Jacket",
+    unitPrice: 22,
     quantity: 1,
   },
   {
-    service: "bedAndBath",
-    itemLabel: "Duvet Cover (Queen)",
-    unitPrice: 35,
+    service: "pressOnly",
+    itemLabel: "Dress",
+    unitPrice: 18,
     quantity: 1,
   },
 ];

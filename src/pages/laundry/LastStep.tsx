@@ -61,7 +61,7 @@ function buildLineItems(services: ServicesState): LineItem[] {
     items.push({ label: "Press & Hang", amount: pressingTotal });
   }
   if (services.cleanAndPress) items.push({ label: "Clean & Press", amount: 25 });
-  if (services.bedAndBath) items.push({ label: "Bed & Bath", amount: 30 });
+  if (services.bedAndBath) items.push({ label: "Bed & Bath", amount: 85 });
   if (services.pressOnly) items.push({ label: "Press Only", amount: 20 });
   return items;
 }
