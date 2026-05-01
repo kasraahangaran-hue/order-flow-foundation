@@ -319,10 +319,12 @@ function PaymentSummaryFlat({
               <span className="text-muted-foreground">Delivery Fee</span>
               <span className="text-foreground">AED {DELIVERY_FEE.toFixed(2)}*</span>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Driver Tip</span>
-              <span className="text-foreground">AED {formatPrice(selectedTip)}</span>
-            </div>
+            {selectedTip > 0 && (
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Driver Tip</span>
+                <span className="text-foreground">AED {formatPrice(selectedTip)}</span>
+              </div>
+            )}
             <div className="mt-2 flex items-center justify-between border-t border-dashed border-border pt-3">
               <span className="text-sm font-bold text-washmen-primary">Estimated Total</span>
               <span className="text-sm font-bold text-washmen-primary">
@@ -525,10 +527,12 @@ function PaymentSummaryItemized({
                 <span className="text-muted-foreground">Delivery Fee</span>
                 <span className="text-foreground">AED {DELIVERY_FEE.toFixed(2)}*</span>
               </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Driver Tip</span>
-                <span className="text-foreground">AED {formatPrice(selectedTip)}</span>
-              </div>
+              {selectedTip > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Driver Tip</span>
+                  <span className="text-foreground">AED {formatPrice(selectedTip)}</span>
+                </div>
+              )}
               <div className="flex items-center justify-between border-t border-dashed border-border pt-3">
                 <span className="text-sm font-bold text-washmen-primary">Estimated Total</span>
                 <span className="text-sm font-bold text-washmen-primary">
