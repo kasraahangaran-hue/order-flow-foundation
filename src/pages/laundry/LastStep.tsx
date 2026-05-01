@@ -615,7 +615,17 @@ export default function LastStep() {
     <OrderLayout
       title="Last Step"
       step={4}
-      onBack={() => navigate("/laundry/order-instructions")}
+      onBack={() => {
+        // In pricing-page flow the user enters Last Step directly from
+        // the native pricing page — there's no /order-instructions step
+        // before it. Go back to the homepage (or the native pricing page
+        // when the integration lands).
+        if (isPricingFlow) {
+          navigate("/");
+        } else {
+          navigate("/laundry/order-instructions");
+        }
+      }}
       footerAboveSlot={
         <div className="flex items-center gap-2">
           <span className="text-[16px] font-semibold leading-[21px] tracking-[0.4px] text-washmen-primary">

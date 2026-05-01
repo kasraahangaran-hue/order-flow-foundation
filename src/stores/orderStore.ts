@@ -427,7 +427,11 @@ export const useOrderStore = create<OrderState>()(
           payment: null,
           promoCode: null,
           tip: 0,
-          cart: [],
+          // For pricingPage, re-seed the mock cart so the user lands on
+          // Last Step with items to view. For other flows, clear cart
+          // (it's not used outside pricingPage).
+          cart:
+            state.flowType === "pricingPage" ? PRICING_PAGE_MOCK_CART : [],
         })),
     }),
     {
