@@ -43,7 +43,14 @@ function ImageIcon({
   alt?: string;
   className?: string;
 }) {
-  return <img src={src} alt={alt} className={cn("h-6 w-6", className)} />;
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className={cn("h-8 w-8 select-none", className)}
+      draggable={false}
+    />
+  );
 }
 
 // Pre-bound icon components for each service so we can pass them to
@@ -128,7 +135,8 @@ export function ServiceSelector({
                 <img
                   src={pressActive ? addPressingActiveUrl : addPressingInactiveUrl}
                   alt=""
-                  className="h-6 w-6"
+                  className="h-8 w-8 select-none"
+                  draggable={false}
                 />
               </div>
               <div className="min-w-0 flex-1">
@@ -231,7 +239,8 @@ export function ServiceSelector({
                     : addPressingInactiveUrl
                 }
                 alt=""
-                className="h-6 w-6"
+                className="h-8 w-8 select-none"
+                draggable={false}
               />
             )}
             iconBgClass={
@@ -419,7 +428,7 @@ function ComboRow({
           iconBgClass
         )}
       >
-        <Icon className={cn("h-6 w-6 transition-colors", iconFgClass)} />
+        <Icon className={cn("h-8 w-8 transition-colors", iconFgClass)} />
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
