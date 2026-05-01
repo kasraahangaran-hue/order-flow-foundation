@@ -7,9 +7,9 @@ import { haptics } from "@/lib/haptics";
 import { cn } from "@/lib/utils";
 import { DateSlotPicker, type SlotOption } from "./DateSlotPicker";
 import { buildDropoffMockDays } from "@/data/slots";
-import dropoffDoorImg from "@/assets/dropoff-at-door.jpg";
+import dropoffDoorImg from "@/assets/images/dropoff-at-door.jpg";
 // TODO: Replace with proper drop-off-in-person illustration when designed.
-import dropoffPersonImg from "@/assets/dropoff-in-person.jpg";
+import dropoffPersonImg from "@/assets/images/dropoff-in-person.jpg";
 
 interface DropOffSheetProps {
   open: boolean;
