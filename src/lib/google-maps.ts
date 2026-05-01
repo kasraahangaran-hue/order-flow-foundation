@@ -55,7 +55,7 @@ export const DUBAI_BOUNDS = {
  * Adjust based on UX research — too low triggers false positives in dense
  * mixed-use areas; too high renders the warning useless.
  */
-export const FAR_PIN_THRESHOLD_METERS = 2000;
+export const FAR_PIN_THRESHOLD_METERS = 500;
 
 /**
  * Haversine distance between two lat/lng points, in meters.
