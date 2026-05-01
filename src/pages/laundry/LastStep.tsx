@@ -4,7 +4,6 @@ import {
   ChevronDown,
   ChevronUp,
   Pencil,
-  Apple,
   Check,
   Plus,
   Info,
