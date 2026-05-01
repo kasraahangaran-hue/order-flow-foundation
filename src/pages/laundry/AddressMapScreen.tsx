@@ -14,6 +14,7 @@ import { useOrderStore } from "@/stores/orderStore";
 import { haptics } from "@/lib/haptics";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   loadMaps,
   DUBAI_CENTER,
