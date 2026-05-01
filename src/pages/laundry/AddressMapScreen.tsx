@@ -14,6 +14,7 @@ import { useOrderStore } from "@/stores/orderStore";
 import { haptics } from "@/lib/haptics";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   loadMaps,
   DUBAI_CENTER,
@@ -277,6 +278,20 @@ export default function AddressMapScreen() {
     );
   }, [center.lat, center.lng]);
 
+  /**
+   * True when the map center is within ~30m of the user's GPS location.
+   * Drives the locate-me button's active (filled) state.
+   */
+  const isAtUserLocation = useMemo(() => {
+    if (!userGpsRef.current) return false;
+    return (
+      distanceMeters(
+        { lat: center.lat, lng: center.lng },
+        userGpsRef.current,
+      ) < 30
+    );
+  }, [center.lat, center.lng]);
+
   const onBack = () => {
     haptics.light();
     setPendingAddressDraft(null);
@@ -393,16 +408,23 @@ export default function AddressMapScreen() {
         ) : null}
       </div>
 
-      {/* Locate-me FAB */}
+      {/* Locate-me FAB. Active (filled) when the pin is at the user's GPS
+          location; inactive (stroke only) otherwise. */}
       <button
         onClick={onLocateMe}
         aria-label="Locate me"
+        aria-pressed={isAtUserLocation}
         className="press-effect absolute bottom-44 right-4 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-lg"
       >
         {locating ? (
           <Loader2 className="h-5 w-5 animate-spin text-washmen-primary" />
         ) : (
-          <Navigation className="h-5 w-5 text-washmen-primary" />
+          <Navigation
+            className={cn(
+              "h-5 w-5 text-washmen-primary transition-colors",
+              isAtUserLocation && "fill-washmen-primary"
+            )}
+          />
         )}
       </button>
 
