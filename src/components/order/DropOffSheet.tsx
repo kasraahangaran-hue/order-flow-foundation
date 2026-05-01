@@ -7,6 +7,7 @@ import { haptics } from "@/lib/haptics";
 import { cn } from "@/lib/utils";
 import { DateSlotPicker, type SlotOption } from "./DateSlotPicker";
 import { buildDropoffMockDays } from "@/data/slots";
+import { useIsFirstOrder } from "@/lib/userType";
 import dropoffDoorImg from "@/assets/images/dropoff-at-door.jpg";
 // TODO: Replace with proper drop-off-in-person illustration when designed.
 import dropoffPersonImg from "@/assets/images/dropoff-in-person.jpg";
@@ -67,7 +68,11 @@ export function DropOffSheet({ open, onOpenChange }: DropOffSheetProps) {
   const storedDropoff = useOrderStore((s) => s.dropoff);
   const setDropoff = useOrderStore((s) => s.setDropoff);
 
-  const days = useMemo(() => buildDropoffMockDays(), []);
+  const isFirstOrder = useIsFirstOrder();
+  const days = useMemo(
+    () => buildDropoffMockDays(isFirstOrder),
+    [isFirstOrder]
+  );
 
   const [step, setStep] = useState<1 | 2>(1);
   const [dropoffMode, setDropoffMode] = useState<DropoffMode>("door");

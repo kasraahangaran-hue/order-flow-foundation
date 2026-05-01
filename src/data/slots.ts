@@ -109,7 +109,16 @@ export function buildDropoffSlotsForDay(_offset: number): SlotOption[] {
   ];
 }
 
-export function buildDropoffMockDays(): DayOption[] {
+/**
+ * Builds the dropoff day options for the next 7 days starting at +1.
+ * Day +1 (Tomorrow) normally carries a 50% surcharge for next-day delivery.
+ * When isFirstOrder is true, the surcharge is waived as part of the
+ * new-user welcome experience — the next-day-delivery badge stays so the
+ * user understands the speed benefit, but it's free.
+ */
+export function buildDropoffMockDays(
+  isFirstOrder: boolean = false
+): DayOption[] {
   const days: DayOption[] = [];
   // Day 0 (Today) is not a drop-off option for laundry — start at +1
   for (let i = 1; i <= 7; i++) {
@@ -122,8 +131,9 @@ export function buildDropoffMockDays(): DayOption[] {
       label: getDayLabel(i, d),
       subLabel: getDaySubLabel(d),
       badge: isTomorrow ? "next-day-delivery" : undefined,
-      freeDelivery: !isTomorrow,
-      daySurchargePct: isTomorrow ? 50 : undefined,
+      // NU: next-day is free. RU: next-day carries 50% surcharge.
+      freeDelivery: isTomorrow ? isFirstOrder : true,
+      daySurchargePct: isTomorrow && !isFirstOrder ? 50 : undefined,
       slots: buildDropoffSlotsForDay(i),
     });
   }
