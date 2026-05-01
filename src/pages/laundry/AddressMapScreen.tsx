@@ -323,7 +323,7 @@ export default function AddressMapScreen() {
           >
             <ArrowLeft className="h-5 w-5 text-washmen-primary" />
           </button>
-          <Search className="h-4 w-4 text-washmen-slate-grey" />
+          <Search className="h-5 w-5 text-washmen-slate-grey" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -349,7 +349,7 @@ export default function AddressMapScreen() {
               aria-label="Clear search"
               className="press-effect flex h-6 w-6 items-center justify-center"
             >
-              <X className="h-4 w-4 text-washmen-slate-grey" />
+              <X className="h-5 w-5 text-washmen-slate-grey" />
             </button>
           ) : null}
         </div>

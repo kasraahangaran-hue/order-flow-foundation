@@ -192,7 +192,7 @@ export default function HowItWorks() {
               </span>
               {/* Figma uses a small grey rounded-square tile (#F2F3F8). */}
               <span className="flex h-8 w-7 items-center justify-center rounded-[4px] bg-washmen-pale-grey">
-                <ArrowRight className="h-4 w-4 text-washmen-primary" />
+                <ArrowRight className="h-5 w-5 text-washmen-primary" />
               </span>
             </button>
 
