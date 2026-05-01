@@ -21,6 +21,7 @@ import { FoldingSheet } from "@/components/order/FoldingSheet";
 import { AutoApprovalsSheet } from "@/components/order/AutoApprovalsSheet";
 import { CameraCaptureSheet } from "@/components/order/CameraCaptureSheet";
 import { DeleteItemDialog } from "@/components/order/DeleteItemDialog";
+import { DelicatePhotoEducationDialog } from "@/components/order/DelicatePhotoEducationDialog";
 import {
   summarizeCreases,
   summarizeStarch,
@@ -71,6 +72,7 @@ export default function OrderInstructions() {
   const [foldingSheetOpen, setFoldingSheetOpen] = useState(false);
   const [autoApprovalsSheetOpen, setAutoApprovalsSheetOpen] = useState(false);
   const [cameraOpen, setCameraOpen] = useState(false);
+  const [educationDialogOpen, setEducationDialogOpen] = useState(false);
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 
   const userPrefsFolding = useUserPrefsStore((s) => s.folding);
@@ -93,6 +95,19 @@ export default function OrderInstructions() {
   const openCamera = () => {
     if (delicateItems.length >= MAX_DELICATE_ITEMS) return;
     haptics.light();
+    // Show the education modal once per order. After the user taps Got It,
+    // delicatePhotoEducationShown flips to true and subsequent photo taps
+    // go straight to the camera. The flag resets when a new order starts.
+    if (!orderInstructions?.delicatePhotoEducationShown) {
+      setEducationDialogOpen(true);
+      return;
+    }
+    setCameraOpen(true);
+  };
+
+  const onEducationConfirm = () => {
+    setOrderInstructions({ delicatePhotoEducationShown: true });
+    setEducationDialogOpen(false);
     setCameraOpen(true);
   };
 
@@ -315,6 +330,10 @@ export default function OrderInstructions() {
         onOpenChange={setAutoApprovalsSheetOpen}
         initialValue={autoApprovals ?? DEFAULT_AUTO_APPROVALS}
         onApply={(value) => setOrderInstructions({ autoApprovals: value })}
+      />
+      <DelicatePhotoEducationDialog
+        open={educationDialogOpen}
+        onConfirm={onEducationConfirm}
       />
       <CameraCaptureSheet
         open={cameraOpen}
