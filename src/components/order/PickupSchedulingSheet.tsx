@@ -8,8 +8,8 @@ import { cn } from "@/lib/utils";
 import { DateSlotPicker, type SlotOption } from "./DateSlotPicker";
 import { buildPickupMockDays } from "@/data/slots";
 import { useIsFirstOrder } from "@/lib/userType";
-import doorImg from "@/assets/pickup-at-door.jpg";
-import driverImg from "@/assets/pickup-meet-driver.jpg";
+import doorImg from "@/assets/images/pickup-at-door.jpg";
+import driverImg from "@/assets/images/pickup-meet-driver.jpg";
 
 interface PickupSchedulingSheetProps {
   open: boolean;
