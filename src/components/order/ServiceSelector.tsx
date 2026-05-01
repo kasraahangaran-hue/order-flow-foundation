@@ -94,6 +94,15 @@ export function ServiceSelector({
 
   return (
     <div className={cn("flex flex-col gap-2")}>
+      {/* Preload the Add Pressing active variant so it's decoded before
+          the user expands the row. Hidden img with eager loading. */}
+      <img
+        src={addPressingActiveUrl}
+        alt=""
+        aria-hidden
+        className="absolute h-0 w-0 opacity-0 pointer-events-none"
+        loading="eager"
+      />
       {/* Wash & Fold + Add Pressing combo card */}
       <div className="rounded-card bg-card shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
         <ComboRow
@@ -145,14 +154,28 @@ export function ServiceSelector({
             <div className="flex items-center gap-3 px-4 pt-3 pb-2">
               <div
                 className={cn(
-                  "flex h-12 w-12 shrink-0 items-center justify-center rounded-full transition-colors",
+                  "relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full transition-colors",
                   pressActive ? "bg-washmen-light-aqua" : "bg-washmen-secondary-100"
                 )}
               >
+                {/* Both variants render simultaneously and toggle via
+                    opacity so the swap has zero load latency. */}
                 <img
-                  src={pressActive ? addPressingActiveUrl : addPressingInactiveUrl}
+                  src={addPressingInactiveUrl}
                   alt=""
-                  className="h-8 w-8 select-none"
+                  className={cn(
+                    "absolute h-8 w-8 select-none transition-opacity",
+                    pressActive ? "opacity-0" : "opacity-100"
+                  )}
+                  draggable={false}
+                />
+                <img
+                  src={addPressingActiveUrl}
+                  alt=""
+                  className={cn(
+                    "absolute h-8 w-8 select-none transition-opacity",
+                    pressActive ? "opacity-100" : "opacity-0"
+                  )}
                   draggable={false}
                 />
               </div>
