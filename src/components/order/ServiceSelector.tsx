@@ -1,4 +1,4 @@
-import { Check, Plus, WashingMachine, Shirt, BedDouble, Footprints, Pencil } from "lucide-react";
+import { Check, Plus, Footprints, Pencil } from "lucide-react";
 import { ComponentType, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -7,6 +7,17 @@ import { ServiceCard } from "./ServiceCard";
 import { PricingLink } from "./PricingLink";
 import { useOrderStore, ServicesState } from "@/stores/orderStore";
 import { PRESSING_CATEGORIES } from "@/data/pressingCategories";
+
+// Custom service icons. Each is rendered as a 24×24 inside the 48×48
+// circle. These are illustrative branded icons with multi-color fills,
+// so we import them as URL assets and render via <img>, not as
+// currentColor SVG.
+import washFoldIconUrl from "@/assets/icons/service-wash-fold.svg";
+import cleanPressIconUrl from "@/assets/icons/service-clean-press.svg";
+import bedBathIconUrl from "@/assets/icons/service-bed-bath.svg";
+import pressOnlyIconUrl from "@/assets/icons/service-press-only.svg";
+import addPressingActiveUrl from "@/assets/icons/add-pressing-active.svg";
+import addPressingInactiveUrl from "@/assets/icons/add-pressing-inactive.svg";
 
 export type SelectedServicesSnapshot = ServicesState;
 
@@ -18,44 +29,29 @@ interface ServiceSelectorProps {
   onLearnMoreWashAndFold?: () => void;
 }
 
-function HangerIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      aria-hidden
-    >
-      <path d="M12 4a2 2 0 1 0-2 2" />
-      <path d="M12 6v2" />
-      <path d="m12 8-9 8a1 1 0 0 0 .6 1.8h16.8a1 1 0 0 0 .6-1.8L12 8z" />
-    </svg>
-  );
+/**
+ * Wraps a static SVG asset URL in a component so it can be passed via
+ * the `icon` prop on ComboRow / ServiceCard. Renders the image at the
+ * same 24×24 size that Lucide icons used.
+ */
+function ImageIcon({
+  src,
+  alt = "",
+  className,
+}: {
+  src: string;
+  alt?: string;
+  className?: string;
+}) {
+  return <img src={src} alt={alt} className={cn("h-6 w-6", className)} />;
 }
 
-function IronIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      aria-hidden
-    >
-      <path d="M2 18h20" />
-      <path d="M4 18a8 6 0 0 1 16 0" />
-      <path d="M16 8h2a2 2 0 0 1 2 2v2" />
-      <circle cx="8" cy="14" r="0.5" fill="currentColor" />
-    </svg>
-  );
-}
+// Pre-bound icon components for each service so we can pass them to
+// ComboRow/ServiceCard's `icon` prop without inline lambdas.
+const WashFoldIcon = () => <ImageIcon src={washFoldIconUrl} />;
+const CleanPressIcon = () => <ImageIcon src={cleanPressIconUrl} />;
+const BedBathIcon = () => <ImageIcon src={bedBathIconUrl} />;
+const PressOnlyIcon = () => <ImageIcon src={pressOnlyIconUrl} />;
 
 export function ServiceSelector({
   variant,
