@@ -78,8 +78,8 @@ export function InstructionsCard({
             </div>
           ) : null}
         </div>
-        <div className="flex h-8 w-4 shrink-0 items-center justify-center">
-          <ActionIcon className="h-4 w-4 text-washmen-primary" strokeWidth={2} aria-hidden />
+        <div className="flex h-8 w-5 shrink-0 items-center justify-center">
+          <ActionIcon className="h-5 w-5 text-washmen-primary" aria-hidden />
         </div>
       </div>
     </div>
