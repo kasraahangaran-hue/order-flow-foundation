@@ -208,6 +208,10 @@ export interface OrderState {
   updateAddress: (a: Address) => void;
   deleteAddress: (id: string) => void;
   selectAddress: (id: string | null) => void;
+  /** Dev-only: toggles between "no saved address" (empty array) and
+   * "has the seed address." Used by the State Inspector for testing
+   * the NU empty-address vs has-address paths. */
+  devSetHasSavedAddress: (hasSaved: boolean) => void;
   setPendingAddressDraft: (d: PendingAddressDraft | null) => void;
   setPickup: (p: PickupState | null) => void;
   setDropoff: (d: DropoffState | null) => void;
