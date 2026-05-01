@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Layers } from "lucide-react";
+import creasesIconUrl from "@/assets/icons/instruction-creases.svg";
 import { BottomSheetShell } from "./BottomSheetShell";
 import { RadioRow } from "./RadioRow";
 import { ToggleRow } from "./ToggleRow";
@@ -50,9 +50,13 @@ export function CreasesSheet({ open, onOpenChange, initialValue, onApply }: Crea
       <div className="flex flex-col gap-4">
         {/* Sub-question header */}
         <div className={`flex items-center gap-3 ${dividerClass}`}>
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center">
-            <Layers className="h-6 w-6 text-washmen-primary" />
-          </div>
+          <img
+            src={creasesIconUrl}
+            alt=""
+            aria-hidden="true"
+            className="h-8 w-8 shrink-0 select-none"
+            draggable={false}
+          />
           <p className="text-[14px] font-medium leading-[20px] text-washmen-primary">
             How should we crease your items?
           </p>

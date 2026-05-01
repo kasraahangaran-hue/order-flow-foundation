@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { SprayCan } from "lucide-react";
+import starchIconUrl from "@/assets/icons/instruction-starch.svg";
 import { BottomSheetShell } from "./BottomSheetShell";
 import { RadioRow } from "./RadioRow";
 import type { StarchChoice } from "@/stores/orderStore";
@@ -40,9 +40,13 @@ export function StarchSheet({ open, onOpenChange, initialValue, onApply }: Starc
     >
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center">
-            <SprayCan className="h-6 w-6 text-washmen-primary" />
-          </div>
+          <img
+            src={starchIconUrl}
+            alt=""
+            aria-hidden="true"
+            className="h-8 w-8 shrink-0 select-none"
+            draggable={false}
+          />
           <p className="text-[14px] font-medium leading-[20px] text-washmen-primary">
             How should we starch your shirts?
           </p>
