@@ -122,7 +122,7 @@ export function ServiceSelector({
             }}
             className="press-effect flex flex-col text-left"
           >
-            <div className="flex items-start gap-3 px-4 pt-3 pb-2">
+            <div className="flex items-center gap-3 px-4 pt-3 pb-2">
               <div
                 className={cn(
                   "flex h-12 w-12 shrink-0 items-center justify-center rounded-full transition-colors",
@@ -168,11 +168,11 @@ export function ServiceSelector({
                   goToWashAndFoldInfo();
                 }}
                 className={cn(
-                  "press-effect mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center transition-colors",
+                  "press-effect flex h-6 w-6 shrink-0 items-center justify-center transition-colors",
                   pressActive ? "text-washmen-primary" : "text-washmen-secondary-400"
                 )}
               >
-                <Pencil className="h-5 w-5" strokeWidth={2.5} />
+                <Pencil className="h-4 w-4" />
               </button>
             </div>
             <div className="px-4 pb-4 pl-[76px]">
