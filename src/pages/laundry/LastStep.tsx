@@ -39,6 +39,9 @@ import bagCleanPressUrl from "@/assets/icons/bag-clean-press.svg";
 import bagBedBathUrl from "@/assets/icons/bag-bed-bath.svg";
 import bagPressOnlyUrl from "@/assets/icons/bag-press-only.svg";
 import bagShoeBagUrl from "@/assets/icons/bag-shoe-bag.svg";
+// Used inside the Wash & Fold section when Press & Hang has items —
+// shown as a sub-header above the "priced per item" alert.
+import addPressingActiveUrl from "@/assets/icons/add-pressing-active.svg";
 
 const BAG_ICON_BY_SERVICE: Record<CartItem["service"], string> = {
   washAndFold: bagWashFoldUrl,
@@ -449,23 +452,28 @@ function PaymentSummaryItemized({
                         />
                       </div>
                     ))}
-                    {service === "washAndFold" && services.addPressing &&
-                      services.pressingPrefs?.items?.length ? (
-                      <p className="text-xs text-muted-foreground">
-                        + Press & Hang ({services.pressingPrefs.items.length} items)
-                      </p>
-                    ) : null}
-                    {service === "washAndFold" && services.pressingPrefs ? null : null}
                   </div>
-                  {service === "washAndFold" && (hasPressing || hasFolding) && (
-                    // TODO: Make copy dynamic based on which sub-services are actually selected (only Press & Hang vs only Folding vs both)
-                    <div className="mt-2 rounded-[8px] bg-washmen-light-aqua p-2">
-                      <p className="text-[12px] font-light leading-[18px] tracking-[0.1px] text-washmen-primary">
-                        <span className="font-medium">Press & Hang </span>
-                        <span>and </span>
-                        <span className="font-medium">Folding </span>
-                        <span>will be priced per item after we receive your order</span>
-                      </p>
+                  {service === "washAndFold" && hasPressing && (
+                    <div className="space-y-2">
+                      {/* Press & Hang sub-header with iron icon */}
+                      <div className="flex items-center gap-2">
+                        <img
+                          src={addPressingActiveUrl}
+                          alt=""
+                          className="h-5 w-5 select-none shrink-0"
+                          draggable={false}
+                        />
+                        <span className="text-sm font-semibold text-washmen-primary">
+                          Press & Hang
+                        </span>
+                      </div>
+                      {/* Pricing alert */}
+                      <div className="rounded-[8px] bg-washmen-light-aqua p-2">
+                        <p className="text-[12px] font-light leading-[18px] tracking-[0.1px] text-washmen-primary">
+                          <span className="font-medium">Press & Hang </span>
+                          <span>will be priced per item after we receive your order</span>
+                        </p>
+                      </div>
                     </div>
                   )}
                 </div>
