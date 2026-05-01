@@ -134,7 +134,7 @@ export function ServiceSelector({
           iconBgClass="bg-washmen-light-aqua"
           iconFgClass="text-washmen-primary"
           title="Wash & Fold"
-          priceLabel="AED 75 per bag"
+          priceLabel={services.washAndFold ? "AED 75 per bag" : undefined}
           selected={services.washAndFold}
           showSelectionIndicator
           onPress={() =>
@@ -359,7 +359,7 @@ export function ServiceSelector({
         iconBgClass="bg-washmen-light-pink"
         iconFgClass="text-washmen-pink"
         title="Bed & Bath"
-        priceLabel="AED 85 per bag"
+        pricingLink={{ label: "View Pricing", onPress: () => {} }}
         selected={services.bedAndBath}
         onPress={() => setServices({ bedAndBath: !services.bedAndBath })}
       />
