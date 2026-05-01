@@ -161,9 +161,9 @@ export default function OrderInstructions() {
               Send a Photo
             </p>
             {photoExpanded ? (
-              <Pencil className="h-5 w-5 text-washmen-primary" aria-hidden />
+              <Pencil className="h-4 w-4 text-washmen-primary" strokeWidth={2} aria-hidden />
             ) : (
-              <Plus className="h-5 w-5 text-washmen-primary" aria-hidden />
+              <Plus className="h-4 w-4 text-washmen-primary" strokeWidth={2} aria-hidden />
             )}
           </button>
           {photoExpanded ? (

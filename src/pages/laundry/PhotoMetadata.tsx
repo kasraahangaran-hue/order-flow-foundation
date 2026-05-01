@@ -194,7 +194,7 @@ export default function PhotoMetadata() {
             className="press-effect flex w-12 h-[42px] items-center justify-center rounded-[8px] border border-washmen-primary bg-white"
             aria-label="Back"
           >
-            <ArrowLeft className="h-5 w-5 text-washmen-primary" />
+            <ArrowLeft className="h-4 w-4 text-washmen-primary" />
           </button>
           <button
             type="button"
@@ -259,7 +259,7 @@ function CategoryCard({ icon: Icon, title, configured, onTap }: CategoryCardProp
           <Check className="h-3 w-3 text-washmen-primary" strokeWidth={3} />
         </span>
       ) : (
-        <ChevronRight className="h-5 w-5 text-washmen-secondary-500" />
+        <ChevronRight className="h-4 w-4 text-washmen-secondary-500" />
       )}
     </button>
   );

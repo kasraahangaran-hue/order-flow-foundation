@@ -121,7 +121,7 @@ function FaqItem({ question, children }: FaqItemProps) {
         </span>
         <ChevronDown
           className={cn(
-            "h-5 w-5 shrink-0 text-washmen-primary transition-transform duration-200",
+            "h-4 w-4 shrink-0 text-washmen-primary transition-transform duration-200",
             open && "rotate-180"
           )}
         />

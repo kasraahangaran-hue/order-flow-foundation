@@ -90,7 +90,7 @@ export default function WashAndFoldTerms() {
           <div className="rounded-card border border-washmen-secondary-100 bg-card p-4">
             <div className="flex items-center gap-3">
               <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-washmen-primary-green text-washmen-primary">
-                <Check className="h-4 w-4 icon-bold" />
+                <Check className="h-4 w-4" strokeWidth={3} />
               </div>
               <p className="text-base font-semibold text-washmen-secondary-900">
                 ONLY Suitable for:
@@ -107,7 +107,7 @@ export default function WashAndFoldTerms() {
           <div className="rounded-card border border-washmen-secondary-100 bg-card p-4">
             <div className="flex items-center gap-3">
               <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-washmen-primary-red text-white">
-                <X className="h-4 w-4 icon-bold" />
+                <X className="h-4 w-4" strokeWidth={3} />
               </div>
               <p className="text-base font-semibold text-washmen-secondary-900">
                 NOT Suitable for:
