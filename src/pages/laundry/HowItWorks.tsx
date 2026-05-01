@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, ArrowRight, Play, ShoppingBag, MessageCircle } from "lucide-react";
+import { ArrowLeft, ArrowRight, Play } from "lucide-react";
+import viewPricingUrl from "@/assets/icons/view-pricing.svg";
+import contactServiceUrl from "@/assets/icons/contact-customer-service.svg";
 import { haptics } from "@/lib/haptics";
 import { cn } from "@/lib/utils";
 
@@ -205,10 +207,12 @@ export default function HowItWorks() {
               <span className="text-sm font-semibold text-washmen-primary">
                 View Pricing
               </span>
-              {/* HANDOFF: Figma uses a custom shopping-bag-with-tag icon
-                  (the "nav pricing" component). Lucide ShoppingBag is a
-                  stand-in. Swap for the custom asset when available. */}
-              <ShoppingBag className="h-5 w-5 text-washmen-primary" />
+              <img
+                src={viewPricingUrl}
+                alt=""
+                className="h-5 w-5 shrink-0 select-none"
+                draggable={false}
+              />
             </button>
 
             {/* Contact Customer Service */}
@@ -220,10 +224,12 @@ export default function HowItWorks() {
               <span className="text-sm font-semibold text-washmen-primary">
                 Contact Customer Service
               </span>
-              {/* HANDOFF: Figma uses an outline WhatsApp glyph (no fill,
-                  primary blue). Lucide MessageCircle is a stand-in. Swap
-                  for the official WhatsApp outline SVG. */}
-              <MessageCircle className="h-5 w-5 text-washmen-primary" />
+              <img
+                src={contactServiceUrl}
+                alt=""
+                className="h-5 w-5 shrink-0 select-none"
+                draggable={false}
+              />
             </button>
           </div>
         </section>
