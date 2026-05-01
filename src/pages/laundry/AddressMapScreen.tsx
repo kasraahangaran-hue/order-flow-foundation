@@ -21,6 +21,11 @@ import {
   FAR_PIN_THRESHOLD_METERS,
   distanceMeters,
 } from "@/lib/google-maps";
+// Map-pin SVG. Designed at 40×52 with the geographic tip at the bottom-
+// center of the viewBox. The tip = source of truth for the user's pinned
+// coordinate, so the wrapper anchors the bottom of this asset to the
+// viewport center via -translate-y-full.
+import locationPinUrl from "@/assets/icons/location-pin.svg";
 
 interface Suggestion {
   placeId: string;
@@ -303,14 +308,16 @@ export default function AddressMapScreen() {
         </div>
       )}
 
-      {/* Centered pin (anchored to viewport center) */}
+      {/* Centered pin (anchored to viewport center via -translate-y-full).
+          The pin SVG's tip sits at the very bottom of its viewBox, so the
+          bottom edge of the wrapper = the geographic source of truth. */}
       <div className="pointer-events-none absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-full">
-        <div className="flex flex-col items-center">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-washmen-primary text-white shadow-lg">
-            <MapPin className="h-5 w-5" />
-          </div>
-          <div className="mt-[-2px] h-3 w-3 rotate-45 bg-washmen-primary shadow-lg" />
-        </div>
+        <img
+          src={locationPinUrl}
+          alt=""
+          aria-hidden="true"
+          className="h-12 w-auto [filter:drop-shadow(0_4px_6px_hsl(var(--washmen-primary)/0.35))]"
+        />
       </div>
 
       {/* Top: back + search */}
