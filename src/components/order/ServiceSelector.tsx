@@ -453,7 +453,7 @@ function ComboRow({
         {children}
       </div>
       {rightSlot ? (
-        <div className="shrink-0 self-start">{rightSlot}</div>
+        <div className="shrink-0 self-center">{rightSlot}</div>
       ) : showSelectionIndicator ? (
         <div
           className={cn(
