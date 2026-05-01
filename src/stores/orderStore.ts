@@ -274,28 +274,39 @@ const SEED_ADDRESS: Address = {
  * this with API-sent cart items at navigation time.
  */
 const PRICING_PAGE_MOCK_CART: CartItem[] = [
+  // Bed & Bath — bag-priced.
+  {
+    service: "bedAndBath",
+    itemLabel: "Bag",
+    unitPrice: 85,
+    quantity: 1,
+  },
+  // Wash & Fold — bag-priced. (Press & Hang sub-section is driven by
+  // pressingPrefs, NOT by separate cart entries — see PRICING_PAGE_MOCK_PRESSING_PREFS.)
+  {
+    service: "washAndFold",
+    itemLabel: "Bag",
+    unitPrice: 75,
+    quantity: 1,
+  },
+  // Clean & Press — itemized.
   {
     service: "cleanAndPress",
-    itemLabel: "Men's Shirt",
+    itemLabel: "Shirt",
+    unitPrice: 18,
+    quantity: 1,
+  },
+  // Press Only — itemized.
+  {
+    service: "pressOnly",
+    itemLabel: "Shirt",
     unitPrice: 12,
-    quantity: 3,
-  },
-  {
-    service: "cleanAndPress",
-    itemLabel: "Trousers",
-    unitPrice: 14,
-    quantity: 2,
-  },
-  {
-    service: "cleanAndPress",
-    itemLabel: "Suit Jacket",
-    unitPrice: 22,
     quantity: 1,
   },
   {
     service: "pressOnly",
-    itemLabel: "Dress",
-    unitPrice: 18,
+    itemLabel: "T Shirt",
+    unitPrice: 11,
     quantity: 1,
   },
 ];
