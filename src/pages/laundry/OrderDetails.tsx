@@ -94,7 +94,7 @@ function ValueRow({
   return (
     <div className="flex items-center gap-2">
       <div className="flex h-8 w-8 shrink-0 items-center justify-center">
-        <Icon className="h-8 w-8 text-washmen-primary" />
+        <Icon className="h-6 w-6 text-washmen-primary" />
       </div>
       <p
         className={cn(
@@ -268,7 +268,7 @@ export default function OrderDetails() {
                       src={driverInstructionsIconUrl}
                       alt=""
                       aria-hidden="true"
-                      className="h-8 w-8"
+                      className="h-6 w-6"
                     />
                   </div>
                   <div className="min-w-0 flex-1 space-y-0.5">
