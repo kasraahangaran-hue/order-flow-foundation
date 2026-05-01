@@ -5,6 +5,17 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+// HANDOFF — Native-feel TODO: bottom sheets should support swipe-down-
+// to-dismiss to match iOS behavior. Radix Dialog doesn't ship with this.
+// Two options when this becomes priority:
+//   1. Swap this primitive for `vaul` (https://vaul.emilkowal.ski/) which
+//      is API-compatible-ish and adds drag handlers + spring physics.
+//      Smaller diff, well-maintained.
+//   2. Wrap each sheet's body in a framer-motion drag handler that
+//      calculates dy and calls onOpenChange(false) at threshold.
+//      More control, more code.
+// Option 1 is recommended — vaul ships with the right defaults and
+// handles overscroll, content scrolling vs sheet dragging, etc.
 const Sheet = SheetPrimitive.Root;
 
 const SheetTrigger = SheetPrimitive.Trigger;

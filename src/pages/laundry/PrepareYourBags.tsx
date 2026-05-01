@@ -35,9 +35,9 @@ export default function PrepareYourBags() {
   };
 
   return (
-    <div className="flex h-full min-h-screen flex-col bg-subtle-bg">
+    <div className="animate-page-in flex h-full min-h-screen flex-col bg-subtle-bg">
       {/* Header */}
-      <header className="sticky top-0 z-10 bg-subtle-bg px-6 pt-6 pb-0">
+      <header className="sticky top-0 z-10 bg-subtle-bg px-6 pt-[max(env(safe-area-inset-top),24px)] pb-0">
         <h1 className="text-lg font-bold text-washmen-primary">
           Prepare Your Bags
         </h1>

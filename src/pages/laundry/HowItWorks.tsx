@@ -102,11 +102,11 @@ export default function HowItWorks() {
   };
 
   return (
-    <div className="flex h-full min-h-screen flex-col bg-subtle-bg">
+    <div className="animate-page-in flex h-full min-h-screen flex-col bg-subtle-bg">
       {/* Header — matches OrderLayout (px-6 pt-6 pb-0) but with a back
           chevron before the title since this is a sub-screen of the NU
           homepage flow rather than a numbered step. */}
-      <header className="sticky top-0 z-10 bg-subtle-bg px-6 pt-6 pb-0">
+      <header className="sticky top-0 z-10 bg-subtle-bg px-6 pt-[max(env(safe-area-inset-top),24px)] pb-0">
         <div className="flex items-center gap-2">
           <button
             type="button"
