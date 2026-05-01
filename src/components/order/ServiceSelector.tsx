@@ -64,13 +64,19 @@ const PressOnlyIcon = () => <ImageIcon src={pressOnlyIconUrl} />;
  * Renders both Add Pressing variants stacked, swapping between them
  * via opacity based on whether Wash & Fold is selected. Both <img>s
  * stay in the DOM so the browser decodes both up front — toggling is
- * a 0ms opacity flip, no load latency. Used in the COLLAPSED Add
- * Pressing row; the expanded state has its own inline equivalent.
+ * a 0ms opacity flip, no load latency.
  *
- * Stable identity (top-level fn) — passing as `icon` prop won't cause
- * remount-on-render.
+ * Reads services.washAndFold from the store directly so callers can
+ * pass this component reference verbatim (no closure wrapping needed),
+ * preserving stable component identity across parent re-renders. With
+ * a closure wrapper, every parent render creates a new fn ref which
+ * caused ComboRow to remount the rendered tree, which caused the <img>s
+ * to re-decode, which caused visible swap lag.
  */
-function AddPressingIcon({ active }: { active: boolean }) {
+function AddPressingIcon() {
+  const washAndFoldActive = useOrderStore(
+    (s) => s.services.washAndFold
+  );
   return (
     <div className="relative h-8 w-8">
       <img
@@ -78,7 +84,7 @@ function AddPressingIcon({ active }: { active: boolean }) {
         alt=""
         className={cn(
           "absolute inset-0 h-8 w-8 select-none transition-opacity",
-          active ? "opacity-0" : "opacity-100"
+          washAndFoldActive ? "opacity-0" : "opacity-100"
         )}
         draggable={false}
       />
@@ -87,7 +93,7 @@ function AddPressingIcon({ active }: { active: boolean }) {
         alt=""
         className={cn(
           "absolute inset-0 h-8 w-8 select-none transition-opacity",
-          active ? "opacity-100" : "opacity-0"
+          washAndFoldActive ? "opacity-100" : "opacity-0"
         )}
         draggable={false}
       />
@@ -289,7 +295,7 @@ export function ServiceSelector({
           </div>
         ) : (
           <ComboRow
-            icon={() => <AddPressingIcon active={services.washAndFold} />}
+            icon={AddPressingIcon}
             iconBgClass={
                   services.washAndFold ? "bg-washmen-light-aqua" : "bg-washmen-secondary-100"
             }
