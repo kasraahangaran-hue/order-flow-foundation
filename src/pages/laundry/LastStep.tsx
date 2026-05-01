@@ -418,14 +418,16 @@ function PaymentSummaryItemized({
                       {meta.label}
                     </span>
                   </div>
-                  <div className="space-y-2 pl-6">
+                  <div className="space-y-2 pl-7">
                     {entries.map(({ item, index }) => (
                       <div
                         key={index}
                         className="flex items-center justify-between gap-3"
                       >
                         <div className="min-w-0 flex-1">
-                          <p className="text-sm text-foreground">{item.itemLabel}</p>
+                          <p className="text-sm font-medium text-washmen-secondary-900">
+                            {item.itemLabel}
+                          </p>
                           <p className="text-[13px] leading-[18px] tracking-[0.4px]">
                             {item.discountedPrice !== undefined ? (
                               <>
@@ -437,7 +439,7 @@ function PaymentSummaryItemized({
                                 </span>
                               </>
                             ) : (
-                              <span className="text-washmen-secondary-700">
+                              <span className="text-washmen-secondary-500">
                                 AED {item.unitPrice.toFixed(2)}
                               </span>
                             )}
@@ -452,7 +454,7 @@ function PaymentSummaryItemized({
                     ))}
                   </div>
                   {service === "washAndFold" && hasPressing && (
-                    <div className="space-y-2">
+                    <div className="mt-3 space-y-2 pl-7">
                       {/* Press & Hang sub-header with iron icon */}
                       <div className="flex items-center gap-2">
                         <img
