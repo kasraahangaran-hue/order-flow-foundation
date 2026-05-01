@@ -50,7 +50,7 @@ function DetailCard({ title, onPress, hasValue, addAction, titleClassName, child
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <p className={cn("text-sm font-normal leading-tight text-washmen-primary", titleClassName)}>{title}</p>
-          <ActionIcon className="h-4 w-4 text-washmen-primary" strokeWidth={2} aria-hidden />
+          <ActionIcon className="h-5 w-5 text-washmen-primary" aria-hidden />
         </div>
         {children ? <div>{children}</div> : null}
       </div>
