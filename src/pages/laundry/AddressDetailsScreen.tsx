@@ -8,9 +8,7 @@ import { AddressTypeTile } from "@/components/order/AddressTypeTile";
 import type {
   Address,
   AddressType,
-  ApartmentFields,
   HotelFields,
-  OfficeFields,
   VillaFields,
 } from "@/stores/orderStore";
 
@@ -60,44 +58,47 @@ export default function AddressDetailsScreen() {
   const initialType = pendingDraft?.type ?? "apartment";
   const [type, setType] = useState<AddressType>(initialType);
 
-  // Apartment
-  const [aptBuilding, setAptBuilding] = useState(
-    (pendingDraft?.fields as ApartmentFields | undefined)?.building ?? "",
-  );
-  const [aptNumber, setAptNumber] = useState(
-    (pendingDraft?.fields as ApartmentFields | undefined)?.aptNumber ?? "",
-  );
+  // Universal "place name" — maps to:
+  // - apartment: building name
+  // - office:    building name
+  // - villa:     community / area
+  // - hotel:     hotel name
+  // Persists across tab switches so the user doesn't lose what they typed.
+  const [placeName, setPlaceName] = useState(() => {
+    const f = pendingDraft?.fields;
+    if (!f) return "";
+    if ("building" in f) return f.building; // apartment, office
+    if ("community" in f) return f.community; // villa
+    if ("hotelName" in f) return f.hotelName; // hotel
+    return "";
+  });
 
-  // Office
-  const [officeBuilding, setOfficeBuilding] = useState(
-    (pendingDraft?.fields as OfficeFields | undefined)?.building ?? "",
-  );
-  const [officeNumber, setOfficeNumber] = useState(
-    (pendingDraft?.fields as OfficeFields | undefined)?.officeNumber ?? "",
-  );
+  // Universal "unit number" — maps to:
+  // - apartment: apt #
+  // - office:    office #
+  // - villa:     villa #
+  // - hotel:     room #
+  // Persists across tab switches.
+  const [unitNumber, setUnitNumber] = useState(() => {
+    const f = pendingDraft?.fields;
+    if (!f) return "";
+    if ("aptNumber" in f) return f.aptNumber;
+    if ("officeNumber" in f) return f.officeNumber;
+    if ("villaNumber" in f) return f.villaNumber;
+    if ("roomNumber" in f) return f.roomNumber;
+    return "";
+  });
 
-  // Villa
-  const [villaCommunity, setVillaCommunity] = useState(
-    (pendingDraft?.fields as VillaFields | undefined)?.community ?? "",
-  );
+  // Tab-specific extras — not shared across tabs because there's no
+  // equivalent slot in the other types.
   const [villaStreet, setVillaStreet] = useState(
     (pendingDraft?.fields as VillaFields | undefined)?.street ?? "",
-  );
-  const [villaNumber, setVillaNumber] = useState(
-    (pendingDraft?.fields as VillaFields | undefined)?.villaNumber ?? "",
-  );
-
-  // Hotel
-  const [hotelName, setHotelName] = useState(
-    (pendingDraft?.fields as HotelFields | undefined)?.hotelName ?? "",
-  );
-  const [hotelRoom, setHotelRoom] = useState(
-    (pendingDraft?.fields as HotelFields | undefined)?.roomNumber ?? "",
   );
   const [hotelGuest, setHotelGuest] = useState(
     (pendingDraft?.fields as HotelFields | undefined)?.guestName ?? "",
   );
 
+  // Notes — persist across all tabs.
   const [notes, setNotes] = useState(
     (pendingDraft?.fields as { notes?: string } | undefined)?.notes ?? "",
   );
@@ -108,53 +109,24 @@ export default function AddressDetailsScreen() {
     if (newType === type) return;
     haptics.light();
     setType(newType);
-    setAptBuilding("");
-    setAptNumber("");
-    setOfficeBuilding("");
-    setOfficeNumber("");
-    setVillaCommunity("");
-    setVillaStreet("");
-    setVillaNumber("");
-    setHotelName("");
-    setHotelRoom("");
-    setHotelGuest("");
-    setNotes("");
+    // Don't clear placeName, unitNumber, notes — they're shared concepts.
+    // Don't clear villaStreet / hotelGuest either — if the user comes back
+    // to that tab, they'll find what they typed before.
   };
 
   const canContinue = useMemo(() => {
+    const hasPlace = placeName.trim().length > 0;
+    const hasUnit = unitNumber.trim().length > 0;
     switch (type) {
       case "apartment":
-        return aptBuilding.trim().length > 0 && aptNumber.trim().length > 0;
       case "office":
-        return (
-          officeBuilding.trim().length > 0 && officeNumber.trim().length > 0
-        );
+        return hasPlace && hasUnit;
       case "villa":
-        return (
-          villaCommunity.trim().length > 0 &&
-          villaStreet.trim().length > 0 &&
-          villaNumber.trim().length > 0
-        );
+        return hasPlace && villaStreet.trim().length > 0 && hasUnit;
       case "hotel":
-        return (
-          hotelName.trim().length > 0 &&
-          hotelRoom.trim().length > 0 &&
-          hotelGuest.trim().length > 0
-        );
+        return hasPlace && hasUnit && hotelGuest.trim().length > 0;
     }
-  }, [
-    type,
-    aptBuilding,
-    aptNumber,
-    officeBuilding,
-    officeNumber,
-    villaCommunity,
-    villaStreet,
-    villaNumber,
-    hotelName,
-    hotelRoom,
-    hotelGuest,
-  ]);
+  }, [type, placeName, unitNumber, villaStreet, hotelGuest]);
 
   // Early return AFTER all hooks have run, to satisfy Rules of Hooks. The
   // useEffect above redirects when pendingDraft is missing, so this only
@@ -179,6 +151,8 @@ export default function AddressDetailsScreen() {
     const id = pendingDraft.id ?? `addr_${Date.now()}`;
 
     let address: Address;
+    const trimmedPlace = placeName.trim();
+    const trimmedUnit = unitNumber.trim();
     switch (type) {
       case "apartment":
         address = {
@@ -186,8 +160,8 @@ export default function AddressDetailsScreen() {
           type: "apartment",
           ...baseShared,
           fields: {
-            building: aptBuilding.trim(),
-            aptNumber: aptNumber.trim(),
+            building: trimmedPlace,
+            aptNumber: trimmedUnit,
             ...(trimmedNotes ? { notes: trimmedNotes } : {}),
           },
         };
@@ -198,8 +172,8 @@ export default function AddressDetailsScreen() {
           type: "office",
           ...baseShared,
           fields: {
-            building: officeBuilding.trim(),
-            officeNumber: officeNumber.trim(),
+            building: trimmedPlace,
+            officeNumber: trimmedUnit,
             ...(trimmedNotes ? { notes: trimmedNotes } : {}),
           },
         };
@@ -210,9 +184,9 @@ export default function AddressDetailsScreen() {
           type: "villa",
           ...baseShared,
           fields: {
-            community: villaCommunity.trim(),
+            community: trimmedPlace,
             street: villaStreet.trim(),
-            villaNumber: villaNumber.trim(),
+            villaNumber: trimmedUnit,
             ...(trimmedNotes ? { notes: trimmedNotes } : {}),
           },
         };
@@ -223,8 +197,8 @@ export default function AddressDetailsScreen() {
           type: "hotel",
           ...baseShared,
           fields: {
-            hotelName: hotelName.trim(),
-            roomNumber: hotelRoom.trim(),
+            hotelName: trimmedPlace,
+            roomNumber: trimmedUnit,
             guestName: hotelGuest.trim(),
             ...(trimmedNotes ? { notes: trimmedNotes } : {}),
           },
@@ -281,15 +255,15 @@ export default function AddressDetailsScreen() {
             <div className="grid grid-cols-2 gap-3">
               <input
                 {...noAutofill}
-                value={aptBuilding}
-                onChange={(e) => setAptBuilding(e.target.value)}
+                value={placeName}
+                onChange={(e) => setPlaceName(e.target.value)}
                 placeholder="Building name"
                 className={inputClass}
               />
               <input
                 {...noAutofill}
-                value={aptNumber}
-                onChange={(e) => setAptNumber(e.target.value)}
+                value={unitNumber}
+                onChange={(e) => setUnitNumber(e.target.value)}
                 placeholder="Apt #"
                 className={inputClass}
               />
@@ -303,15 +277,15 @@ export default function AddressDetailsScreen() {
             <div className="grid grid-cols-2 gap-3">
               <input
                 {...noAutofill}
-                value={officeBuilding}
-                onChange={(e) => setOfficeBuilding(e.target.value)}
+                value={placeName}
+                onChange={(e) => setPlaceName(e.target.value)}
                 placeholder="Building name"
                 className={inputClass}
               />
               <input
                 {...noAutofill}
-                value={officeNumber}
-                onChange={(e) => setOfficeNumber(e.target.value)}
+                value={unitNumber}
+                onChange={(e) => setUnitNumber(e.target.value)}
                 placeholder="Office #"
                 className={inputClass}
               />
@@ -324,8 +298,8 @@ export default function AddressDetailsScreen() {
           <div className="space-y-3">
             <input
               {...noAutofill}
-              value={villaCommunity}
-              onChange={(e) => setVillaCommunity(e.target.value)}
+              value={placeName}
+              onChange={(e) => setPlaceName(e.target.value)}
               placeholder="Community / Area"
               className={inputClass}
             />
@@ -339,8 +313,8 @@ export default function AddressDetailsScreen() {
               />
               <input
                 {...noAutofill}
-                value={villaNumber}
-                onChange={(e) => setVillaNumber(e.target.value)}
+                value={unitNumber}
+                onChange={(e) => setUnitNumber(e.target.value)}
                 placeholder="Villa #"
                 className={inputClass}
               />
@@ -354,15 +328,15 @@ export default function AddressDetailsScreen() {
             <div className="grid grid-cols-2 gap-3">
               <input
                 {...noAutofill}
-                value={hotelName}
-                onChange={(e) => setHotelName(e.target.value)}
+                value={placeName}
+                onChange={(e) => setPlaceName(e.target.value)}
                 placeholder="Hotel Name"
                 className={inputClass}
               />
               <input
                 {...noAutofill}
-                value={hotelRoom}
-                onChange={(e) => setHotelRoom(e.target.value)}
+                value={unitNumber}
+                onChange={(e) => setUnitNumber(e.target.value)}
                 placeholder="Room #"
                 className={inputClass}
               />
