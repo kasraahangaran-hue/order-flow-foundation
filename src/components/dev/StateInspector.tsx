@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { SlidersHorizontal } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useOrderStore, type OrderState, type FlowType } from "@/stores/orderStore";
+import { useUserPrefsStore } from "@/stores/userPrefsStore";
 import { cn } from "@/lib/utils";
 import { haptics } from "@/lib/haptics";
 
@@ -60,6 +61,13 @@ function StateInspectorInner() {
     haptics.medium();
     if (pendingReset) {
       store.reset();
+      // For NU, also clear userPrefs so the user re-encounters first-time
+      // gates (WF+ terms, folding apply-all prompt, etc.) — true "fresh
+      // user" simulation. For RU and pricingPage, preserve userPrefs since
+      // those user types are returning customers with existing prefs.
+      if (store.flowType === "newUser") {
+        useUserPrefsStore.getState().reset();
+      }
       setPendingReset(false);
     }
     setOpen(false);
