@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CircleCheck } from "lucide-react";
+import approveIconUrl from "@/assets/icons/instruction-approve.svg";
 import { BottomSheetShell } from "./BottomSheetShell";
 import { RadioRow } from "./RadioRow";
 import { Switch } from "@/components/ui/switch";
@@ -84,7 +84,12 @@ export function AutoApprovalsSheet({
           </p>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <CircleCheck className="h-6 w-6 text-washmen-primary" />
+              <img
+                src={approveIconUrl}
+                alt=""
+                className="h-6 w-6 shrink-0 select-none"
+                draggable={false}
+              />
               <p className="text-[14px] font-light leading-[20px] tracking-[0.1px] text-washmen-slate-grey">
                 Auto-Approve
               </p>

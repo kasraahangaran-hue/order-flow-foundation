@@ -1,4 +1,5 @@
-import { ArrowLeft, Check, X, HelpCircle, ChevronDown, ChevronRight, CircleCheck, Plus } from "lucide-react";
+import { ArrowLeft, Check, X, HelpCircle, ChevronDown, ChevronRight, Plus } from "lucide-react";
+import approveIconUrl from "@/assets/icons/instruction-approve.svg";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -166,7 +167,12 @@ export default function WashAndFoldTerms() {
                     className="press-effect flex w-full items-center justify-between gap-3 rounded-card bg-card px-4 py-4 text-left"
                   >
                     <div className="flex items-center gap-3">
-                      <CircleCheck className="h-5 w-5 text-washmen-primary" strokeWidth={2} />
+                      <img
+                        src={approveIconUrl}
+                        alt=""
+                        className="h-5 w-5 shrink-0 select-none"
+                        draggable={false}
+                      />
                       <span className="text-sm font-medium text-washmen-secondary-900">
                         Auto-Approvals
                       </span>
