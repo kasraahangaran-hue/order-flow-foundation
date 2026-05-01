@@ -64,7 +64,7 @@ export default function SelectService() {
           </h2>
           <div className="flex flex-col gap-2">
             <FaqItem question="How much will it cost?">
-              <p className="text-sm leading-relaxed text-washmen-primary">
+              <p className="text-sm font-light leading-relaxed text-washmen-primary">
                 The final bill is calculated once we count your items at our
                 facility. To estimate your bill, visit the{" "}
                 <button
@@ -82,7 +82,7 @@ export default function SelectService() {
               </p>
             </FaqItem>
             <FaqItem question="Do I need to wait for the driver?">
-              <div className="flex flex-col gap-2 text-sm leading-relaxed text-washmen-primary">
+              <div className="flex flex-col gap-2 text-sm font-light leading-relaxed text-washmen-primary">
                 <p>Not necessarily.</p>
                 <p>
                   For each service selected, put your laundry in separate bags
