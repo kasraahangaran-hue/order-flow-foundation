@@ -300,6 +300,17 @@ const PRICING_PAGE_MOCK_CART: CartItem[] = [
   },
 ];
 
+/**
+ * Pressing prefs seeded alongside the mock cart in pricingPage mode.
+ * Drives the Press & Hang sub-section in the Payment Summary (the
+ * "will be priced per item after we receive your order" alert).
+ * Production gets these from the native pricing page entry payload.
+ */
+const PRICING_PAGE_MOCK_PRESSING_PREFS: PressingPrefs = {
+  items: ["All Shirts / Blouses", "All T-Shirts / Polos"],
+  pricePerItem: 9,
+};
+
 export const useOrderStore = create<OrderState>()(
   persist(
     (set) => ({
