@@ -27,6 +27,10 @@ const TYPE_TITLE: Record<AddressType, string> = {
 const inputClass =
   "h-12 w-full rounded-[6px] border border-washmen-pale-grey bg-white px-3 text-base font-light leading-[20px] tracking-[0.1px] text-washmen-primary placeholder:text-washmen-cloudy-blue focus:border-washmen-primary focus:outline-none focus:ring-2 focus:ring-washmen-primary/20";
 
+// Spread on every text input. Default keyboard return key is "next" so
+// the user can advance through fields without dismissing the keyboard;
+// the LAST input on each form (just before notes) overrides this with
+// `enterKeyHint="done"`.
 const noAutofill = {
   autoComplete: "new-password",
   autoCorrect: "off",
@@ -36,6 +40,7 @@ const noAutofill = {
   "data-1p-ignore": "true",
   "data-lpignore": "true",
   "data-form-type": "other",
+  enterKeyHint: "next" as const,
 } as const;
 
 export default function AddressDetailsScreen() {
@@ -269,6 +274,7 @@ export default function AddressDetailsScreen() {
                 onChange={(e) => setUnitNumber(e.target.value)}
                 placeholder="Apt #"
                 className={inputClass}
+                enterKeyHint="done"
               />
             </div>
             <NotesField notes={notes} setNotes={setNotes} />
@@ -291,6 +297,7 @@ export default function AddressDetailsScreen() {
                 onChange={(e) => setUnitNumber(e.target.value)}
                 placeholder="Office #"
                 className={inputClass}
+                enterKeyHint="done"
               />
             </div>
             <NotesField notes={notes} setNotes={setNotes} />
@@ -320,6 +327,7 @@ export default function AddressDetailsScreen() {
                 onChange={(e) => setUnitNumber(e.target.value)}
                 placeholder="Villa #"
                 className={inputClass}
+                enterKeyHint="done"
               />
             </div>
             <NotesField notes={notes} setNotes={setNotes} />
@@ -350,6 +358,7 @@ export default function AddressDetailsScreen() {
               onChange={(e) => setHotelGuest(e.target.value)}
               placeholder="Guest full name (for reception)"
               className={inputClass}
+              enterKeyHint="done"
             />
             <NotesField notes={notes} setNotes={setNotes} />
           </div>
