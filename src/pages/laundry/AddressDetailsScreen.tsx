@@ -8,9 +8,7 @@ import { AddressTypeTile } from "@/components/order/AddressTypeTile";
 import type {
   Address,
   AddressType,
-  ApartmentFields,
   HotelFields,
-  OfficeFields,
   VillaFields,
 } from "@/stores/orderStore";
 
