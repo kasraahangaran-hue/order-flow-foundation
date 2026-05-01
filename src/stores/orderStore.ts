@@ -327,6 +327,18 @@ export const useOrderStore = create<OrderState>()(
           };
         }),
       selectAddress: (id) => set({ selectedAddressId: id }),
+      devSetHasSavedAddress: (hasSaved) =>
+        set(() =>
+          hasSaved
+            ? {
+                addresses: [SEED_ADDRESS],
+                selectedAddressId: SEED_ADDRESS.id,
+              }
+            : {
+                addresses: [],
+                selectedAddressId: null,
+              },
+        ),
       setPendingAddressDraft: (d) => set({ pendingAddressDraft: d }),
       setPickup: (pickup) => set({ pickup }),
       setDropoff: (dropoff) => set({ dropoff }),
