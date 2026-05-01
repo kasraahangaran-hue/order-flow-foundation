@@ -408,16 +408,23 @@ export default function AddressMapScreen() {
         ) : null}
       </div>
 
-      {/* Locate-me FAB */}
+      {/* Locate-me FAB. Active (filled) when the pin is at the user's GPS
+          location; inactive (stroke only) otherwise. */}
       <button
         onClick={onLocateMe}
         aria-label="Locate me"
+        aria-pressed={isAtUserLocation}
         className="press-effect absolute bottom-44 right-4 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-lg"
       >
         {locating ? (
           <Loader2 className="h-5 w-5 animate-spin text-washmen-primary" />
         ) : (
-          <Navigation className="h-5 w-5 text-washmen-primary" />
+          <Navigation
+            className={cn(
+              "h-5 w-5 text-washmen-primary transition-colors",
+              isAtUserLocation && "fill-washmen-primary"
+            )}
+          />
         )}
       </button>
 
