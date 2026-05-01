@@ -265,6 +265,13 @@
     animation: page-in 150ms ease-out;
   }
 
+  /* Escape hatch for small glyphs that need heavier weight than the
+     global 1.5 stroke. Use sparingly — only when an icon is small enough
+     (12-14px) that 1.5 reads spindly. */
+  svg.icon-bold {
+    stroke-width: 2.5 !important;
+  }
+
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;

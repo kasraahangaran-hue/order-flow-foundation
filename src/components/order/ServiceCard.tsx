@@ -88,9 +88,9 @@ export function ServiceCard({
         aria-hidden
       >
         {selected ? (
-          <Check className="h-3.5 w-3.5" strokeWidth={3} />
+          <Check className="h-4 w-4 icon-bold" />
         ) : (
-          <Plus className="h-3.5 w-3.5" strokeWidth={2.5} />
+          <Plus className="h-4 w-4 icon-bold" />
         )}
       </div>
     </div>
