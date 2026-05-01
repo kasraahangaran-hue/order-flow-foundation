@@ -21,8 +21,11 @@ const TYPE_TITLE: Record<AddressType, string> = {
   office: "Office Details",
 };
 
+// Input font-size is 16px (text-base) to prevent iOS Safari from
+// auto-zooming the viewport on focus. Anything below 16px triggers
+// the zoom regardless of viewport meta tag settings.
 const inputClass =
-  "h-12 w-full rounded-[6px] border border-washmen-pale-grey bg-white px-3 text-[14px] font-light leading-[20px] tracking-[0.1px] text-washmen-primary placeholder:text-washmen-cloudy-blue focus:border-washmen-primary focus:outline-none focus:ring-2 focus:ring-washmen-primary/20";
+  "h-12 w-full rounded-[6px] border border-washmen-pale-grey bg-white px-3 text-base font-light leading-[20px] tracking-[0.1px] text-washmen-primary placeholder:text-washmen-cloudy-blue focus:border-washmen-primary focus:outline-none focus:ring-2 focus:ring-washmen-primary/20";
 
 const noAutofill = {
   autoComplete: "new-password",
@@ -236,7 +239,7 @@ export default function AddressDetailsScreen() {
         </h1>
 
         {/* Type chips */}
-        <div className="-mx-6 overflow-x-auto px-6">
+        <div className="no-scrollbar -mx-6 overflow-x-auto px-6">
           <div className="flex gap-2">
             {TYPES.map((t) => (
               <AddressTypeTile
@@ -384,7 +387,8 @@ function NotesField({ notes, setNotes }: NotesFieldProps) {
       autoCorrect="off"
       autoCapitalize="sentences"
       spellCheck
-      className="w-full resize-none rounded-[6px] border border-washmen-pale-grey bg-white px-3 py-3 text-[14px] font-light leading-[20px] tracking-[0.1px] text-washmen-primary placeholder:text-washmen-cloudy-blue focus:border-washmen-primary focus:outline-none focus:ring-2 focus:ring-washmen-primary/20"
+      // Same 16px rule — textareas trigger iOS focus-zoom too.
+      className="w-full resize-none rounded-[6px] border border-washmen-pale-grey bg-white px-3 py-3 text-base font-light leading-[20px] tracking-[0.1px] text-washmen-primary placeholder:text-washmen-cloudy-blue focus:border-washmen-primary focus:outline-none focus:ring-2 focus:ring-washmen-primary/20"
     />
   );
 }

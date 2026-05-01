@@ -154,6 +154,8 @@
     -webkit-font-smoothing: antialiased;
     -webkit-tap-highlight-color: transparent;
     overscroll-behavior-y: none;
+    /* Smooth iOS-style scroll momentum on the document. */
+    -webkit-overflow-scrolling: touch;
   }
 
   /* Tap targets: no text selection, unified press feedback */
@@ -162,6 +164,14 @@
     user-select: none;
     -webkit-touch-callout: none;
     touch-action: manipulation;
+  }
+
+  /* Inner scroll containers: contain overscroll so iOS doesn't trigger
+     pull-to-refresh or rubber-band on parent containers. Also enable
+     momentum scrolling. Applies to every overflow-* ancestor. */
+  [class*="overflow-"] {
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
   }
 
   .press-effect {
