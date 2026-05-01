@@ -58,17 +58,17 @@ export function ServiceCard({
       </div>
 
       <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2">
-          <p className="truncate text-base font-semibold leading-tight text-washmen-secondary-900">
+        <div className="flex min-w-0 items-center gap-2">
+          <p className="min-w-0 truncate text-base font-semibold leading-tight text-washmen-secondary-900">
             {title}
           </p>
           {badge && (
-            <span className="rounded-md bg-washmen-warning/30 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-washmen-secondary-800">
+            <span className="shrink-0 rounded-md bg-washmen-warning/30 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-washmen-secondary-800">
               {badge}
             </span>
           )}
           {priceLabel && (
-            <span className="rounded-md bg-washmen-secondary-aqua px-2 py-0.5 text-[12px] font-medium text-washmen-primary">
+            <span className="shrink-0 rounded-md bg-washmen-secondary-aqua px-2 py-0.5 text-[12px] font-medium text-washmen-primary">
               {priceLabel}
             </span>
           )}
