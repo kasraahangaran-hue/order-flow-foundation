@@ -274,31 +274,53 @@ const SEED_ADDRESS: Address = {
  * this with API-sent cart items at navigation time.
  */
 const PRICING_PAGE_MOCK_CART: CartItem[] = [
+  // Bed & Bath — bag-priced.
+  {
+    service: "bedAndBath",
+    itemLabel: "Bag",
+    unitPrice: 85,
+    quantity: 1,
+  },
+  // Wash & Fold — bag-priced. (Press & Hang sub-section is driven by
+  // pressingPrefs, NOT by separate cart entries — see PRICING_PAGE_MOCK_PRESSING_PREFS.)
+  {
+    service: "washAndFold",
+    itemLabel: "Bag",
+    unitPrice: 75,
+    quantity: 1,
+  },
+  // Clean & Press — itemized.
   {
     service: "cleanAndPress",
-    itemLabel: "Men's Shirt",
+    itemLabel: "Shirt",
+    unitPrice: 18,
+    quantity: 1,
+  },
+  // Press Only — itemized.
+  {
+    service: "pressOnly",
+    itemLabel: "Shirt",
     unitPrice: 12,
-    quantity: 3,
-  },
-  {
-    service: "cleanAndPress",
-    itemLabel: "Trousers",
-    unitPrice: 14,
-    quantity: 2,
-  },
-  {
-    service: "cleanAndPress",
-    itemLabel: "Suit Jacket",
-    unitPrice: 22,
     quantity: 1,
   },
   {
     service: "pressOnly",
-    itemLabel: "Dress",
-    unitPrice: 18,
+    itemLabel: "T Shirt",
+    unitPrice: 11,
     quantity: 1,
   },
 ];
+
+/**
+ * Pressing prefs seeded alongside the mock cart in pricingPage mode.
+ * Drives the Press & Hang sub-section in the Payment Summary (the
+ * "will be priced per item after we receive your order" alert).
+ * Production gets these from the native pricing page entry payload.
+ */
+const PRICING_PAGE_MOCK_PRESSING_PREFS: PressingPrefs = {
+  items: ["All Shirts / Blouses", "All T-Shirts / Polos"],
+  pricePerItem: 9,
+};
 
 export const useOrderStore = create<OrderState>()(
   persist(
@@ -321,26 +343,38 @@ export const useOrderStore = create<OrderState>()(
       // priced order regardless of addPressing flag — needs to be handled in
       // cart/checkout logic.
       setFlowType: (flowType) =>
-        set((state) => ({
-          flowType,
-          // Re-derive the pickup default so NU lands on "in_person" and RU
-          // on "door" when the flow type changes via the State Inspector.
-          // Addresses are intentionally NOT cleared on flowType change —
-          // for dev testing the seed address persists across both modes.
-          // Production NU users will get an empty address state from the
-          // customer profile API at session start, not from the web layer.
-          pickup: getDefaultPickup(flowType === "newUser"),
-          // Pricing page entry expects a populated cart from the native
-          // pricing page. For dev, seed mock items so Payment Summary
-          // has something to render. If switching AWAY from pricingPage,
-          // clear the cart so non-pricing flows start clean.
-          cart:
-            flowType === "pricingPage"
+        set((state) => {
+          const isPricing = flowType === "pricingPage";
+          return {
+            flowType,
+            // Re-derive the pickup default so NU lands on "in_person" and RU
+            // on "door" when the flow type changes via the State Inspector.
+            // Addresses are intentionally NOT cleared on flowType change —
+            // for dev testing the seed address persists across both modes.
+            // Production NU users will get an empty address state from the
+            // customer profile API at session start, not from the web layer.
+            pickup: getDefaultPickup(flowType === "newUser"),
+            // Pricing page entry expects a populated cart from the native
+            // pricing page. For dev, seed mock items + services + pressing
+            // prefs so Payment Summary renders correctly with all sections.
+            cart: isPricing
               ? state.cart.length > 0
                 ? state.cart
                 : PRICING_PAGE_MOCK_CART
               : [],
-        })),
+            services: isPricing
+              ? {
+                  ...state.services,
+                  washAndFold: true,
+                  addPressing: true,
+                  pressingPrefs: PRICING_PAGE_MOCK_PRESSING_PREFS,
+                  cleanAndPress: true,
+                  bedAndBath: true,
+                  pressOnly: true,
+                }
+              : state.services,
+          };
+        }),
       setServices: (patch) =>
         set((s) => ({ services: { ...s.services, ...patch } })),
       setPressingPrefs: (prefs) =>
@@ -408,31 +442,45 @@ export const useOrderStore = create<OrderState>()(
           };
         }),
       reset: () =>
-        set((state) => ({
-          // Preserve current flowType so dev-panel mode toggles aren't clobbered
-          // and getDefaultPickup() picks the right mode for the active flow.
-          flowType: state.flowType,
-          services: initialServices,
-          // Preserve addresses verbatim. The dev panel uses
-          // devSetHasSavedAddress to explicitly empty the array — reset()
-          // must not silently restore the seed, otherwise the dev "no
-          // saved address" toggle is undone on every reset.
-          addresses: state.addresses,
-          selectedAddressId: state.selectedAddressId,
-          pendingAddressDraft: null,
-          pickup: getDefaultPickup(state.flowType === "newUser"),
-          dropoff: getDefaultDropoff(),
-          driverInstructions: null,
-          orderInstructions: null,
-          payment: null,
-          promoCode: null,
-          tip: 0,
-          // For pricingPage, re-seed the mock cart so the user lands on
-          // Last Step with items to view. For other flows, clear cart
-          // (it's not used outside pricingPage).
-          cart:
-            state.flowType === "pricingPage" ? PRICING_PAGE_MOCK_CART : [],
-        })),
+        set((state) => {
+          const isPricing = state.flowType === "pricingPage";
+          return {
+            // Preserve current flowType so dev-panel mode toggles aren't clobbered
+            // and getDefaultPickup() picks the right mode for the active flow.
+            flowType: state.flowType,
+            // For pricingPage, re-seed services + pressingPrefs to power the
+            // Payment Summary sections. Other flows reset to a blank slate.
+            services: isPricing
+              ? {
+                  ...initialServices,
+                  washAndFold: true,
+                  addPressing: true,
+                  pressingPrefs: PRICING_PAGE_MOCK_PRESSING_PREFS,
+                  cleanAndPress: true,
+                  bedAndBath: true,
+                  pressOnly: true,
+                }
+              : initialServices,
+            // Preserve addresses verbatim. The dev panel uses
+            // devSetHasSavedAddress to explicitly empty the array — reset()
+            // must not silently restore the seed, otherwise the dev "no
+            // saved address" toggle is undone on every reset.
+            addresses: state.addresses,
+            selectedAddressId: state.selectedAddressId,
+            pendingAddressDraft: null,
+            pickup: getDefaultPickup(state.flowType === "newUser"),
+            dropoff: getDefaultDropoff(),
+            driverInstructions: null,
+            orderInstructions: null,
+            payment: null,
+            promoCode: null,
+            tip: 0,
+            // For pricingPage, re-seed the mock cart so the user lands on
+            // Last Step with items to view. For other flows, clear cart
+            // (it's not used outside pricingPage).
+            cart: isPricing ? PRICING_PAGE_MOCK_CART : [],
+          };
+        }),
     }),
     {
       // v8: bumped from v7 to seed a default address.
