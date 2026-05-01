@@ -68,7 +68,11 @@ export function DropOffSheet({ open, onOpenChange }: DropOffSheetProps) {
   const storedDropoff = useOrderStore((s) => s.dropoff);
   const setDropoff = useOrderStore((s) => s.setDropoff);
 
-  const days = useMemo(() => buildDropoffMockDays(), []);
+  const isFirstOrder = useIsFirstOrder();
+  const days = useMemo(
+    () => buildDropoffMockDays(isFirstOrder),
+    [isFirstOrder]
+  );
 
   const [step, setStep] = useState<1 | 2>(1);
   const [dropoffMode, setDropoffMode] = useState<DropoffMode>("door");
