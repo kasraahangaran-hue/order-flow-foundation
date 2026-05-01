@@ -188,6 +188,14 @@
     user-select: none;
   }
 
+  /* Lucide icon stroke weight: 1.5 globally (Lucide ships with 2 by
+     default, which reads heavy at most sizes). Per-icon strokeWidth
+     props in JSX still override this — we keep explicit strokeWidth={2.5}
+     and {3} where small glyphs need extra weight to read. */
+  svg.lucide {
+    stroke-width: 1.5;
+  }
+
   /* Strip Safari's default input "clear" (×) button — it doesn't match
      the design and looks like an unstyled web form. */
   input[type="text"]::-webkit-search-cancel-button,
