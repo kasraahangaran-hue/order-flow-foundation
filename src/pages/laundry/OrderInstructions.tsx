@@ -1,15 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Camera,
-  Layers,
-  Pencil,
-  Plus,
-  Shirt,
-  SprayCan,
-  X,
-  BadgeCheck,
-} from "lucide-react";
+import { Camera, Pencil, Plus, X } from "lucide-react";
+
+// Custom illustrative icons for Order Instructions sections.
+// Multi-color washmen-themed SVGs at 32×32 native viewBox.
+import sendPhotoIconUrl from "@/assets/icons/instruction-send-photo.svg";
+import foldingIconUrl from "@/assets/icons/instruction-folding.svg";
+import creasesIconUrl from "@/assets/icons/instruction-creases.svg";
+import starchIconUrl from "@/assets/icons/instruction-starch.svg";
+import approveIconUrl from "@/assets/icons/instruction-approve.svg";
 import { OrderLayout } from "@/components/order/OrderLayout";
 import { InstructionsCard } from "@/components/order/InstructionsCard";
 import { Button } from "@/components/ui/button";
@@ -34,6 +33,23 @@ import {
 import { useUserPrefsStore } from "@/stores/userPrefsStore";
 
 const MAX_DELICATE_ITEMS = 5;
+
+/**
+ * Wraps a static SVG URL as a React component matching the icon-prop
+ * signature used by InstructionsCard. Same helper as in OrderDetails.
+ */
+function makeImageIcon(src: string): React.ComponentType<{ className?: string }> {
+  const Component: React.ComponentType<{ className?: string }> = ({ className }) => (
+    <img src={src} alt="" aria-hidden="true" className={className} />
+  );
+  Component.displayName = `ImageIcon(${src})`;
+  return Component;
+}
+
+const FoldingIcon = makeImageIcon(foldingIconUrl);
+const CreasesIcon = makeImageIcon(creasesIconUrl);
+const StarchIcon = makeImageIcon(starchIconUrl);
+const ApproveIcon = makeImageIcon(approveIconUrl);
 
 export default function OrderInstructions() {
   const navigate = useNavigate();
@@ -154,9 +170,13 @@ export default function OrderInstructions() {
             onClick={togglePhotoCard}
             className="press-effect flex w-full items-center gap-2 px-4 py-[10px] text-left"
           >
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center">
-              <Camera className="h-6 w-6 text-washmen-primary" />
-            </div>
+            <img
+              src={sendPhotoIconUrl}
+              alt=""
+              aria-hidden="true"
+              className="h-8 w-8 shrink-0 select-none"
+              draggable={false}
+            />
             <p className="flex-1 text-[14px] font-normal leading-[20px] tracking-[0.1px] text-washmen-primary">
               Send a Photo
             </p>
@@ -220,7 +240,7 @@ export default function OrderInstructions() {
         {/* 3. Folding */}
         <InstructionsCard
           title="Folding"
-          icon={Shirt}
+          icon={FoldingIcon}
           value={folding ? summarizeFolding(folding) : null}
           onPress={() => {
             haptics.light();
@@ -231,7 +251,7 @@ export default function OrderInstructions() {
         {/* 4. Creases */}
         <InstructionsCard
           title="Creases"
-          icon={Layers}
+          icon={CreasesIcon}
           value={creases ? summarizeCreases(creases) : null}
           onPress={() => {
             haptics.light();
@@ -242,7 +262,7 @@ export default function OrderInstructions() {
         {/* 5. Starch */}
         <InstructionsCard
           title="Starch"
-          icon={SprayCan}
+          icon={StarchIcon}
           value={starch && starch !== "none" ? summarizeStarch(starch) : null}
           onPress={() => {
             haptics.light();
@@ -256,7 +276,7 @@ export default function OrderInstructions() {
         {!isFirstOrder && (
           <InstructionsCard
             title="Auto-Approvals"
-            icon={BadgeCheck}
+            icon={ApproveIcon}
             value={autoApprovals ? summarizeAutoApprovals(autoApprovals) : null}
             onPress={() => {
               haptics.light();
