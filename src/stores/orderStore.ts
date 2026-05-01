@@ -267,6 +267,39 @@ const SEED_ADDRESS: Address = {
   },
 };
 
+/**
+ * Mock cart seeded when flowType becomes "pricingPage" with an empty
+ * cart. Mirrors what the native pricing page would send — itemized
+ * line entries with unit prices and quantities. Production replaces
+ * this with API-sent cart items at navigation time.
+ */
+const PRICING_PAGE_MOCK_CART: CartItem[] = [
+  {
+    service: "cleanAndPress",
+    itemLabel: "Men's Shirt",
+    unitPrice: 12,
+    quantity: 3,
+  },
+  {
+    service: "cleanAndPress",
+    itemLabel: "Trousers",
+    unitPrice: 14,
+    quantity: 2,
+  },
+  {
+    service: "pressOnly",
+    itemLabel: "Dress",
+    unitPrice: 18,
+    quantity: 1,
+  },
+  {
+    service: "bedAndBath",
+    itemLabel: "Duvet Cover (Queen)",
+    unitPrice: 35,
+    quantity: 1,
+  },
+];
+
 export const useOrderStore = create<OrderState>()(
   persist(
     (set) => ({
@@ -288,7 +321,7 @@ export const useOrderStore = create<OrderState>()(
       // priced order regardless of addPressing flag — needs to be handled in
       // cart/checkout logic.
       setFlowType: (flowType) =>
-        set(() => ({
+        set((state) => ({
           flowType,
           // Re-derive the pickup default so NU lands on "in_person" and RU
           // on "door" when the flow type changes via the State Inspector.
@@ -297,6 +330,16 @@ export const useOrderStore = create<OrderState>()(
           // Production NU users will get an empty address state from the
           // customer profile API at session start, not from the web layer.
           pickup: getDefaultPickup(flowType === "newUser"),
+          // Pricing page entry expects a populated cart from the native
+          // pricing page. For dev, seed mock items so Payment Summary
+          // has something to render. If switching AWAY from pricingPage,
+          // clear the cart so non-pricing flows start clean.
+          cart:
+            flowType === "pricingPage"
+              ? state.cart.length > 0
+                ? state.cart
+                : PRICING_PAGE_MOCK_CART
+              : [],
         })),
       setServices: (patch) =>
         set((s) => ({ services: { ...s.services, ...patch } })),
