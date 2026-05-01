@@ -19,12 +19,14 @@ import HowItWorks from "./pages/laundry/HowItWorks";
 import QuickCheckout from "./pages/quick-checkout/QuickCheckout";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import { StateInspector } from "./components/dev/StateInspector";
+import { IconPreloader } from "./components/IconPreloader";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
+      <IconPreloader />
       <Toaster />
       <Sonner />
       <BrowserRouter>

@@ -118,15 +118,6 @@ export function ServiceSelector({
 
   return (
     <div className={cn("flex flex-col gap-2")}>
-      {/* Preload the Add Pressing active variant so it's decoded before
-          the user expands the row. Hidden img with eager loading. */}
-      <img
-        src={addPressingActiveUrl}
-        alt=""
-        aria-hidden
-        className="absolute h-0 w-0 opacity-0 pointer-events-none"
-        loading="eager"
-      />
       {/* Wash & Fold + Add Pressing combo card */}
       <div className="rounded-card bg-card shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
         <ComboRow
