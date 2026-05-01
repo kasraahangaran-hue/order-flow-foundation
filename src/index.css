@@ -208,8 +208,18 @@
 
   /* Inner scroll containers: contain overscroll so iOS doesn't trigger
      pull-to-refresh or rubber-band on parent containers. Also enable
-     momentum scrolling. Applies to every overflow-* ancestor. */
-  [class*="overflow-"] {
+     momentum scrolling.
+
+     Scoped to ACTUAL scroll classes — using a broad [class*="overflow-"]
+     selector previously matched overflow-hidden wrappers (used for
+     visual clipping on rounded cards) and blocked touch-scroll from
+     bubbling out of them, breaking page scroll inside expanded cards. */
+  .overflow-auto,
+  .overflow-y-auto,
+  .overflow-x-auto,
+  .overflow-scroll,
+  .overflow-y-scroll,
+  .overflow-x-scroll {
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
   }
