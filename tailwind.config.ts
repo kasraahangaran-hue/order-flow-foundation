@@ -49,6 +49,7 @@ export default {
           "light-grey": "hsl(var(--washmen-light-grey))",
           "pale-grey": "hsl(var(--washmen-pale-grey))",
           bg: "hsl(var(--washmen-bg))",
+          background: "hsl(var(--washmen-background))",
 
           // Function colors
           discount: "hsl(var(--washmen-discount))",
