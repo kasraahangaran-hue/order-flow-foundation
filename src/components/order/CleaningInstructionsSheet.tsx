@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Sparkles, X } from "lucide-react";
+import { X } from "lucide-react";
 import { BottomSheetShell } from "./BottomSheetShell";
 import { RadioRow } from "./RadioRow";
 import { CLEANING_INSTRUCTION_OPTIONS } from "@/lib/orderInstructionsLabels";
 import { haptics } from "@/lib/haptics";
 import type { CleaningInstruction } from "@/stores/orderStore";
+import cleaningIconUrl from "@/assets/icons/instruction-cleaning.svg";
 
 interface CleaningInstructionsSheetProps {
   open: boolean;
@@ -53,9 +54,12 @@ export function CleaningInstructionsSheet({
     >
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center">
-            <Sparkles className="h-6 w-6 text-washmen-primary" />
-          </div>
+          <img
+            src={cleaningIconUrl}
+            alt=""
+            className="h-8 w-8 shrink-0 select-none"
+            draggable={false}
+          />
           <p className="text-[14px] font-medium leading-[20px] text-washmen-primary">
             What are the instructions?
           </p>

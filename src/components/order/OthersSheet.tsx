@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { MessageCircle, X } from "lucide-react";
+import { X } from "lucide-react";
 import { BottomSheetShell } from "./BottomSheetShell";
 import { CheckboxRow } from "./CheckboxRow";
 import { OTHER_FLAG_OPTIONS } from "@/lib/orderInstructionsLabels";
 import { haptics } from "@/lib/haptics";
 import type { OtherFlag } from "@/stores/orderStore";
+import othersIconUrl from "@/assets/icons/instruction-others.svg";
 
 interface OthersSheetProps {
   open: boolean;
@@ -60,9 +61,12 @@ export function OthersSheet({
     >
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center">
-            <MessageCircle className="h-6 w-6 text-washmen-primary" />
-          </div>
+          <img
+            src={othersIconUrl}
+            alt=""
+            className="h-8 w-8 shrink-0 select-none"
+            draggable={false}
+          />
           <p className="text-[14px] font-medium leading-[20px] text-washmen-primary">
             Any additional information?
           </p>

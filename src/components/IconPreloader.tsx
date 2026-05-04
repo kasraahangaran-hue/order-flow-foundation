@@ -60,6 +60,12 @@ import paymentMethodUrl from "@/assets/icons/payment-method.svg";
 import promocodeUrl from "@/assets/icons/promocode.svg";
 import creditUrl from "@/assets/icons/credit.svg";
 
+// Delicate photo flow sheet headers + education dialog
+import instructionCleaningUrl from "@/assets/icons/instruction-cleaning.svg";
+import instructionOthersUrl from "@/assets/icons/instruction-others.svg";
+import instructionStainUrl from "@/assets/icons/instruction-stain.svg";
+import delicatePhotoEducationUrl from "@/assets/icons/delicate-photo-education.svg";
+
 const ALL_ICON_URLS = [
   washFoldIconUrl,
   cleanPressIconUrl,
@@ -95,6 +101,10 @@ const ALL_ICON_URLS = [
   paymentMethodUrl,
   promocodeUrl,
   creditUrl,
+  instructionCleaningUrl,
+  instructionOthersUrl,
+  instructionStainUrl,
+  delicatePhotoEducationUrl,
 ];
 
 /**

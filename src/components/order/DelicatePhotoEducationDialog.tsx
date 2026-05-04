@@ -1,6 +1,7 @@
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { haptics } from "@/lib/haptics";
+import delicatePhotoEducationUrl from "@/assets/icons/delicate-photo-education.svg";
 
 interface DelicatePhotoEducationDialogProps {
   open: boolean;
@@ -29,12 +30,15 @@ export function DelicatePhotoEducationDialog({
       }}
     >
       <DialogContent className="max-w-[320px] rounded-2xl p-6 flex flex-col items-center gap-4">
-        {/* Placeholder illustration — replace with real Figma export */}
-        <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-washmen-pale-grey">
-          <span className="text-[10px] text-washmen-slate-grey text-center px-2">
-            Illustration placeholder
-          </span>
-        </div>
+        {/* Multi-bag illustration showing service-specific bags with a
+            red X badge over the unsupported types — communicates which
+            bags this feature applies to before the camera launches. */}
+        <img
+          src={delicatePhotoEducationUrl}
+          alt=""
+          className="h-32 w-auto select-none"
+          draggable={false}
+        />
 
         <p className="text-center text-[14px] leading-[20px] text-washmen-primary">
           This feature is only available for items put in the{" "}
