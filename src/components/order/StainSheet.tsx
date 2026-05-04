@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Droplet, X } from "lucide-react";
+import { X } from "lucide-react";
 import { BottomSheetShell } from "./BottomSheetShell";
 import { CheckboxRow } from "./CheckboxRow";
 import { STAIN_OPTIONS } from "@/lib/orderInstructionsLabels";
 import { haptics } from "@/lib/haptics";
 import type { StainType } from "@/stores/orderStore";
+import stainIconUrl from "@/assets/icons/instruction-stain.svg";
 
 interface StainSheetProps {
   open: boolean;
@@ -60,9 +61,12 @@ export function StainSheet({
     >
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center">
-            <Droplet className="h-6 w-6 text-washmen-primary" />
-          </div>
+          <img
+            src={stainIconUrl}
+            alt=""
+            className="h-8 w-8 shrink-0 select-none"
+            draggable={false}
+          />
           <p className="text-[14px] font-medium leading-[20px] text-washmen-primary">
             What type of stain is it?
           </p>
