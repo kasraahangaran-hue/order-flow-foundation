@@ -245,7 +245,7 @@ function CategoryCard({ iconUrl, title, configured, onTap }: CategoryCardProps) 
       <img
         src={iconUrl}
         alt=""
-        className="h-10 w-10 shrink-0 select-none"
+        className="h-8 w-8 shrink-0 select-none"
         draggable={false}
       />
       <span className="flex-1 text-[14px] font-normal leading-[20px] tracking-[0.1px] text-washmen-primary">
