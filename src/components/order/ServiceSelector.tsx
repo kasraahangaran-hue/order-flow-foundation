@@ -204,7 +204,7 @@ export function ServiceSelector({
                   >
                     Press & Hang
                   </p>
-                  <span className="rounded-md bg-washmen-warning/30 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-washmen-secondary-800">
+                  <span className="rounded-md bg-washmen-yellow-pill px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-washmen-secondary-800">
                     NEW
                   </span>
                 </div>
