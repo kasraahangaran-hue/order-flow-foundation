@@ -44,6 +44,7 @@
     --washmen-pale-grey: 234 24% 96%;           /* #F2F3F8 — NEW */
     --washmen-bg: 220 25% 98%;                  /* #FAFBFC — NEW */
     --washmen-background: 240 17% 98%;          /* #FAFBFC — page background, slightly cooler than pure white for contrast against white cards */
+    --washmen-yellow-pill: 50 90% 58%;           /* #F5D534 — accent pill bg for service price labels */
 
     /* Function colors */
     --washmen-discount: 339 89% 58%;            /* #F13578 — NEW */
