@@ -35,8 +35,17 @@ export default function SelectService() {
     <OrderLayout
       title="Select Service(s)"
       step={1}
-      // Flow root — no in-flow predecessor, so fall back to browser history.
-      onBack={() => navigate(-1)}
+      onBack={() => {
+        // Don't use navigate(-1) — it follows browser history which loops
+        // between screens when the user has been bouncing around in the
+        // flow (e.g. testers hitting back/forward repeatedly). Branch
+        // explicitly on user type so backwards nav is deterministic.
+        if (isFirstOrder) {
+          navigate("/laundry/prepare-your-bags");
+        } else {
+          navigate("/laundry/order-details");
+        }
+      }}
       footerSlot={
         <Button
           className="flex-1 h-[42px] rounded-[8px] text-sm font-semibold"
