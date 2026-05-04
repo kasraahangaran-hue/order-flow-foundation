@@ -705,12 +705,28 @@ export default function LastStep() {
         </div>
       }
       footerSlot={
-        <Button
-          className="flex-1 h-[42px] rounded-[8px] text-sm font-semibold"
-          onClick={onPay}
-        >
-          {ctaLabel}
-        </Button>
+        ctaIsApplePay ? (
+          <button
+            type="button"
+            onClick={onPay}
+            className="press-effect flex flex-1 h-[42px] items-center justify-center gap-2 rounded-[8px] bg-black text-white"
+          >
+            <span className="text-sm font-medium">Pay with</span>
+            <img
+              src={applePayWordmarkUrl}
+              alt="Apple Pay"
+              className="h-[20px] w-auto select-none"
+              draggable={false}
+            />
+          </button>
+        ) : (
+          <Button
+            className="flex-1 h-[42px] rounded-[8px] text-sm font-semibold"
+            onClick={onPay}
+          >
+            {ctaLabel}
+          </Button>
+        )
       }
     >
       <div className="flex flex-col gap-4">
