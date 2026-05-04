@@ -10,8 +10,6 @@
  *
  * Add new icon imports to this file whenever a new icon is integrated.
  */
-import { useEffect } from "react";
-
 // Service tile icons
 import washFoldIconUrl from "@/assets/icons/service-wash-fold.svg";
 import cleanPressIconUrl from "@/assets/icons/service-clean-press.svg";
@@ -107,40 +105,40 @@ const ALL_ICON_URLS = [
  */
 const decodedCache: HTMLImageElement[] = [];
 
+/**
+ * Kick off preloading at module-evaluation time (the moment this file
+ * is imported by App.tsx), NOT inside useEffect. useEffect only runs
+ * after first render, which can be hundreds of ms after the bundle
+ * loads — that delay is the source of the remaining icon lag.
+ *
+ * Guarded against multiple calls (HMR / StrictMode).
+ */
+let preloadStarted = false;
+function startPreload() {
+  if (preloadStarted) return;
+  preloadStarted = true;
+  if (typeof window === "undefined") return;
+
+  for (const url of ALL_ICON_URLS) {
+    const img = new Image();
+    img.src = url;
+    img
+      .decode()
+      .then(() => {
+        decodedCache.push(img);
+      })
+      .catch(() => {
+        // Fallback for browsers where SVG decode() rejects.
+        img.onload = () => decodedCache.push(img);
+        img.onerror = () => {};
+      });
+  }
+}
+
+startPreload();
+
 export function IconPreloader() {
-  useEffect(() => {
-    // Bail if already decoded (StrictMode double-mount protection).
-    if (decodedCache.length === ALL_ICON_URLS.length) return;
-
-    let cancelled = false;
-    Promise.all(
-      ALL_ICON_URLS.map((url) => {
-        const img = new Image();
-        img.src = url;
-        // decode() returns a promise that resolves once the image is
-        // fully decoded into GPU-ready memory. After this resolves,
-        // any future <img src={url}> paints in zero time.
-        return img
-          .decode()
-          .then(() => img)
-          .catch(() => {
-            // SVGs occasionally fail decode in some browsers; fall back
-            // to a plain load. Still better than no preload at all.
-            return new Promise<HTMLImageElement>((resolve) => {
-              img.onload = () => resolve(img);
-              img.onerror = () => resolve(img);
-            });
-          });
-      }),
-    ).then((images) => {
-      if (cancelled) return;
-      decodedCache.push(...images);
-    });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
+  // Preload already kicked off at module load. This component remains
+  // mounted purely to keep the import alive in the React tree.
   return null;
 }
