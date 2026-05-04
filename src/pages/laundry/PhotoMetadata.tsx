@@ -1,15 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import type { ComponentType } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import {
-  ArrowLeft,
-  Camera,
-  Check,
-  ChevronRight,
-  Droplet,
-  MessageCircle,
-  Sparkles,
-} from "lucide-react";
+import { ArrowLeft, Camera, Check, ChevronRight } from "lucide-react";
+import stainIconUrl from "@/assets/icons/instruction-stain.svg";
+import cleaningIconUrl from "@/assets/icons/instruction-cleaning.svg";
+import othersIconUrl from "@/assets/icons/instruction-others.svg";
 import { useOrderStore } from "@/stores/orderStore";
 import { haptics } from "@/lib/haptics";
 import { CameraCaptureSheet } from "@/components/order/CameraCaptureSheet";
@@ -156,7 +150,7 @@ export default function PhotoMetadata() {
 
         <div className="mt-3 flex flex-col gap-2">
           <CategoryCard
-            icon={Droplet}
+            iconUrl={stainIconUrl}
             title="Report Stain"
             configured={stainConfigured}
             onTap={() => {
@@ -165,7 +159,7 @@ export default function PhotoMetadata() {
             }}
           />
           <CategoryCard
-            icon={Sparkles}
+            iconUrl={cleaningIconUrl}
             title="Cleaning Instructions"
             configured={cleaningConfigured}
             onTap={() => {
@@ -174,7 +168,7 @@ export default function PhotoMetadata() {
             }}
           />
           <CategoryCard
-            icon={MessageCircle}
+            iconUrl={othersIconUrl}
             title="Others"
             configured={othersConfigured}
             onTap={() => {
@@ -235,22 +229,25 @@ export default function PhotoMetadata() {
 }
 
 interface CategoryCardProps {
-  icon: ComponentType<{ className?: string }>;
+  iconUrl: string;
   title: string;
   configured: boolean;
   onTap: () => void;
 }
 
-function CategoryCard({ icon: Icon, title, configured, onTap }: CategoryCardProps) {
+function CategoryCard({ iconUrl, title, configured, onTap }: CategoryCardProps) {
   return (
     <button
       type="button"
       onClick={onTap}
       className="press-effect flex items-center gap-3 rounded-[8px] border border-washmen-pale-grey bg-white px-4 py-3 text-left"
     >
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] bg-washmen-light-blue">
-        <Icon className="h-5 w-5 text-washmen-primary" />
-      </div>
+      <img
+        src={iconUrl}
+        alt=""
+        className="h-10 w-10 shrink-0 select-none"
+        draggable={false}
+      />
       <span className="flex-1 text-[14px] font-normal leading-[20px] tracking-[0.1px] text-washmen-primary">
         {title}
       </span>
