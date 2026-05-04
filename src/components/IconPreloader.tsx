@@ -1,12 +1,16 @@
 /**
- * Renders hidden <img> tags for every icon SVG used in the app, mounted
- * once at App level. The browser fetches and decodes them in parallel
- * at app start, so when the user later navigates to a screen or opens
- * a sheet, the icons are already cached — <img src> paints instantly.
+ * Aggressively preloads every icon SVG used in the app at App mount.
+ *
+ * Uses Image.decode() instead of hidden <img> tags because hidden imgs
+ * can have their decoding deferred indefinitely by the browser (opacity-0
+ * + h-0 w-0 elements may never trigger a paint, which is when decoding
+ * normally happens). decode() forces the browser to fully decode each
+ * SVG into memory IMMEDIATELY, so subsequent <img src={...}> usages
+ * paint with zero latency.
  *
  * Add new icon imports to this file whenever a new icon is integrated.
- * The pattern keeps icons feeling as instant as Lucide inline icons.
  */
+import { useEffect } from "react";
 
 // Service tile icons
 import washFoldIconUrl from "@/assets/icons/service-wash-fold.svg";
@@ -18,7 +22,7 @@ import pressOnlyIconUrl from "@/assets/icons/service-press-only.svg";
 import addPressingActiveUrl from "@/assets/icons/add-pressing-active.svg";
 import addPressingInactiveUrl from "@/assets/icons/add-pressing-inactive.svg";
 
-// Bag icons (cart row indicators in LastStep, AutoApprovalsSheet illustrations)
+// Bag icons
 import bagWashFoldUrl from "@/assets/icons/bag-wash-fold.svg";
 import bagCleanPressUrl from "@/assets/icons/bag-clean-press.svg";
 import bagBedBathUrl from "@/assets/icons/bag-bed-bath.svg";
@@ -49,7 +53,7 @@ import addressHotelUrl from "@/assets/icons/address-hotel.svg";
 import addressVillaUrl from "@/assets/icons/address-villa.svg";
 import addressApartmentUrl from "@/assets/icons/address-apartment.svg";
 
-// Payment / Last Step / How It Works
+// Last Step / payment / pricing
 import applePayWordmarkUrl from "@/assets/icons/apple-pay-wordmark.svg";
 import viewPricingUrl from "@/assets/icons/view-pricing.svg";
 import contactServiceUrl from "@/assets/icons/contact-customer-service.svg";
@@ -95,12 +99,48 @@ const ALL_ICON_URLS = [
   creditUrl,
 ];
 
+/**
+ * Module-level cache pinning the decoded Image objects so the browser
+ * doesn't garbage-collect them. As long as these references live, the
+ * decoded pixels stay in memory and any <img src={url}> in the app
+ * paints instantly.
+ */
+const decodedCache: HTMLImageElement[] = [];
+
 export function IconPreloader() {
-  return (
-    <div aria-hidden className="absolute h-0 w-0 overflow-hidden opacity-0 pointer-events-none">
-      {ALL_ICON_URLS.map((url) => (
-        <img key={url} src={url} alt="" loading="eager" decoding="async" />
-      ))}
-    </div>
-  );
+  useEffect(() => {
+    // Bail if already decoded (StrictMode double-mount protection).
+    if (decodedCache.length === ALL_ICON_URLS.length) return;
+
+    let cancelled = false;
+    Promise.all(
+      ALL_ICON_URLS.map((url) => {
+        const img = new Image();
+        img.src = url;
+        // decode() returns a promise that resolves once the image is
+        // fully decoded into GPU-ready memory. After this resolves,
+        // any future <img src={url}> paints in zero time.
+        return img
+          .decode()
+          .then(() => img)
+          .catch(() => {
+            // SVGs occasionally fail decode in some browsers; fall back
+            // to a plain load. Still better than no preload at all.
+            return new Promise<HTMLImageElement>((resolve) => {
+              img.onload = () => resolve(img);
+              img.onerror = () => resolve(img);
+            });
+          });
+      }),
+    ).then((images) => {
+      if (cancelled) return;
+      decodedCache.push(...images);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return null;
 }
