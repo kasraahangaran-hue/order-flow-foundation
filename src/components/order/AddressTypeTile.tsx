@@ -77,19 +77,12 @@ export function AddressTypeTile({
       )}
       aria-pressed={selected}
     >
-      <div
-        className={cn(
-          "flex h-16 w-16 items-center justify-center rounded-full",
-          selected ? "bg-washmen-primary/10" : "bg-muted",
-        )}
-      >
-        <img
-          src={iconUrl}
-          alt=""
-          className="h-12 w-12 select-none"
-          draggable={false}
-        />
-      </div>
+      <img
+        src={iconUrl}
+        alt=""
+        className="h-16 w-16 select-none"
+        draggable={false}
+      />
       <span className="text-[14px] font-semibold text-washmen-primary">{label}</span>
     </button>
   );
