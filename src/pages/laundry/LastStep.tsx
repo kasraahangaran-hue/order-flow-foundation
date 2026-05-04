@@ -42,6 +42,7 @@ import paymentSummaryUrl from "@/assets/icons/payment-summary.svg";
 import paymentMethodUrl from "@/assets/icons/payment-method.svg";
 import promocodeUrl from "@/assets/icons/promocode.svg";
 import creditUrl from "@/assets/icons/credit.svg";
+import applePayWordmarkUrl from "@/assets/icons/apple-pay-wordmark.svg";
 
 const BAG_ICON_BY_SERVICE: Record<CartItem["service"], string> = {
   washAndFold: bagWashFoldUrl,
@@ -287,14 +288,12 @@ function PaymentSummaryFlat({
         onClick={onToggleExpanded}
         className="press-effect flex h-[52px] w-full items-center gap-3 px-3 py-0 text-left"
       >
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
-          <img
-            src={paymentSummaryUrl}
-            alt=""
-            className="h-5 w-5 shrink-0 select-none"
-            draggable={false}
-          />
-        </div>
+        <img
+          src={paymentSummaryUrl}
+          alt=""
+          className="h-8 w-8 shrink-0 select-none"
+          draggable={false}
+        />
         <p className="flex-1 text-sm font-semibold leading-tight text-washmen-primary">
           Payment Summary
         </p>
