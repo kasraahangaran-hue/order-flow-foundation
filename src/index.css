@@ -253,6 +253,12 @@
   .press-effect:active {
     transform: scale(0.97);
     opacity: 0.9;
+    /* Delay scale until the press is held for 100ms. If the user
+       starts scrolling within that window, :active is canceled and
+       scale never applies — preventing the wobble that occurs when a
+       thumb rests on a card to begin a scroll. Real taps held longer
+       than 100ms still get the scale feedback. */
+    transition-delay: 100ms;
   }
 
   /* Subtle route-transition fade. Applied at the page level via
