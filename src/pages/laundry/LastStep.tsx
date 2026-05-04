@@ -404,14 +404,12 @@ function PaymentSummaryItemized({
         onClick={onToggleExpanded}
         className="press-effect flex h-[52px] w-full items-center gap-3 px-3 py-0 text-left"
       >
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
-          <img
-            src={paymentSummaryUrl}
-            alt=""
-            className="h-5 w-5 shrink-0 select-none"
-            draggable={false}
-          />
-        </div>
+        <img
+          src={paymentSummaryUrl}
+          alt=""
+          className="h-8 w-8 shrink-0 select-none"
+          draggable={false}
+        />
         <p className="flex-1 text-sm font-semibold leading-tight text-washmen-primary">
           Payment Summary
         </p>
@@ -723,14 +721,12 @@ export default function LastStep() {
             onClick={() => toggle(setPromosExpanded, promosExpanded)}
             className="press-effect flex h-[52px] w-full items-center gap-3 px-3 py-0 text-left"
           >
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary">
-              <img
-                src={promocodeUrl}
-                alt=""
-                className="h-5 w-5 shrink-0 select-none"
-                draggable={false}
-              />
-            </div>
+            <img
+              src={promocodeUrl}
+              alt=""
+              className="h-8 w-8 shrink-0 select-none"
+              draggable={false}
+            />
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold leading-tight text-washmen-primary">
                 Promos
@@ -797,14 +793,12 @@ export default function LastStep() {
               </div>
               <div className="flex items-center gap-8 border-t border-washmen-light-grey pt-4">
                 <div className="flex flex-1 items-center gap-3">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary">
-                    <img
-                      src={creditUrl}
-                      alt=""
-                      className="h-5 w-5 shrink-0 select-none"
-                      draggable={false}
-                    />
-                  </div>
+                  <img
+                    src={creditUrl}
+                    alt=""
+                    className="h-8 w-8 shrink-0 select-none"
+                    draggable={false}
+                  />
                   <span className="text-sm text-washmen-primary">Credits</span>
                 </div>
                 <p className="text-[10px] text-washmen-secondary-700">
@@ -851,14 +845,12 @@ export default function LastStep() {
           className="press-effect w-full rounded-card bg-card px-3 py-4 text-left shadow-[0_1px_2px_rgba(16,24,40,0.04)]"
         >
           <div className="flex items-start gap-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary">
-              <img
-                src={paymentMethodUrl}
-                alt=""
-                className="h-5 w-5 shrink-0 select-none"
-                draggable={false}
-              />
-            </div>
+            <img
+              src={paymentMethodUrl}
+              alt=""
+              className="h-8 w-8 shrink-0 select-none"
+              draggable={false}
+            />
             <div className="min-w-0 flex-1">
               <p className="text-sm font-semibold leading-tight text-washmen-primary">
                 {paymentMethodLabel}
