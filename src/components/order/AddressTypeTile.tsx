@@ -1,13 +1,17 @@
-import { Briefcase, Building2, Home, Hotel } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { AddressType } from "@/stores/orderStore";
 
-const ICON_BY_TYPE = {
-  office: Briefcase,
-  hotel: Hotel,
-  villa: Home,
-  apartment: Building2,
-} as const;
+import addressOfficeUrl from "@/assets/icons/address-office.svg";
+import addressHotelUrl from "@/assets/icons/address-hotel.svg";
+import addressVillaUrl from "@/assets/icons/address-villa.svg";
+import addressApartmentUrl from "@/assets/icons/address-apartment.svg";
+
+const ICON_URL_BY_TYPE: Record<AddressType, string> = {
+  office: addressOfficeUrl,
+  hotel: addressHotelUrl,
+  villa: addressVillaUrl,
+  apartment: addressApartmentUrl,
+};
 
 const LABEL_BY_TYPE: Record<AddressType, string> = {
   office: "Office",
@@ -33,7 +37,7 @@ export function AddressTypeTile({
   onSelect,
   variant,
 }: AddressTypeTileProps) {
-  const Icon = ICON_BY_TYPE[type];
+  const iconUrl = ICON_URL_BY_TYPE[type];
   const label = LABEL_BY_TYPE[type];
 
   if (variant === "chip") {
@@ -49,7 +53,12 @@ export function AddressTypeTile({
         )}
         aria-pressed={selected}
       >
-        <Icon className="h-4 w-4" />
+        <img
+          src={iconUrl}
+          alt=""
+          className="h-5 w-5 shrink-0 select-none"
+          draggable={false}
+        />
         <span className="text-[13px] font-medium">{label}</span>
       </button>
     );
@@ -70,11 +79,16 @@ export function AddressTypeTile({
     >
       <div
         className={cn(
-          "flex h-14 w-14 items-center justify-center rounded-full",
-          selected ? "bg-washmen-primary text-white" : "bg-muted text-washmen-primary",
+          "flex h-16 w-16 items-center justify-center rounded-full",
+          selected ? "bg-washmen-primary/10" : "bg-muted",
         )}
       >
-        <Icon className="h-7 w-7" />
+        <img
+          src={iconUrl}
+          alt=""
+          className="h-12 w-12 select-none"
+          draggable={false}
+        />
       </div>
       <span className="text-[14px] font-semibold text-washmen-primary">{label}</span>
     </button>
