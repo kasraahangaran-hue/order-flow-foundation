@@ -198,8 +198,8 @@ export function ServiceSelector({
                 <div className="flex items-center gap-2">
                   <p
                     className={cn(
-                      "truncate text-base font-semibold leading-tight transition-colors",
-                      pressActive ? "text-washmen-secondary-900" : "text-washmen-secondary-400"
+                      "truncate text-sm font-semibold leading-tight transition-colors",
+                      pressActive ? "text-washmen-primary" : "text-washmen-secondary-400"
                     )}
                   >
                     Press & Hang
@@ -393,7 +393,7 @@ function FineryCard() {
         <span className="font-serif text-base font-bold text-white">TF</span>
       </div>
       <div className="min-w-0 flex-1">
-        <p className="truncate text-base font-semibold text-washmen-secondary-900">
+        <p className="truncate text-sm font-semibold text-washmen-primary">
           The Finery
         </p>
         <PricingLink label="View Pricing" onPress={() => {}} />
@@ -478,8 +478,8 @@ function ComboRow({
         <div className="flex min-w-0 items-center gap-2">
           <p
             className={cn(
-              "min-w-0 truncate text-base font-semibold leading-tight transition-colors",
-              titleClass ?? "text-washmen-secondary-900"
+              "min-w-0 truncate text-sm font-semibold leading-tight transition-colors",
+              titleClass ?? "text-washmen-primary"
             )}
           >
             {title}
@@ -490,7 +490,7 @@ function ComboRow({
             </span>
           )}
           {priceLabel && (
-            <span className="shrink-0 rounded-md bg-washmen-light-aqua px-2 py-0.5 text-[12px] font-medium text-washmen-primary">
+            <span className="shrink-0 rounded-md bg-washmen-yellow-pill px-2 py-0.5 text-[12px] font-medium text-washmen-primary">
               {priceLabel}
             </span>
           )}
