@@ -76,7 +76,7 @@ export function OrderLayout({
       {/* Scrollable content — the only element that scrolls.
           overscroll-contain keeps any over-scroll inside this container
           so iOS rubber-band can't bubble up to the document. */}
-      <main className="no-scrollbar flex-1 overflow-y-auto overscroll-contain px-6 pb-4 pt-3">{children}</main>
+      <main className="no-scrollbar flex-1 overflow-y-auto overscroll-contain px-6 pb-4 pt-6">{children}</main>
 
       {/* Footer */}
       {footerSlot !== undefined && (
