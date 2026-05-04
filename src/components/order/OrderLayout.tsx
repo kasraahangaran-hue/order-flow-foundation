@@ -36,7 +36,7 @@ export function OrderLayout({
       {/* Header — static flex child, naturally pinned at top because the
           outer container can't scroll. No position:sticky (which would
           rubber-band on iOS over-scroll). */}
-      <header className="shrink-0 bg-washmen-background px-6 pt-[max(env(safe-area-inset-top),24px)] pb-0">
+      <header className="shrink-0 bg-washmen-background px-6 pt-[max(env(safe-area-inset-top),24px)] pb-3">
         <div className="flex items-start justify-between gap-3">
           <h1 className="text-lg font-bold text-washmen-primary">
             {title}
@@ -76,7 +76,7 @@ export function OrderLayout({
       {/* Scrollable content — the only element that scrolls.
           overscroll-contain keeps any over-scroll inside this container
           so iOS rubber-band can't bubble up to the document. */}
-      <main className="no-scrollbar flex-1 overflow-y-auto overscroll-contain px-6 pb-4 pt-6">{children}</main>
+      <main className="no-scrollbar flex-1 overflow-y-auto overscroll-contain px-6 pb-4">{children}</main>
 
       {/* Footer */}
       {footerSlot !== undefined && (
