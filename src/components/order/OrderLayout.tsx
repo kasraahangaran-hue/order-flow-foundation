@@ -32,9 +32,9 @@ export function OrderLayout({
   const showProgress = typeof step === "number";
 
   return (
-    <div className="flex h-full min-h-screen flex-col bg-washmen-background">
+    <div className="flex h-full min-h-screen flex-col bg-subtle-bg">
       {/* Header */}
-      <header className="sticky top-0 z-10 bg-washmen-background px-6 pt-[max(env(safe-area-inset-top),24px)] pb-0">
+      <header className="sticky top-0 z-10 bg-subtle-bg px-6 pt-[max(env(safe-area-inset-top),24px)] pb-0">
         <div className="flex items-start justify-between gap-3">
           <h1 className="text-lg font-bold text-washmen-primary">
             {title}
@@ -72,7 +72,7 @@ export function OrderLayout({
       </header>
 
       {/* Scrollable content */}
-      <main className="no-scrollbar flex-1 overflow-y-auto px-6 pb-4 pt-3">{children}</main>
+      <main className="no-scrollbar flex-1 overflow-y-auto px-6 pb-4 pt-[26px]">{children}</main>
 
       {/* Footer */}
       {footerSlot !== undefined && (

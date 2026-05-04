@@ -729,7 +729,7 @@ export default function LastStep() {
         )
       }
     >
-      <div className="flex flex-col gap-4 stagger-children">
+      <div className="flex flex-col gap-4">
         {/* PROMOS */}
         <div className="overflow-hidden rounded-card bg-card shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
           <button

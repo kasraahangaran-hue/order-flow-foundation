@@ -1,7 +1,4 @@
-import {
-  AlertDialog,
-  AlertDialogContent,
-} from "@/components/ui/alert-dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { haptics } from "@/lib/haptics";
 import delicatePhotoEducationUrl from "@/assets/icons/delicate-photo-education.svg";
@@ -18,17 +15,21 @@ interface DelicatePhotoEducationDialogProps {
  * items so users understand the constraint before investing time in
  * photographing each item.
  *
- * Uses AlertDialog (not Dialog) so there's no top-right close button —
- * the only exit is the Got It CTA, ensuring the user actively
- * acknowledges the constraint.
+ * The illustration is a placeholder — to be swapped for the real Figma
+ * artwork once exported.
  */
 export function DelicatePhotoEducationDialog({
   open,
   onConfirm,
 }: DelicatePhotoEducationDialogProps) {
   return (
-    <AlertDialog open={open}>
-      <AlertDialogContent className="max-w-[320px] rounded-2xl p-6 flex flex-col items-center gap-4">
+    <Dialog
+      open={open}
+      onOpenChange={(o) => {
+        if (!o) onConfirm();
+      }}
+    >
+      <DialogContent className="max-w-[320px] rounded-2xl p-6 flex flex-col items-center gap-4">
         {/* Multi-bag illustration showing service-specific bags with a
             red X badge over the unsupported types — communicates which
             bags this feature applies to before the camera launches. */}
@@ -54,7 +55,7 @@ export function DelicatePhotoEducationDialog({
         >
           Got It
         </Button>
-      </AlertDialogContent>
-    </AlertDialog>
+      </DialogContent>
+    </Dialog>
   );
 }

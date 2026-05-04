@@ -43,8 +43,6 @@
     --washmen-light-grey: 240 11% 95%;          /* #EEEFF4 — was #EFEFF4 */
     --washmen-pale-grey: 234 24% 96%;           /* #F2F3F8 — NEW */
     --washmen-bg: 220 25% 98%;                  /* #FAFBFC — NEW */
-    --washmen-background: 240 17% 98%;          /* #FAFBFC — page background, slightly cooler than pure white for contrast against white cards */
-    --washmen-yellow-pill: 50 90% 58%;          /* #F5D534 — accent pill bg for service price labels */
 
     /* Function colors */
     --washmen-discount: 339 89% 58%;            /* #F13578 — NEW */
@@ -255,44 +253,5 @@
   }
   .no-scrollbar::-webkit-scrollbar {
     display: none;
-  }
-
-  /* Top-to-bottom stagger animation. Each direct child of an element
-     with `.stagger-children` fades in and slides down from -8px. The
-     animation-delay is applied progressively so children appear in
-     sequence top-to-bottom — gives a screen a "settling in" feel.
-     Test on a single screen before rolling out app-wide. */
-  @keyframes stagger-in {
-    from {
-      opacity: 0;
-      transform: translateY(-8px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .stagger-children > * {
-    opacity: 0;
-    animation: stagger-in 320ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-  .stagger-children > *:nth-child(1) { animation-delay: 0ms; }
-  .stagger-children > *:nth-child(2) { animation-delay: 50ms; }
-  .stagger-children > *:nth-child(3) { animation-delay: 100ms; }
-  .stagger-children > *:nth-child(4) { animation-delay: 150ms; }
-  .stagger-children > *:nth-child(5) { animation-delay: 200ms; }
-  .stagger-children > *:nth-child(6) { animation-delay: 250ms; }
-  .stagger-children > *:nth-child(7) { animation-delay: 300ms; }
-  .stagger-children > *:nth-child(n+8) { animation-delay: 350ms; }
-
-  /* Respect users who prefer reduced motion — they get the final state
-     immediately, no stagger. */
-  @media (prefers-reduced-motion: reduce) {
-    .stagger-children > * {
-      animation: none;
-      opacity: 1;
-      transform: none;
-    }
   }
 }
