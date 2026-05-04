@@ -32,9 +32,11 @@ export function OrderLayout({
   const showProgress = typeof step === "number";
 
   return (
-    <div className="flex h-full min-h-screen flex-col bg-washmen-background">
-      {/* Header */}
-      <header className="sticky top-0 z-10 bg-washmen-background px-6 pt-[max(env(safe-area-inset-top),24px)] pb-0">
+    <div className="flex h-full flex-col overflow-hidden bg-washmen-background">
+      {/* Header — static flex child, naturally pinned at top because the
+          outer container can't scroll. No position:sticky (which would
+          rubber-band on iOS over-scroll). */}
+      <header className="shrink-0 bg-washmen-background px-6 pt-[max(env(safe-area-inset-top),24px)] pb-0">
         <div className="flex items-start justify-between gap-3">
           <h1 className="text-lg font-bold text-washmen-primary">
             {title}
@@ -71,13 +73,15 @@ export function OrderLayout({
         )}
       </header>
 
-      {/* Scrollable content */}
-      <main className="no-scrollbar flex-1 overflow-y-auto px-6 pb-4 pt-3">{children}</main>
+      {/* Scrollable content — the only element that scrolls.
+          overscroll-contain keeps any over-scroll inside this container
+          so iOS rubber-band can't bubble up to the document. */}
+      <main className="no-scrollbar flex-1 overflow-y-auto overscroll-contain px-6 pb-4 pt-3">{children}</main>
 
       {/* Footer */}
       {footerSlot !== undefined && (
         <footer
-          className="sticky bottom-0 z-10 bg-washmen-secondary-express pb-[max(env(safe-area-inset-bottom),1rem)] shadow-[0px_-1px_8px_rgba(0,0,0,0.06)]"
+          className="shrink-0 bg-washmen-secondary-express pb-[max(env(safe-area-inset-bottom),1rem)] shadow-[0px_-1px_8px_rgba(0,0,0,0.06)]"
         >
           {footerAboveSlot && (
             <div className="px-6 pt-4">
