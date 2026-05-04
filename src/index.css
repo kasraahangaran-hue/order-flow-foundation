@@ -248,6 +248,45 @@
     animation: page-in 150ms ease-out;
   }
 
+  /* Top-to-bottom stagger animation. Each direct child of an element
+     with `.stagger-children` fades in and slides down from -8px. The
+     animation-delay is applied progressively so children appear in
+     sequence top-to-bottom — gives a screen a "settling in" feel.
+     Test on a single screen before rolling out app-wide. */
+  @keyframes stagger-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .stagger-children > * {
+    opacity: 0;
+    animation: stagger-in 320ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+  .stagger-children > *:nth-child(2) { animation-delay: 50ms; }
+  .stagger-children > *:nth-child(3) { animation-delay: 100ms; }
+  .stagger-children > *:nth-child(4) { animation-delay: 150ms; }
+  .stagger-children > *:nth-child(5) { animation-delay: 200ms; }
+  .stagger-children > *:nth-child(6) { animation-delay: 250ms; }
+  .stagger-children > *:nth-child(7) { animation-delay: 300ms; }
+  .stagger-children > *:nth-child(n+8) { animation-delay: 350ms; }
+
+  /* Respect users who prefer reduced motion — they get the final state
+     immediately, no stagger. */
+  @media (prefers-reduced-motion: reduce) {
+    .stagger-children > * {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
